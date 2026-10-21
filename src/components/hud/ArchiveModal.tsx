@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import {
   TAPE_PROJECTS,
-  TapeProject,
   ARCHIVE_CATEGORIES,
   ArchiveCategoryFilter,
 } from "@/data/tapes";
@@ -47,7 +46,7 @@ export function ArchiveModal({
       aria-labelledby="archive-heading"
       className="absolute inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-black/85 backdrop-blur-md animate-in fade-in duration-300"
     >
-      <div className="relative w-full max-w-5xl max-h-[88vh] bg-[#121110]/95 border border-crt-phosphor/30 rounded-lg p-5 sm:p-7 overflow-hidden shadow-2xl flex flex-col justify-between gap-5 font-mono">
+      <div className="relative w-full max-w-5xl max-h-[88vh] bg-[#121110]/95 border border-crt-phosphor/30 rounded-xs p-5 sm:p-7 overflow-hidden shadow-2xl flex flex-col justify-between gap-5 font-mono">
         {/* Header Bar */}
         <div className="flex items-center justify-between border-b border-crt-phosphor/20 pb-3">
           <div className="flex items-center gap-3">
@@ -95,7 +94,7 @@ export function ArchiveModal({
         </div>
 
         {/* Project Table / Grid */}
-        <div className="flex-1 overflow-y-auto no-scrollbar border border-crt-phosphor/15 rounded-sm bg-black/40">
+        <div className="flex-1 overflow-y-auto no-scrollbar border border-crt-phosphor/15 rounded-xs bg-black/40">
           <div className="grid grid-cols-1 divide-y divide-crt-phosphor/10">
             {filteredProjects.map((tape) => {
               const globalIndex = TAPE_PROJECTS.findIndex((t) => t.id === tape.id);
@@ -124,15 +123,15 @@ export function ArchiveModal({
                     </div>
 
                     <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-xs sm:text-sm font-bold text-crt-phosphor group-hover:text-white truncate">
+                      <div className="flex items-center gap-2.5">
+                        <h4 className="font-bit text-xl sm:text-2xl font-bold text-crt-phosphor group-hover:text-white truncate uppercase leading-none">
                           {tape.title}
                         </h4>
-                        <span className="text-[9px] text-crt-phosphor/40">
+                        <span className="text-[10px] text-crt-phosphor/40 font-mono">
                           {tape.year}
                         </span>
                       </div>
-                      <span className="text-[10px] text-crt-phosphor/60 block truncate">
+                      <span className="text-[10px] text-crt-phosphor/60 block truncate mt-0.5">
                         {tape.headline}
                       </span>
                     </div>

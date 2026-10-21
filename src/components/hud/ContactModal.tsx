@@ -9,7 +9,6 @@ interface ContactModalProps {
 }
 
 const PRIMARY_EMAIL = "ferrelrashadakeyla2014@gmail.com";
-const ALT_EMAIL = "ferrelrashad15@gmail.com";
 
 export function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const [copied, setCopied] = useState<string | null>(null);
@@ -43,7 +42,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
       aria-labelledby="contact-heading"
       className="absolute inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-black/85 backdrop-blur-md animate-in fade-in duration-300"
     >
-      <div className="relative w-full max-w-xl bg-[#121110]/95 border border-crt-phosphor/30 rounded-lg p-6 sm:p-8 overflow-hidden shadow-2xl flex flex-col justify-between gap-6 font-mono">
+      <div className="relative w-full max-w-xl bg-[#121110]/95 border border-crt-phosphor/30 rounded-xs p-6 sm:p-8 overflow-hidden shadow-2xl flex flex-col justify-between gap-6 font-mono">
         {/* Top Header */}
         <div className="flex items-center justify-between border-b border-crt-phosphor/20 pb-3">
           <div className="flex items-center gap-3">
@@ -69,16 +68,16 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
         {/* Transmission Body */}
         <div className="flex flex-col gap-5 my-2">
           <div>
-            <h3 className="text-lg sm:text-xl font-bold text-crt-phosphor phosphor-glow">
+            <h3 className="font-bit text-3xl sm:text-4xl font-bold text-crt-phosphor phosphor-glow leading-none">
               INITIATE COMMUNICATIONS
             </h3>
-            <p className="text-xs text-crt-phosphor/70 mt-1 leading-relaxed">
+            <p className="text-xs text-crt-phosphor/70 mt-1.5 leading-relaxed font-mono">
               Open for creative engineering, frontend architecture, and technical consulting.
             </p>
           </div>
 
           {/* Primary Email */}
-          <div className="bg-black/60 border border-crt-phosphor/20 p-4 rounded-sm flex flex-col gap-2">
+          <div className="bg-black/60 border border-crt-phosphor/20 p-4 rounded-xs flex flex-col gap-2">
             <span className="text-[10px] text-crt-phosphor/40 uppercase tracking-widest">
               DIRECT DISPATCH // PRIMARY EMAIL
             </span>
@@ -106,7 +105,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
           </div>
 
           {/* GitHub Profile */}
-          <div className="bg-black/60 border border-crt-phosphor/20 p-4 rounded-sm flex flex-col gap-2">
+          <div className="bg-black/60 border border-crt-phosphor/20 p-4 rounded-xs flex flex-col gap-2">
             <span className="text-[10px] text-crt-phosphor/40 uppercase tracking-widest">
               PUBLIC CODE REPOSITORY
             </span>

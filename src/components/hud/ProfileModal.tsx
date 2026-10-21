@@ -29,7 +29,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
       aria-labelledby="profile-heading"
       className="absolute inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-black/85 backdrop-blur-md animate-in fade-in duration-300"
     >
-      <div className="relative w-full max-w-4xl max-h-[85vh] bg-[#121110]/95 border border-crt-phosphor/30 rounded-lg p-6 sm:p-8 overflow-y-auto no-scrollbar shadow-2xl flex flex-col justify-between gap-6">
+      <div className="relative w-full max-w-4xl max-h-[85vh] bg-[#121110]/95 border border-crt-phosphor/30 rounded-xs p-6 sm:p-8 overflow-y-auto no-scrollbar shadow-2xl flex flex-col justify-between gap-6 font-mono">
         {/* Top Bar: Title & Close Button */}
         <div className="flex items-center justify-between border-b border-crt-phosphor/20 pb-4">
           <div className="flex items-center gap-3">
@@ -56,7 +56,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-start my-auto">
           {/* Portrait Photo (3/4 aspect, passport viewfinder frame) */}
           <div className="md:col-span-4 flex flex-col items-center gap-3">
-            <div className="relative w-48 sm:w-56 aspect-[3/4] bg-black/80 border border-crt-phosphor/30 rounded-sm overflow-hidden p-1 group">
+            <div className="relative w-48 sm:w-56 aspect-[3/4] bg-black/80 border border-crt-phosphor/30 rounded-xs overflow-hidden p-1 group">
               <img
                 src="/projects/ferrel-portrait.jpg"
                 alt="Ferrel Rashad Akeyla"
@@ -66,10 +66,10 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
             </div>
 
             <div className="text-center font-mono">
-              <span className="text-[11px] text-crt-amber font-bold block">
+              <span className="font-bit text-2xl sm:text-3xl text-crt-phosphor font-bold block leading-none mt-1">
                 FERREL RASHAD AKEYLA
               </span>
-              <span className="text-[9px] text-crt-phosphor/50 block">
+              <span className="text-[10px] text-crt-amber tracking-widest block mt-0.5">
                 JAKARTA, ID • UTC+7 (WIB)
               </span>
             </div>
@@ -81,18 +81,18 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
               <span className="text-[10px] text-crt-phosphor/40 tracking-widest uppercase block mb-1">
                 EXECUTIVE SUMMARY
               </span>
-              <p className="text-sm sm:text-base text-crt-phosphor leading-relaxed font-sans font-normal">
+              <p className="text-sm sm:text-base text-crt-phosphor leading-relaxed font-mono font-normal">
                 Hi, I&apos;m Ferrel — a software engineer and creative
                 technologist focused on crafting fluid web interfaces, real-time
                 data visualisations, and interactive digital experiences.
               </p>
             </div>
 
-            <blockquote className="border-l-2 border-crt-amber/80 pl-3 py-1 bg-white/[0.02]">
-              <span className="text-xs sm:text-sm font-mono text-crt-amber font-bold tracking-wider uppercase block">
+            <blockquote className="border-l-2 border-crt-amber/80 pl-3.5 py-1 bg-white/[0.02]">
+              <span className="font-bit text-xl sm:text-2xl text-crt-amber font-bold tracking-wide uppercase block leading-snug">
                 &ldquo;CODE WITH PRECISION, DESIGN FOR PEOPLE.&rdquo;
               </span>
-              <span className="text-[10px] text-crt-phosphor/60 block mt-0.5">
+              <span className="text-[11px] text-crt-phosphor/60 block mt-0.5">
                 Beyond engineering: 3D modeling, game environments, and
                 interactive graphics.
               </span>
@@ -100,12 +100,12 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
 
             {/* Core 3 Capabilities / Disciplines */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-              <div className="bg-black/50 border border-crt-phosphor/15 p-3 rounded-sm flex flex-col justify-between">
+              <div className="bg-black/50 border border-crt-phosphor/15 p-3 rounded-xs flex flex-col justify-between">
                 <div>
                   <span className="text-[9px] text-crt-amber font-mono font-bold block">
                     01 // FRONTEND
                   </span>
-                  <h4 className="text-xs font-bold text-crt-phosphor mt-1">
+                  <h4 className="font-bit text-lg font-bold text-crt-phosphor mt-0.5 leading-tight">
                     Frontend Engineering
                   </h4>
                 </div>
@@ -115,12 +115,12 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 </p>
               </div>
 
-              <div className="bg-black/50 border border-crt-phosphor/15 p-3 rounded-sm flex flex-col justify-between">
+              <div className="bg-black/50 border border-crt-phosphor/15 p-3 rounded-xs flex flex-col justify-between">
                 <div>
                   <span className="text-[9px] text-crt-amber font-mono font-bold block">
                     02 // CREATIVE
                   </span>
-                  <h4 className="text-xs font-bold text-crt-phosphor mt-1">
+                  <h4 className="font-bit text-lg font-bold text-crt-phosphor mt-0.5 leading-tight">
                     Creative Development
                   </h4>
                 </div>
@@ -130,12 +130,12 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 </p>
               </div>
 
-              <div className="bg-black/50 border border-crt-phosphor/15 p-3 rounded-sm flex flex-col justify-between">
+              <div className="bg-black/50 border border-crt-phosphor/15 p-3 rounded-xs flex flex-col justify-between">
                 <div>
                   <span className="text-[9px] text-crt-amber font-mono font-bold block">
                     03 // FULLSTACK
                   </span>
-                  <h4 className="text-xs font-bold text-crt-phosphor mt-1">
+                  <h4 className="font-bit text-lg font-bold text-crt-phosphor mt-0.5 leading-tight">
                     Full-Stack Architecture
                   </h4>
                 </div>

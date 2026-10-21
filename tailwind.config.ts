@@ -20,19 +20,23 @@ export default {
         },
       },
       fontFamily: {
+        bit: ["NeueBit", "monospace"],
         mono: [
+          "PPNeueMontrealMono",
           "ui-monospace",
           "SFMono-Regular",
           "Menlo",
-          "Monaco",
-          "Consolas",
-          "Liberation Mono",
-          "Courier New",
           "monospace",
+        ],
+        sans: [
+          "PPNeueMontrealMono",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "sans-serif",
         ],
       },
     },
   },
   plugins: [],
 } satisfies Config;
-

@@ -115,10 +115,10 @@ function drawFrontCover(
   ctx.textAlign = "left";
   ctx.fillText(tape.code, pX + 14, pY + 21);
 
-  // Big Headline Title (Stacked bold serif / display font)
+  // Big Headline Title (Stacked bold pixel/grotesque display font)
   ctx.textAlign = "center";
   ctx.fillStyle = "#ef4444";
-  ctx.font = "bold 25px sans-serif";
+  ctx.font = "bold 26px sans-serif";
   const words = tape.title.split(" ");
   if (words.length > 2) {
     ctx.fillText(words.slice(0, 2).join(" "), w / 2, 335);
@@ -181,35 +181,200 @@ function drawSpine(
 }
 
 /**
- * Generates vertical portrait Canvas 2D textures for the VHS cardboard sleeve.
- * Dimensions: 340 x 512 (aspect ratio 130 : 196).
+ * Creates authentic physical VHS tape body textures:
+ * - Front face: Twin transparent reel windows showing the magnetic tape & 6-toothed white spools, paper label sticker, and molded arrows.
+ * - Top edge: White/ivory paper spine label with tracking marks and finger grip ribs.
  */
-function createPortraitTexture(tape: TapeProject, isSpine = false): THREE.CanvasTexture {
+function createCassetteFrontTexture(tape: TapeProject): THREE.CanvasTexture {
   const canvas = document.createElement("canvas");
-  const w = isSpine ? 96 : 340;
-  const h = 512;
+  const w = 380;
+  const h = 210;
   canvas.width = w;
   canvas.height = h;
 
   const ctx = canvas.getContext("2d");
   if (!ctx) return new THREE.CanvasTexture(canvas);
 
-  if (isSpine) {
-    drawSpine(ctx, w, h, tape);
-  } else {
-    drawFrontCover(ctx, w, h, tape, null);
+  // 1. Dark molded plastic shell background with subtle texture
+  ctx.fillStyle = "#141416";
+  ctx.fillRect(0, 0, w, h);
 
-    // Asynchronously load real project artwork image and redraw
-    if (typeof window !== "undefined" && tape.image) {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.src = tape.image;
-      img.onload = () => {
-        drawFrontCover(ctx, w, h, tape, img);
-        texture.needsUpdate = true;
-      };
+  // Plastic shell perimeter bevel line
+  ctx.strokeStyle = "#252528";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(6, 6, w - 12, h - 12);
+
+  // 2. Paper Label Sticker (Centered on upper face)
+  const lX = 32;
+  const lY = 16;
+  const lW = w - 64;
+  const lH = 46;
+
+  ctx.fillStyle = "#f3efe6"; // Vintage aged ivory label paper
+  ctx.fillRect(lX, lY, lW, lH);
+
+  // Red and blue hairline label margins
+  ctx.strokeStyle = "rgba(220, 38, 38, 0.75)";
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(lX + 3, lY + 3, lW - 6, lH - 6);
+
+  ctx.strokeStyle = "rgba(37, 99, 235, 0.4)";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(lX + 6, lY + 6, lW - 12, lH - 12);
+
+  // Label text
+  ctx.fillStyle = "#111111";
+  ctx.font = "bold 11px monospace";
+  ctx.textAlign = "left";
+  ctx.fillText(`T-120 // HQ`, lX + 12, lY + 28);
+
+  ctx.fillStyle = "#991b1b";
+  ctx.font = "bold 13px sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(`${tape.code} : ${tape.title}`, w / 2, lY + 29);
+
+  ctx.fillStyle = "#111111";
+  ctx.font = "bold 10px monospace";
+  ctx.textAlign = "right";
+  ctx.fillText(`SP HI-FI`, lX + lW - 12, lY + 28);
+
+  // 3. The Iconic Twin Spool Acrylic Windows (Centered lower half)
+  const winX = 54;
+  const winY = 74;
+  const winW = w - 108;
+  const winH = 105;
+
+  // Window frame indentation
+  ctx.fillStyle = "#0c0c0e";
+  ctx.fillRect(winX, winY, winW, winH);
+  ctx.strokeStyle = "#2b2b30";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(winX, winY, winW, winH);
+
+  // Left Reel & Right Reel
+  const reels = [
+    { cx: 120, cy: winY + winH / 2 },
+    { cx: w - 120, cy: winY + winH / 2 },
+  ];
+
+  reels.forEach((r, idx) => {
+    // Magnetic Tape Spool (Dark chocolate brown metallic ring)
+    ctx.fillStyle = idx === 0 ? "#1b1411" : "#221915";
+    ctx.beginPath();
+    ctx.arc(r.cx, r.cy, 40, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Spool core (white/translucent plastic wheel)
+    ctx.fillStyle = "#eae6dc";
+    ctx.beginPath();
+    ctx.arc(r.cx, r.cy, 22, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Gear Teeth Hub (6 radial teeth cutouts)
+    ctx.fillStyle = "#0c0c0e";
+    ctx.beginPath();
+    ctx.arc(r.cx, r.cy, 12, 0, Math.PI * 2);
+    ctx.fill();
+
+    for (let i = 0; i < 6; i++) {
+      const ang = (i * Math.PI) / 3;
+      const tx = r.cx + Math.cos(ang) * 16;
+      const ty = r.cy + Math.sin(ang) * 16;
+      ctx.fillStyle = "#0c0c0e";
+      ctx.beginPath();
+      ctx.arc(tx, ty, 3.5, 0, Math.PI * 2);
+      ctx.fill();
     }
+  });
+
+  // Center tape progress level ruler
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 6; i++) {
+    const rx = w / 2 - 24 + i * 8;
+    ctx.beginPath();
+    ctx.moveTo(rx, winY + 45);
+    ctx.lineTo(rx, winY + 60);
+    ctx.stroke();
   }
+
+  // Clear Acrylic Window Gloss Sheen (diagonal reflective specular gradient)
+  const gloss = ctx.createLinearGradient(winX, winY, winX + winW, winY + winH);
+  gloss.addColorStop(0, "rgba(255, 255, 255, 0.08)");
+  gloss.addColorStop(0.35, "rgba(255, 255, 255, 0.18)");
+  gloss.addColorStop(0.55, "rgba(255, 255, 255, 0.02)");
+  gloss.addColorStop(1, "rgba(255, 255, 255, 0.09)");
+  ctx.fillStyle = gloss;
+  ctx.fillRect(winX + 2, winY + 2, winW - 4, winH - 4);
+
+  // 4. Embossed Molded Plastic Arrow: "INSERT THIS END"
+  ctx.fillStyle = "#222226";
+  ctx.font = "bold 9px monospace";
+  ctx.textAlign = "center";
+  ctx.fillText("▲  INSERT THIS END  ▲", w / 2, 196);
+
+  // 5. Left & Right Finger Grip Ribs
+  [12, w - 24].forEach((rx) => {
+    ctx.fillStyle = "#0e0e10";
+    for (let i = 0; i < 8; i++) {
+      ctx.fillRect(rx, 80 + i * 11, 12, 5);
+    }
+  });
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
+/**
+ * Top face texture for the cassette: ivory spine sticker with tape title & tracking marks.
+ */
+function createCassetteTopTexture(tape: TapeProject): THREE.CanvasTexture {
+  const canvas = document.createElement("canvas");
+  const w = 380;
+  const h = 50;
+  canvas.width = w;
+  canvas.height = h;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
+
+  // Dark plastic
+  ctx.fillStyle = "#141416";
+  ctx.fillRect(0, 0, w, h);
+
+  // White/Ivory paper label sticker
+  ctx.fillStyle = "#f3efe6";
+  ctx.fillRect(35, 8, w - 70, 34);
+
+  // Red margin rule
+  ctx.strokeStyle = "rgba(220, 38, 38, 0.7)";
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(37, 10, w - 74, 30);
+
+  // Label text
+  ctx.fillStyle = "#111111";
+  ctx.font = "bold 11px monospace";
+  ctx.textAlign = "left";
+  ctx.fillText("VHS", 48, 28);
+
+  ctx.fillStyle = "#991b1b";
+  ctx.font = "bold 12px sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(`[ ${tape.code} ]  ${tape.title}`, w / 2, 28);
+
+  ctx.fillStyle = "#111111";
+  ctx.font = "bold 10px monospace";
+  ctx.textAlign = "right";
+  ctx.fillText(String(tape.year), w - 48, 28);
+
+  // Finger grip ribs on left and right edges
+  [8, w - 24].forEach((gx) => {
+    ctx.fillStyle = "#0c0c0e";
+    for (let i = 0; i < 4; i++) {
+      ctx.fillRect(gx, 10 + i * 8, 16, 4);
+    }
+  });
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -219,11 +384,49 @@ function createPortraitTexture(tape: TapeProject, isSpine = false): THREE.Canvas
 export function TapeMesh({ tape, offset, isSelected, onSelect }: TapeMeshProps) {
   const groupRef = useRef<THREE.Group>(null);
 
-  // Generate textures once per tape
+  // Generate sleeve textures
   const { frontTexture, spineTexture } = useMemo(() => {
     return {
-      frontTexture: createPortraitTexture(tape, false),
-      spineTexture: createPortraitTexture(tape, true),
+      frontTexture: (() => {
+        const canvas = document.createElement("canvas");
+        canvas.width = 340;
+        canvas.height = 512;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return new THREE.CanvasTexture(canvas);
+        drawFrontCover(ctx, 340, 512, tape, null);
+
+        if (typeof window !== "undefined" && tape.image) {
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          img.src = tape.image;
+          img.onload = () => {
+            drawFrontCover(ctx, 340, 512, tape, img);
+            texture.needsUpdate = true;
+          };
+        }
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        return texture;
+      })(),
+      spineTexture: (() => {
+        const canvas = document.createElement("canvas");
+        canvas.width = 96;
+        canvas.height = 512;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return new THREE.CanvasTexture(canvas);
+        drawSpine(ctx, 96, 512, tape);
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        return texture;
+      })(),
+    };
+  }, [tape]);
+
+  // Generate authentic physical VHS cassette body textures
+  const { cassetteFrontTex, cassetteTopTex } = useMemo(() => {
+    return {
+      cassetteFrontTex: createCassetteFrontTexture(tape),
+      cassetteTopTex: createCassetteTopTexture(tape),
     };
   }, [tape]);
 
@@ -231,8 +434,10 @@ export function TapeMesh({ tape, offset, isSelected, onSelect }: TapeMeshProps) 
     return () => {
       frontTexture.dispose();
       spineTexture.dispose();
+      cassetteFrontTex.dispose();
+      cassetteTopTex.dispose();
     };
-  }, [frontTexture, spineTexture]);
+  }, [frontTexture, spineTexture, cassetteFrontTex, cassetteTopTex]);
 
   // Compute 3D cylindrical arc coordinates
   const arc = onArc(offset, VHS_METRICS.ARC_RADIUS);
@@ -242,7 +447,8 @@ export function TapeMesh({ tape, offset, isSelected, onSelect }: TapeMeshProps) 
   const dist = Math.abs(angle);
   const lit = Math.max(0.14, Math.cos(Math.min(Math.PI * 0.45, dist * 1.85)));
 
-  const materials = useMemo(() => {
+  // Sleeve materials
+  const sleeveMaterials = useMemo(() => {
     const baseColor = new THREE.Color(tape.color);
     const sideMat = new THREE.MeshStandardMaterial({
       color: baseColor.clone().multiplyScalar(lit),
@@ -269,24 +475,33 @@ export function TapeMesh({ tape, offset, isSelected, onSelect }: TapeMeshProps) 
     ];
   }, [tape.color, lit, frontTexture, spineTexture]);
 
-  useEffect(() => {
-    materials.forEach((mat) => {
-      if (mat instanceof THREE.MeshStandardMaterial) {
-        mat.color.setScalar(lit);
-      }
+  // Cassette Body Materials (Authentic VHS plastic + twin reel windows + label)
+  const cassetteMaterials = useMemo(() => {
+    const plasticSide = new THREE.MeshStandardMaterial({
+      color: 0x141416,
+      roughness: 0.55,
+      metalness: 0.15,
     });
-  }, [materials, lit]);
+    const plasticTop = new THREE.MeshStandardMaterial({
+      map: cassetteTopTex,
+      roughness: 0.5,
+      metalness: 0.15,
+    });
+    const plasticFront = new THREE.MeshStandardMaterial({
+      map: cassetteFrontTex,
+      roughness: 0.45,
+      metalness: 0.2,
+    });
 
-  // Plastic tape cassette material (black molded plastic with ridges)
-  const plasticMat = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: 0x141416,
-        roughness: 0.45,
-        metalness: 0.2,
-      }),
-    []
-  );
+    return [
+      plasticSide, // +x (right ribbed edge)
+      plasticSide, // -x (left ribbed edge)
+      plasticTop, // +y (top spine label)
+      plasticSide, // -y (bottom)
+      plasticFront, // +z (front twin spool windows)
+      plasticFront, // -z (back face)
+    ];
+  }, [cassetteFrontTex, cassetteTopTex]);
 
   return (
     <group
@@ -298,10 +513,14 @@ export function TapeMesh({ tape, offset, isSelected, onSelect }: TapeMeshProps) 
         onSelect();
       }}
     >
-      {/* 1. Black Plastic Cassette Peeking Out of the Top Opening */}
+      {/* 1. Authentic Physical VHS Cassette (Slides out of top opening) */}
       <mesh
-        position={[0, isSelected ? VHS_METRICS.PEEK : VHS_METRICS.PEEK * 0.6, 0]}
-        material={plasticMat}
+        position={[
+          0,
+          isSelected ? VHS_METRICS.PEEK : VHS_METRICS.PEEK * 0.45,
+          0,
+        ]}
+        material={cassetteMaterials}
         castShadow
       >
         <boxGeometry
@@ -314,7 +533,7 @@ export function TapeMesh({ tape, offset, isSelected, onSelect }: TapeMeshProps) 
       </mesh>
 
       {/* 2. Outer Cardboard Sleeve (Vertical Portrait) */}
-      <mesh material={materials} castShadow receiveShadow>
+      <mesh material={sleeveMaterials} castShadow receiveShadow>
         <boxGeometry
           args={[
             VHS_METRICS.CASE.w,

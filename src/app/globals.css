@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "NeueBit";
+  src: url("/fonts/NeueBit-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PPNeueMontrealMono";
+  src: url("/fonts/PPNeueMontrealMono-Medium.woff2") format("woff2");
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --crt-chassis: #050505;
   --crt-tube: #09090b;
@@ -23,7 +39,7 @@ body {
   overflow: hidden;
   background-color: var(--crt-chassis);
   color: var(--crt-phosphor);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-family: "PPNeueMontrealMono", ui-monospace, monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   user-select: none;

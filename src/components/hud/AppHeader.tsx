@@ -34,7 +34,7 @@ export function AppHeader({
   };
 
   return (
-    <header className="w-full flex items-center justify-between select-none z-40 text-xs tracking-wider">
+    <header className="w-full flex items-center justify-between select-none z-40 text-xs font-mono tracking-wider">
       {/* 1. Left: Home status & Running Timecode */}
       <div className="flex items-center gap-5 sm:gap-7">
         <button
@@ -47,15 +47,15 @@ export function AppHeader({
           aria-label="Return to carousel home"
         >
           <span className="w-2.5 h-2.5 bg-crt-phosphor inline-block group-hover:scale-110 transition-transform" />
-          <span className="font-bold tracking-widest">HOME</span>
+          <span className="font-bold tracking-widest text-[11px] sm:text-xs">HOME</span>
         </button>
 
-        <span className="text-crt-phosphor/70 font-mono tracking-widest text-[13px]">
+        <span className="text-crt-phosphor/70 tracking-widest text-[12px] sm:text-[13px]">
           {formatTimecode(seconds)}
         </span>
       </div>
 
-      {/* 2. Center: FRA ©'26 Brand Lockup (Dead Center) */}
+      {/* 2. Center: FRA ©'26 Brand Lockup (Dead Center, in authentic NeueBit pixel font) */}
       <div
         className="absolute left-1/2 -translate-x-1/2 flex items-center select-none cursor-pointer"
         onClick={() => {
@@ -63,7 +63,7 @@ export function AppHeader({
           onHomeClick?.();
         }}
       >
-        <span className="text-base sm:text-lg font-black tracking-tighter text-crt-phosphor hover:text-white transition-colors phosphor-glow font-sans">
+        <span className="font-bit text-2xl sm:text-3xl font-bold tracking-tight text-crt-phosphor hover:text-white transition-colors phosphor-glow leading-none">
           FRA ©&apos;26
         </span>
       </div>
@@ -76,7 +76,7 @@ export function AppHeader({
             audio.playClick(1.0);
             onProfileClick?.();
           }}
-          className="text-crt-phosphor/70 hover:text-white transition-colors cursor-pointer tracking-wider"
+          className="text-crt-phosphor/70 hover:text-white transition-colors cursor-pointer tracking-wider text-[11px] sm:text-xs"
         >
           PROFILE
         </button>
@@ -87,7 +87,7 @@ export function AppHeader({
             audio.playClick(1.0);
             onArchiveClick?.();
           }}
-          className="text-crt-phosphor/70 hover:text-white transition-colors cursor-pointer tracking-wider"
+          className="text-crt-phosphor/70 hover:text-white transition-colors cursor-pointer tracking-wider text-[11px] sm:text-xs"
         >
           ARCHIVE
         </button>
@@ -98,7 +98,7 @@ export function AppHeader({
             audio.playClick(1.0);
             onContactClick?.();
           }}
-          className="text-crt-phosphor/70 hover:text-white transition-colors cursor-pointer tracking-wider"
+          className="text-crt-phosphor/70 hover:text-white transition-colors cursor-pointer tracking-wider text-[11px] sm:text-xs"
         >
           CONTACT
         </button>
