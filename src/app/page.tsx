@@ -12,6 +12,8 @@ import { ProfileView } from "@/components/hud/ProfileView";
 import { ArchiveView } from "@/components/hud/ArchiveView";
 import { ContactView } from "@/components/hud/ContactView";
 import { VhsLoader } from "@/components/hud/VhsLoader";
+import { HudCalibrationDeck } from "@/components/hud/HudCalibrationDeck";
+import { HudConfig, DEFAULT_HUD_CONFIG, loadHudConfig } from "@/lib/hudConfig";
 import { audio } from "@/lib/audio";
 
 // Client-only dynamic import for the WebGL Three.js Canvas to guarantee zero SSR hydration errors
@@ -26,6 +28,13 @@ const TapeDeck = dynamic(
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeView, setActiveView] = useState<ActiveSection>("deck");
+
+  // Live HUD Calibration Configuration state
+  const [hudConfig, setHudConfig] = useState<HudConfig>(DEFAULT_HUD_CONFIG);
+
+  useEffect(() => {
+    setHudConfig(loadHudConfig());
+  }, []);
 
   // Entrance & Loading state choreography (100% Arc Marumo authentic)
   const [isReady, setIsReady] = useState(false);
@@ -122,11 +131,19 @@ export default function Home() {
           />
         </div>
 
-        {/* Layer 2: Fixed Header across all views (Aligned to safe CRT chamber padding) */}
-        <div className="absolute top-0 left-0 right-0 z-40 px-[var(--pad-x)] pt-[var(--pad-y)] pointer-events-auto">
+        {/* Layer 2: Fixed Header across all views (Calibrated in real-time) */}
+        <div
+          className="absolute top-0 left-0 right-0 z-40 pointer-events-auto"
+          style={{
+            paddingTop: `${hudConfig.headerPaddingTop}px`,
+            paddingLeft: `${hudConfig.headerPaddingX}px`,
+            paddingRight: `${hudConfig.headerPaddingX}px`,
+          }}
+        >
           <AppHeader
             activeView={activeView}
             intro={introStarted}
+            config={hudConfig}
             onHomeClick={handleBackToCarousel}
             onProfileClick={() =>
               setActiveView((prev) => (prev === "profile" ? "deck" : "profile"))
@@ -187,11 +204,25 @@ export default function Home() {
           </div>
         )}
 
-        {/* Layer 4: Fixed Footer across all views (Aligned to safe CRT chamber padding) */}
-        <div className="absolute bottom-0 left-0 right-0 z-40 px-[var(--pad-x)] pb-[var(--pad-y)] pointer-events-auto">
-          <AppFooter intro={introStarted} />
+        {/* Layer 4: Fixed Footer across all views (Calibrated in real-time) */}
+        <div
+          className="absolute bottom-0 left-0 right-0 z-40 pointer-events-auto"
+          style={{
+            paddingBottom: `${hudConfig.footerPaddingBottom}px`,
+            paddingLeft: `${hudConfig.footerPaddingX}px`,
+            paddingRight: `${hudConfig.footerPaddingX}px`,
+          }}
+        >
+          <AppFooter intro={introStarted} config={hudConfig} />
         </div>
       </CrtGlass>
+
+      {/* Layer 5: Studio Monitor HUD Calibration Live Editor (Draggable, resizable, copiable) */}
+      <HudCalibrationDeck
+        config={hudConfig}
+        onChange={setHudConfig}
+        onReset={() => setHudConfig(DEFAULT_HUD_CONFIG)}
+      />
     </main>
   );
 }

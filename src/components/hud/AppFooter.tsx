@@ -4,14 +4,16 @@ import { useEffect, useState } from "react";
 import { BwToggle } from "./BwToggle";
 import { audio } from "@/lib/audio";
 import { Reveal } from "./Reveal";
+import { HudConfig } from "@/lib/hudConfig";
 
 const MY_EMAIL = "ferrelrashad15@gmail.com";
 
 interface AppFooterProps {
   intro?: boolean;
+  config?: HudConfig;
 }
 
-export function AppFooter({ intro = true }: AppFooterProps) {
+export function AppFooter({ intro = true, config }: AppFooterProps) {
   const [timeStr, setTimeStr] = useState("13:00 WIB");
   const [copied, setCopied] = useState(false);
 
@@ -47,11 +49,20 @@ export function AppFooter({ intro = true }: AppFooterProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const sourceText = config?.footerSource ?? "SOURCE: MAC";
+  const emailLabel = config?.footerEmailLabel ?? "EMAIL";
+
   return (
-    <footer className="w-full flex items-center justify-between select-none z-40 text-xs tracking-wider shrink-0 font-mono">
+    <footer
+      className="w-full flex items-center justify-between select-none z-40 text-xs tracking-wider shrink-0 font-mono"
+      style={config ? { fontSize: `${config.footerFontSize}px` } : undefined}
+    >
       {/* 1. Left: Local Timezone Clock & B&W Mode Switch */}
       <Reveal on={intro} i={3}>
-        <div className="flex items-center gap-5 sm:gap-7">
+        <div
+          className="flex items-center gap-5 sm:gap-7"
+          style={config ? { gap: `${config.footerGapLeft}px` } : undefined}
+        >
           <span className="text-crt-phosphor/70 tracking-widest text-[12px] sm:text-[13px]">
             {timeStr}
           </span>
@@ -61,18 +72,21 @@ export function AppFooter({ intro = true }: AppFooterProps) {
 
       {/* 2. Right: Hardware Source Stamp & Interactive Email Copy */}
       <Reveal on={intro} i={4}>
-        <div className="flex items-center gap-5 sm:gap-7">
-          <span className="text-crt-phosphor/50 tracking-wider text-[11px] sm:text-xs">
-            SOURCE: MAC
+        <div
+          className="flex items-center gap-5 sm:gap-7"
+          style={config ? { gap: `${config.footerGapRight}px` } : undefined}
+        >
+          <span className="text-crt-phosphor/50 tracking-wider">
+            {sourceText}
           </span>
 
           <button
             type="button"
             onClick={handleCopyEmail}
-            className="text-crt-phosphor/80 hover:text-white transition-colors cursor-pointer border-b border-crt-phosphor/30 hover:border-white pb-0.5 tracking-wider active:scale-95 text-[11px] sm:text-xs"
+            className="text-crt-phosphor/80 hover:text-white transition-colors cursor-pointer border-b border-crt-phosphor/30 hover:border-white pb-0.5 tracking-wider active:scale-95"
             aria-label={`Copy email ${MY_EMAIL}`}
           >
-            {copied ? "[ COPIED ]" : "EMAIL"}
+            {copied ? "[ COPIED ]" : emailLabel}
           </button>
         </div>
       </Reveal>
