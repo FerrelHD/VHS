@@ -71,3 +71,4 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## License
 
 © 2026 Ferrel Rashad Akeyla (`FRA ©'26`). All rights reserved.
+
