@@ -6,7 +6,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { TAPE_PROJECTS, TapeProject } from "@/data/tapes";
 import { VHS_METRICS, expDecay } from "@/lib/math";
 import { audio } from "@/lib/audio";
-import { TapeMesh } from "./TapeMesh";
+import { TapeMesh, CarouselSharedState } from "./TapeMesh";
 import { BentPostProcessing } from "./BentPostProcessing";
 
 interface TapeDeckProps {
@@ -22,60 +22,75 @@ function TapeCarousel({
   currentIndex,
   onSelectTape,
   intro = true,
+  mouseRef,
+  isDraggingRef,
 }: {
   targetOffset: number;
   currentIndex: number;
   onSelectTape: (index: number) => void;
   intro?: boolean;
+  mouseRef: React.RefObject<{ x: number; y: number }>;
+  isDraggingRef: React.RefObject<boolean>;
 }) {
-  const currentOffsetRef = useRef(0);
-  const currentYRef = useRef(-240);
-  const [, setRerender] = useState(0);
+  const sharedStateRef = useRef<CarouselSharedState>({
+    currentOffset: currentIndex * VHS_METRICS.SLOT_SPACING,
+    enterProgress: 0,
+    velocity: 0,
+    squash: 0,
+    tilt: { x: 0, y: 0 },
+  });
+
+  const prevOffsetRef = useRef(currentIndex * VHS_METRICS.SLOT_SPACING);
 
   useFrame((_, delta) => {
     const dt = Math.min(0.1, delta);
-    const prev = currentOffsetRef.current;
-    const next = expDecay(prev, targetOffset, 14, dt);
+    const state = sharedStateRef.current;
 
-    const targetY = intro ? 28 : -240;
-    const prevY = currentYRef.current;
-    const nextY = expDecay(prevY, targetY, 6.5, dt);
-
-    if (Math.abs(next - prev) > 0.05 || Math.abs(nextY - prevY) > 0.1) {
-      currentOffsetRef.current = next;
-      currentYRef.current = nextY;
-      setRerender((v) => v + 1);
+    // 1. Enter progress (Staggered swoop entrance curve)
+    if (intro) {
+      state.enterProgress = Math.min(1, state.enterProgress + dt / 1.5);
+    } else {
+      state.enterProgress = 0;
     }
+
+    // 2. Position exponential decay
+    const prev = state.currentOffset;
+    const next = expDecay(prev, targetOffset, isDraggingRef.current ? 22 : 14, dt);
+    state.currentOffset = next;
+
+    // 3. Velocity tracking
+    const rawVel = dt > 0 ? (next - prevOffsetRef.current) / dt : 0;
+    prevOffsetRef.current = next;
+    state.velocity = expDecay(state.velocity, rawVel, 10, dt);
+
+    // 4. Dynamic squash & depth compression during fast spin
+    const targetSquash = Math.min(1, Math.abs(state.velocity) / 2400 + (isDraggingRef.current ? 0.2 : 0));
+    state.squash = expDecay(state.squash, targetSquash, targetSquash > state.squash ? 8 : 3.5, dt);
+
+    // 5. Mouse Parallax Tilt
+    const targetMouse = mouseRef.current || { x: 0, y: 0 };
+    state.tilt.x = expDecay(state.tilt.x, targetMouse.x, 2.5, dt);
+    state.tilt.y = expDecay(state.tilt.y, targetMouse.y, 2.5, dt);
   });
 
-  const activeOffset = currentOffsetRef.current;
-  const activeY = currentYRef.current;
-
   return (
-    <group position={[0, activeY, 0]}>
-      {/* Lighting setup: Phosphor tube fill + Key directional light */}
-      <ambientLight intensity={0.55} />
-      <directionalLight position={[0, 180, 420]} intensity={2.0} castShadow />
-      <pointLight position={[0, 20, 220]} intensity={1.0} color="#ece9e1" distance={650} />
+    <group position={[0, 0, 0]}>
+      {/* Authentic CRT Studio Lighting */}
+      <ambientLight intensity={0.65} color="#ece9e1" />
+      <directionalLight position={[0, 220, 420]} intensity={2.2} castShadow color="#ffffff" />
+      <pointLight position={[0, 50, 260]} intensity={1.2} color="#f5f0e6" distance={750} />
+      <pointLight position={[0, -160, -100]} intensity={0.5} color="#38bdf8" distance={600} />
 
-      {TAPE_PROJECTS.map((tape, idx) => {
-        const tapeLinearPos = idx * VHS_METRICS.SLOT_SPACING;
-        const offset = tapeLinearPos - activeOffset;
-
-        if (Math.abs(offset) > VHS_METRICS.SLOT_SPACING * 3.8) {
-          return null;
-        }
-
-        return (
-          <TapeMesh
-            key={tape.id}
-            tape={tape}
-            offset={offset}
-            isSelected={idx === currentIndex}
-            onSelect={() => onSelectTape(idx)}
-          />
-        );
-      })}
+      {TAPE_PROJECTS.map((tape, idx) => (
+        <TapeMesh
+          key={tape.id}
+          tape={tape}
+          index={idx}
+          isSelected={idx === currentIndex}
+          onSelect={() => onSelectTape(idx)}
+          stateRef={sharedStateRef}
+        />
+      ))}
     </group>
   );
 }
@@ -93,6 +108,7 @@ export function TapeDeck({
   const dragStartRef = useRef({ x: 0, offset: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const wheelLockRef = useRef(false);
+  const mouseRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     onReady?.();
@@ -151,7 +167,7 @@ export function TapeDeck({
     }, 280);
   };
 
-  // Pointer drag interactions
+  // Pointer drag interactions & Mouse Parallax Tracking
   const handlePointerDown = (e: React.PointerEvent) => {
     isDraggingRef.current = true;
     dragStartRef.current = {
@@ -162,6 +178,16 @@ export function TapeDeck({
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
+    // 1. Always update normalized mouse coordinates for 3D parallax tilt [-1, 1]
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (rect) {
+      mouseRef.current = {
+        x: ((e.clientX - rect.left) / rect.width) * 2 - 1,
+        y: -(((e.clientY - rect.top) / rect.height) * 2 - 1),
+      };
+    }
+
+    // 2. Drag physics
     if (!isDraggingRef.current) return;
     const dx = e.clientX - dragStartRef.current.x;
     const nextOffset = dragStartRef.current.offset - dx * 1.15;
@@ -223,6 +249,8 @@ export function TapeDeck({
           targetOffset={targetOffset}
           currentIndex={currentIndex}
           intro={intro}
+          mouseRef={mouseRef}
+          isDraggingRef={isDraggingRef}
           onSelectTape={(idx) => {
             if (idx === currentIndex) {
               onOpenProject(TAPE_PROJECTS[idx]);
