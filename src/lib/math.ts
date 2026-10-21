@@ -7,10 +7,11 @@ export const CRT_CONSTANTS = {
 
 /**
  * Millimetric physical metrics for vertical portrait VHS sleeves & tape cassettes.
+ * Slim cardboard sleeve profile matching authentic Arc Marumo reference (14mm case, 10mm cassette).
  */
 export const VHS_METRICS = {
-  CASE: { w: 130, h: 196, t: 30 },
-  TAPE: { w: 120, h: 185, t: 25 },
+  CASE: { w: 130, h: 196, t: 14 },
+  TAPE: { w: 120, h: 185, t: 10 },
   PEEK: 42, // Proud exposure of the twin spool windows and cassette label
   PEEK_IDLE: 14, // Subtle peek when unselected
   ARC_RADIUS: 900, // Radius of the tape carousel cylinder in 3D units

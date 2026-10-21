@@ -90,9 +90,9 @@ export const TAPE_PROJECTS: TapeProject[] = [
       "Haute-couture editorial web archive exploring Hirohiko Araki’s intersection with high-fashion, classical sculpture, and Swiss architectural grid design.",
     story:
       "Structured upon a persistent 12-column Swiss modernist grid overlay with kinetic GSAP timelines, dual-palette chromatic state machine, expanding anatomical accordions, and a live fashion capital world clock.",
-    color: "#221d1b",
+    color: "#080f24",
     wearSeed: 198701,
-    image: "/projects/araki-art.png",
+    image: "/projects/Araki_ Manga Iconoclast Poster.png",
     liveUrl: "https://araki-art.vercel.app",
     githubUrl: "https://github.com/FerrelHD/Araki-Art",
     metrics: [
