@@ -23,59 +23,50 @@ interface TapeMeshProps {
   stateRef: React.RefObject<CarouselSharedState>;
 }
 
+export type SleeveArchetype =
+  | "editorial"
+  | "cyber"
+  | "swiss"
+  | "expedition"
+  | "arcade"
+  | "eco";
+
+export function getSleeveArchetype(tape: TapeProject): SleeveArchetype {
+  if (tape.id === "araki-art" || tape.id === "ferrel-portfolio") return "editorial";
+  if (tape.id === "tactiq" || tape.id === "stock-predictor") return "cyber";
+  if (tape.id === "student-life" || tape.id === "fersya-shop") return "swiss";
+  if (tape.id === "gunung-gede" || tape.id === "nusantara-observatory") return "expedition";
+  if (tape.id === "street-rush") return "arcade";
+  if (tape.id === "ecobite") return "eco";
+
+  if (tape.categoryFilter === "ml") return "cyber";
+  if (tape.categoryFilter === "games") return "arcade";
+  if (tape.categoryFilter === "creative") return "editorial";
+  return "swiss";
+}
+
 /**
- * Draws the front vertical cover of the VHS sleeve.
- * Dimensions: 340 x 512 (aspect ratio 130 : 196).
+ * Clips and draws an image proportionally with subtle dark top/bottom vignettes.
  */
-function drawFrontCover(
+function drawClippedImage(
   ctx: CanvasRenderingContext2D,
-  w: number,
-  h: number,
-  tape: TapeProject,
-  img?: HTMLImageElement | null
+  img: HTMLImageElement | null | undefined,
+  pX: number,
+  pY: number,
+  pW: number,
+  pH: number,
+  fallbackText: string,
+  accentColor: string
 ) {
-  // 1. Base cardboard background
-  ctx.fillStyle = tape.color || "#1f1d1b";
-  ctx.fillRect(0, 0, w, h);
-
-  // Cardboard aged edge wear
-  drawWear(ctx, w, h, 2026 + tape.id.length * 17);
-
-  // Outer keyline frame
-  ctx.strokeStyle = "rgba(239, 68, 68, 0.45)";
-  ctx.lineWidth = 2.5;
-  ctx.strokeRect(18, 18, w - 36, h - 36);
-
-  // Header: "HOME VIDEO • STEREO"
-  ctx.fillStyle = "rgba(239, 68, 68, 0.9)";
-  ctx.font = "italic bold 13px serif";
-  ctx.textAlign = "center";
-  ctx.fillText("HOME VIDEO ARCHIVE", w / 2, 42);
-
-  // Center Image Poster Box coordinates
-  const pX = 30;
-  const pY = 56;
-  const pW = w - 60;
-  const pH = 236;
-
-  // Poster Box Border
-  ctx.strokeStyle = "rgba(239, 68, 68, 0.65)";
-  ctx.lineWidth = 2;
-  ctx.strokeRect(pX, pY, pW, pH);
-
-  // Dark background inside poster box
-  ctx.fillStyle = "#0a0908";
-  ctx.fillRect(pX + 1, pY + 1, pW - 2, pH - 2);
-
   if (img && img.complete && img.naturalWidth > 0) {
     ctx.save();
     ctx.beginPath();
-    ctx.rect(pX + 2, pY + 2, pW - 4, pH - 4);
+    ctx.rect(pX, pY, pW, pH);
     ctx.clip();
 
     const nw = img.naturalWidth;
     const nh = img.naturalHeight;
-    const boxAspect = (pW - 4) / (pH - 4);
+    const boxAspect = pW / pH;
     const imgAspect = nw / nh;
     let sx = 0,
       sy = 0,
@@ -90,81 +81,717 @@ function drawFrontCover(
       sy = (nh - sh) / 2;
     }
 
-    ctx.drawImage(img, sx, sy, sw, sh, pX + 2, pY + 2, pW - 4, pH - 4);
+    ctx.drawImage(img, sx, sy, sw, sh, pX, pY, pW, pH);
 
     // Subtle dark gradient at top and bottom of the image for vintage feel
     const grad = ctx.createLinearGradient(0, pY, 0, pY + pH);
-    grad.addColorStop(0, "rgba(0,0,0,0.4)");
-    grad.addColorStop(0.5, "rgba(0,0,0,0.05)");
-    grad.addColorStop(1, "rgba(0,0,0,0.5)");
+    grad.addColorStop(0, "rgba(0,0,0,0.45)");
+    grad.addColorStop(0.35, "rgba(0,0,0,0.0)");
+    grad.addColorStop(0.7, "rgba(0,0,0,0.0)");
+    grad.addColorStop(1, "rgba(0,0,0,0.55)");
     ctx.fillStyle = grad;
-    ctx.fillRect(pX + 2, pY + 2, pW - 4, pH - 4);
+    ctx.fillRect(pX, pY, pW, pH);
 
     ctx.restore();
   } else {
-    ctx.fillStyle = "rgba(236, 233, 225, 0.08)";
-    ctx.fillRect(48, 80, w - 96, 190);
-    ctx.strokeStyle = "rgba(239, 68, 68, 0.35)";
-    ctx.beginPath();
-    ctx.arc(w / 2, 175, 45, 0, Math.PI * 2);
-    ctx.stroke();
+    ctx.fillStyle = "#0a0a0c";
+    ctx.fillRect(pX, pY, pW, pH);
+    ctx.strokeStyle = accentColor;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(pX + 8, pY + 8, pW - 16, pH - 16);
 
-    ctx.fillStyle = "#f5a742";
-    ctx.font = "bold 12px monospace";
-    ctx.fillText(`[ ${tape.code} ]`, w / 2, 180);
+    ctx.fillStyle = accentColor;
+    ctx.font = "bold 11px monospace";
+    ctx.textAlign = "center";
+    ctx.fillText(`[ ${fallbackText} ]`, pX + pW / 2, pY + pH / 2);
   }
-
-  // Small Pill Badge with Project Code over the image
-  ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
-  ctx.fillRect(pX + 8, pY + 8, 76, 19);
-  ctx.strokeStyle = "rgba(239, 68, 68, 0.75)";
-  ctx.lineWidth = 1;
-  ctx.strokeRect(pX + 8, pY + 8, 76, 19);
-
-  ctx.fillStyle = "#f5a742";
-  ctx.font = "bold 10px monospace";
-  ctx.textAlign = "left";
-  ctx.fillText(tape.code, pX + 14, pY + 22);
-
-  // Big Headline Title (Stacked bold pixel/grotesque display font)
-  ctx.textAlign = "center";
-  ctx.fillStyle = "#ef4444";
-  ctx.font = "bold 26px sans-serif";
-  const words = tape.title.split(" ");
-  if (words.length > 2) {
-    ctx.fillText(words.slice(0, 2).join(" "), w / 2, 335);
-    ctx.fillText(words.slice(2).join(" "), w / 2, 365);
-  } else if (words.length === 2) {
-    ctx.fillText(words[0], w / 2, 335);
-    ctx.fillText(words[1], w / 2, 365);
-  } else {
-    ctx.fillText(tape.title, w / 2, 345);
-  }
-
-  // Category subtitle under title
-  ctx.fillStyle = "rgba(236, 233, 225, 0.75)";
-  ctx.font = "10px monospace";
-  ctx.fillText(tape.category.slice(0, 36), w / 2, 395);
-
-  // Bottom Badges: VHS logo, year, format
-  ctx.strokeStyle = "rgba(239, 68, 68, 0.75)";
-  ctx.lineWidth = 1.5;
-  ctx.strokeRect(32, 440, 50, 24);
-  ctx.fillStyle = "rgba(239, 68, 68, 0.9)";
-  ctx.font = "bold 11px sans-serif";
-  ctx.fillText("VHS", 57, 456);
-
-  ctx.fillStyle = "rgba(236, 233, 225, 0.7)";
-  ctx.font = "11px monospace";
-  ctx.fillText(String(tape.year), w / 2, 456);
-
-  ctx.fillStyle = "rgba(239, 68, 68, 0.85)";
-  ctx.font = "10px monospace";
-  ctx.fillText(tape.meta.quality || "HI-FI", w - 54, 456);
 }
 
 /**
- * Draws the vertical spine on the left side of the sleeve.
+ * Draws realistic procedural barcodes.
+ */
+function drawBarcode(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  seed: number,
+  color: string
+) {
+  ctx.save();
+  ctx.fillStyle = color;
+  let s = seed;
+  const rand = () => (s = (16807 * s) % 0x7fffffff) / 0x7fffffff;
+  let curX = x;
+  while (curX < x + w - 4) {
+    const barW = rand() > 0.55 ? 2.5 : 1.2;
+    const gap = 1 + rand() * 2.2;
+    ctx.fillRect(curX, y, barW, h);
+    curX += barW + gap;
+  }
+  ctx.restore();
+}
+
+/**
+ * Draws corner alignment brackets.
+ */
+function drawCornerBrackets(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  len: number,
+  color: string,
+  lineWidth = 1.5
+) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  // Top-Left
+  ctx.beginPath();
+  ctx.moveTo(x, y + len);
+  ctx.lineTo(x, y);
+  ctx.lineTo(x + len, y);
+  ctx.stroke();
+  // Top-Right
+  ctx.beginPath();
+  ctx.moveTo(x + w - len, y);
+  ctx.lineTo(x + w, y);
+  ctx.lineTo(x + w, y + len);
+  ctx.stroke();
+  // Bottom-Left
+  ctx.beginPath();
+  ctx.moveTo(x, y + h - len);
+  ctx.lineTo(x, y + h);
+  ctx.lineTo(x + len, y + h);
+  ctx.stroke();
+  // Bottom-Right
+  ctx.beginPath();
+  ctx.moveTo(x + w - len, y + h);
+  ctx.lineTo(x + w, y + h);
+  ctx.lineTo(x + w, y + h - len);
+  ctx.stroke();
+  ctx.restore();
+}
+
+/**
+ * Helper to split title into 1 or 2 lines for best fit.
+ */
+function drawTitleLines(
+  ctx: CanvasRenderingContext2D,
+  title: string,
+  cx: number,
+  startY: number,
+  lineHeight = 28
+) {
+  const words = title.split(" ");
+  if (words.length > 2) {
+    const mid = Math.ceil(words.length / 2);
+    ctx.fillText(words.slice(0, mid).join(" "), cx, startY);
+    ctx.fillText(words.slice(mid).join(" "), cx, startY + lineHeight);
+  } else if (words.length === 2) {
+    ctx.fillText(words[0], cx, startY);
+    ctx.fillText(words[1], cx, startY + lineHeight);
+  } else {
+    ctx.fillText(title, cx, startY + lineHeight / 2);
+  }
+}
+
+// ============================================================================
+// ARCHETYPE 1: EDITORIAL / HAUTE-COUTURE (Araki Art, Ferrel Portfolio)
+// ============================================================================
+function drawEditorialCover(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  tape: TapeProject,
+  img?: HTMLImageElement | null
+) {
+  ctx.fillStyle = tape.color || "#1c1916";
+  ctx.fillRect(0, 0, w, h);
+  drawWear(ctx, w, h, 1987 + tape.id.length * 23);
+
+  // Elegant double hairline gold border
+  const gold = "#d4af37";
+  const goldDim = "rgba(212, 175, 55, 0.45)";
+  ctx.strokeStyle = goldDim;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(16, 16, w - 32, h - 32);
+  ctx.strokeRect(20, 20, w - 40, h - 40);
+  drawCornerBrackets(ctx, 12, 12, w - 24, h - 24, 10, gold, 1.5);
+
+  // Header: Haute Couture Monograph
+  ctx.fillStyle = gold;
+  ctx.font = "italic bold 11px serif";
+  ctx.textAlign = "center";
+  ctx.fillText("✦ HAUTE COUTURE ARCHIVE • LUXURY EDITION ✦", w / 2, 40);
+
+  // Poster Image Frame
+  const pX = 26;
+  const pY = 52;
+  const pW = w - 52;
+  const pH = 248;
+
+  ctx.strokeStyle = gold;
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(pX - 1, pY - 1, pW + 2, pH + 2);
+  drawClippedImage(ctx, img, pX, pY, pW, pH, tape.code, gold);
+
+  // Inset Gold Laurel Pill Badge on Image
+  ctx.fillStyle = "rgba(20, 16, 12, 0.9)";
+  ctx.fillRect(pX + 8, pY + 8, 124, 20);
+  ctx.strokeStyle = gold;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(pX + 8, pY + 8, 124, 20);
+  ctx.fillStyle = gold;
+  ctx.font = "bold 9px serif";
+  ctx.textAlign = "center";
+  ctx.fillText(`✦ SPECIAL EXHIBITION ✦`, pX + 70, pY + 22);
+
+  // Headline Title (High-contrast luxury serif display)
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#fcf9f2";
+  ctx.font = "bold 25px serif";
+  drawTitleLines(ctx, tape.title, w / 2, 335, 28);
+
+  // Refined Subtitle
+  ctx.fillStyle = gold;
+  ctx.font = "italic 10px serif";
+  ctx.fillText("CURATED BY FERREL K. • PARIS / MILAN / TOKYO", w / 2, 400);
+
+  ctx.fillStyle = "rgba(236, 233, 225, 0.65)";
+  ctx.font = "9px monospace";
+  ctx.fillText(`SWISS 12-COL GRID • ${tape.meta.channel}`, w / 2, 418);
+
+  // Bottom Metadata Badges
+  ctx.strokeStyle = goldDim;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(28, 442, 60, 22);
+  ctx.fillStyle = gold;
+  ctx.font = "bold 10px serif";
+  ctx.fillText("STEREO", 58, 457);
+
+  ctx.fillStyle = "#ede7db";
+  ctx.font = "11px monospace";
+  ctx.fillText(`VOL. ${tape.year}`, w / 2, 457);
+
+  ctx.strokeStyle = goldDim;
+  ctx.strokeRect(w - 88, 442, 60, 22);
+  ctx.fillStyle = gold;
+  ctx.font = "bold 10px serif";
+  ctx.fillText(tape.meta.quality || "HI-FI", w - 58, 457);
+}
+
+// ============================================================================
+// ARCHETYPE 2: CYBER / TACTICAL HUD TELEMETRY (TactIQ, Stock Predictor)
+// ============================================================================
+function drawCyberCover(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  tape: TapeProject,
+  img?: HTMLImageElement | null
+) {
+  ctx.fillStyle = "#090d15";
+  ctx.fillRect(0, 0, w, h);
+  drawWear(ctx, w, h, 2049 + tape.id.length * 19);
+
+  // Cyan Grid Lines
+  ctx.strokeStyle = "rgba(56, 189, 248, 0.08)";
+  ctx.lineWidth = 1;
+  for (let y = 30; y < h - 30; y += 26) {
+    ctx.beginPath();
+    ctx.moveTo(16, y);
+    ctx.lineTo(w - 16, y);
+    ctx.stroke();
+  }
+  for (let x = 30; x < w - 30; x += 32) {
+    ctx.beginPath();
+    ctx.moveTo(x, 20);
+    ctx.lineTo(x, h - 20);
+    ctx.stroke();
+  }
+
+  // Cyan outer corner brackets
+  const cyan = "#38bdf8";
+  const amber = "#f59e0b";
+  drawCornerBrackets(ctx, 16, 16, w - 32, h - 32, 14, cyan, 2);
+
+  // Header: Real-Time HUD Status
+  ctx.fillStyle = "#22c55e";
+  ctx.beginPath();
+  ctx.arc(32, 38, 4, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = cyan;
+  ctx.font = "bold 10px monospace";
+  ctx.textAlign = "left";
+  ctx.fillText("LIVE TELEMETRY // HUD.SYS.V2", 44, 42);
+
+  ctx.textAlign = "right";
+  ctx.fillStyle = amber;
+  ctx.fillText("LATENCY < 45MS", w - 24, 42);
+
+  // Image Frame with Technical Crosshairs
+  const pX = 24;
+  const pY = 52;
+  const pW = w - 48;
+  const pH = 236;
+
+  ctx.strokeStyle = "rgba(56, 189, 248, 0.4)";
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(pX, pY, pW, pH);
+  drawClippedImage(ctx, img, pX + 1, pY + 1, pW - 2, pH - 2, tape.code, cyan);
+
+  // Cyan HUD Corner Ticks on image
+  drawCornerBrackets(ctx, pX + 4, pY + 4, pW - 8, pH - 8, 8, cyan, 1.5);
+
+  // Telemetry Callout Pill
+  ctx.fillStyle = "rgba(9, 13, 21, 0.9)";
+  ctx.fillRect(pX + 8, pY + 8, 92, 18);
+  ctx.strokeStyle = cyan;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(pX + 8, pY + 8, 92, 18);
+  ctx.fillStyle = cyan;
+  ctx.font = "bold 9px monospace";
+  ctx.textAlign = "center";
+  ctx.fillText(`SYS_${tape.code}`, pX + 54, pY + 21);
+
+  // Headline Title (Techno Sans Display)
+  ctx.textAlign = "center";
+  ctx.fillStyle = cyan;
+  ctx.font = "bold 25px sans-serif";
+  drawTitleLines(ctx, tape.title, w / 2, 328, 27);
+
+  // Telemetry Data Barcode / Coordinate Readout
+  ctx.fillStyle = "rgba(56, 189, 248, 0.7)";
+  ctx.font = "9px monospace";
+  ctx.fillText("COORD: 104.22°E -06.18°S | CORE: ACTIVE", w / 2, 390);
+
+  drawBarcode(ctx, 36, 404, w - 72, 16, 9991 + tape.id.length, "rgba(56, 189, 248, 0.65)");
+
+  // Bottom Badges
+  ctx.fillStyle = amber;
+  ctx.font = "bold 10px monospace";
+  ctx.textAlign = "left";
+  ctx.fillText(`T-120 // QUANT`, 28, 455);
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(236, 233, 225, 0.7)";
+  ctx.fillText(`[ ${tape.year} ]`, w / 2, 455);
+
+  ctx.textAlign = "right";
+  ctx.fillStyle = cyan;
+  ctx.fillText("SOCKET.IO", w - 28, 455);
+}
+
+// ============================================================================
+// ARCHETYPE 3: SWISS MODERNISM / BAUHAUS (Student Life, Fersya Shop)
+// ============================================================================
+function drawSwissCover(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  tape: TapeProject,
+  img?: HTMLImageElement | null
+) {
+  // Top Block Color (Stark Vermillion or Cobalt)
+  const isRed = tape.id === "student-life";
+  const bannerCol = isRed ? "#dc2626" : "#2563eb";
+
+  // Background
+  ctx.fillStyle = "#161618";
+  ctx.fillRect(0, 0, w, h);
+
+  // Top color banner block
+  ctx.fillStyle = bannerCol;
+  ctx.fillRect(0, 0, w, 140);
+
+  drawWear(ctx, w, h, 1968 + tape.id.length * 31);
+
+  // Oversized Index Numeral (Helvetica Bauhaus style)
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "900 68px sans-serif";
+  ctx.textAlign = "left";
+  ctx.fillText(tape.id === "student-life" ? "04" : "08", 24, 76);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 11px sans-serif";
+  ctx.fillText("SWISS MODERNISM", 112, 44);
+  ctx.font = "9px monospace";
+  ctx.fillText("ARCHIVE VOL. 26 // HELVETICA", 112, 60);
+
+  // Diagonal Black/White Hazard Tape Strip
+  ctx.fillStyle = "#000000";
+  ctx.fillRect(0, 134, w, 6);
+
+  // Sharp Rectangular Image Frame
+  const pX = 24;
+  const pY = 152;
+  const pW = w - 48;
+  const pH = 175;
+
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(pX - 1, pY - 1, pW + 2, pH + 2);
+  drawClippedImage(ctx, img, pX, pY, pW, pH, tape.code, "#ffffff");
+
+  // Inset Stark White Badge
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(pX + 8, pY + 8, 80, 18);
+  ctx.fillStyle = "#000000";
+  ctx.font = "900 10px sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(tape.code, pX + 48, pY + 21);
+
+  // Massive Grotesque Sans Headline Title
+  ctx.textAlign = "left";
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "900 27px sans-serif";
+  drawTitleLines(ctx, tape.title, 26, 362, 28);
+
+  // Typographic Spec Divider
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(24, 424);
+  ctx.lineTo(w - 24, 424);
+  ctx.stroke();
+
+  ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+  ctx.font = "9px monospace";
+  ctx.fillText(`DISCIPLINE: ${tape.categoryFilter.toUpperCase()} • YEAR: ${tape.year}`, 26, 440);
+
+  // Authentic Barcode with numbers
+  drawBarcode(ctx, 24, 452, 140, 24, 8821 + tape.id.length, "#ffffff");
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "900 12px sans-serif";
+  ctx.textAlign = "right";
+  ctx.fillText("CH-8001", w - 24, 470);
+}
+
+// ============================================================================
+// ARCHETYPE 4: EXPEDITION / TOPOGRAPHIC SURVEY (Gunung Gede, Nusantara Obs)
+// ============================================================================
+function drawExpeditionCover(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  tape: TapeProject,
+  img?: HTMLImageElement | null
+) {
+  const isMountain = tape.id === "gunung-gede";
+  ctx.fillStyle = isMountain ? "#221913" : "#141e15";
+  ctx.fillRect(0, 0, w, h);
+  drawWear(ctx, w, h, 1888 + tape.id.length * 13);
+
+  // Faint Topographic Contour Curves / Celestial Rings
+  const brass = "#d97706";
+  const brassDim = "rgba(217, 119, 6, 0.25)";
+  ctx.strokeStyle = brassDim;
+  ctx.lineWidth = 1;
+  for (let r = 50; r <= 220; r += 42) {
+    ctx.beginPath();
+    ctx.arc(w / 2, 180, r, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  // Header: Expedition Field Log
+  ctx.fillStyle = brass;
+  ctx.font = "bold 10px serif";
+  ctx.textAlign = "center";
+  ctx.fillText(
+    isMountain
+      ? "★ GEOGRAPHIC SURVEY • EXPEDITION ARCHIVE ★"
+      : "★ ASTRONOMICAL OBSERVATION ARCHIVE ★",
+    w / 2,
+    42
+  );
+
+  // Vintage Specimen Photo Frame with Photo Mounting Corners
+  const pX = 28;
+  const pY = 54;
+  const pW = w - 56;
+  const pH = 236;
+
+  ctx.strokeStyle = "rgba(217, 119, 6, 0.5)";
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(pX, pY, pW, pH);
+  drawClippedImage(ctx, img, pX + 1, pY + 1, pW - 2, pH - 2, tape.code, brass);
+
+  // 4 Photo Mounting Corner Tabs (Triangles)
+  const drawCornerTab = (cx: number, cy: number, dx: number, dy: number) => {
+    ctx.fillStyle = "rgba(217, 119, 6, 0.85)";
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + dx * 14, cy);
+    ctx.lineTo(cx, cy + dy * 14);
+    ctx.closePath();
+    ctx.fill();
+  };
+  drawCornerTab(pX, pY, 1, 1);
+  drawCornerTab(pX + pW, pY, -1, 1);
+  drawCornerTab(pX, pY + pH, 1, -1);
+  drawCornerTab(pX + pW, pY + pH, -1, -1);
+
+  // Circular Rubber Stamp Overlay
+  ctx.save();
+  ctx.translate(pX + pW - 55, pY + pH - 50);
+  ctx.rotate(-0.18);
+  ctx.strokeStyle = "rgba(217, 119, 6, 0.8)";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(0, 0, 36, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(0, 0, 32, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.fillStyle = "rgba(217, 119, 6, 0.85)";
+  ctx.font = "bold 7px serif";
+  ctx.textAlign = "center";
+  ctx.fillText("FIELD SPECIMEN", 0, -8);
+  ctx.fillText("★ APPROVED ★", 0, 4);
+  ctx.fillText("SERIES 1984", 0, 16);
+  ctx.restore();
+
+  // Rugged Explorer Serif Title
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#f5ede0";
+  ctx.font = "bold 24px serif";
+  drawTitleLines(ctx, tape.title, w / 2, 332, 27);
+
+  // Expedition Coordinates Subtitle
+  ctx.fillStyle = brass;
+  ctx.font = "bold 10px monospace";
+  ctx.fillText(
+    isMountain ? "06°47'24\"S 106°59'12\"E • ELEV. 2,958M" : "07°49'S 110°21'E • CELESTIAL SPEC",
+    w / 2,
+    396
+  );
+
+  ctx.fillStyle = "rgba(245, 237, 224, 0.6)";
+  ctx.font = "9px monospace";
+  ctx.fillText("ARCHIVAL SPECIMEN • THREE.JS 3D", w / 2, 414);
+
+  // Bottom Archival Badges
+  ctx.strokeStyle = brassDim;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(28, 442, 64, 22);
+  ctx.fillStyle = brass;
+  ctx.font = "bold 10px serif";
+  ctx.fillText("EXPEDITION", 60, 457);
+
+  ctx.fillStyle = "#f5ede0";
+  ctx.font = "11px monospace";
+  ctx.fillText(`[ ${tape.year} ]`, w / 2, 457);
+
+  ctx.strokeStyle = brassDim;
+  ctx.strokeRect(w - 92, 442, 64, 22);
+  ctx.fillStyle = brass;
+  ctx.font = "bold 10px serif";
+  ctx.fillText("SPEC. 84", w - 60, 457);
+}
+
+// ============================================================================
+// ARCHETYPE 5: NEO-ARCADE SYNTHWAVE (Street Rush)
+// ============================================================================
+function drawArcadeCover(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  tape: TapeProject,
+  img?: HTMLImageElement | null
+) {
+  ctx.fillStyle = "#07070b";
+  ctx.fillRect(0, 0, w, h);
+  drawWear(ctx, w, h, 1986);
+
+  // Racing Checkerboard Bands along top and bottom
+  const drawCheckers = (y: number, hgt: number) => {
+    const sz = 8;
+    const cols = Math.ceil(w / sz);
+    const rows = Math.ceil(hgt / sz);
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        ctx.fillStyle = (r + c) % 2 === 0 ? "#facc15" : "#000000";
+        ctx.fillRect(c * sz, y + r * sz, sz, sz);
+      }
+    }
+  };
+  drawCheckers(12, 16);
+  drawCheckers(h - 28, 16);
+
+  // Header: Retro Arcade
+  ctx.fillStyle = "#f43f5e";
+  ctx.font = "bold 11px sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("★ 16-BIT RETRO ARCADE CLASSIC ★", w / 2, 46);
+
+  // Image Frame with Neon Magenta Glow
+  const pX = 24;
+  const pY = 56;
+  const pW = w - 48;
+  const pH = 236;
+
+  ctx.strokeStyle = "#f43f5e";
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(pX, pY, pW, pH);
+  drawClippedImage(ctx, img, pX + 1, pY + 1, pW - 2, pH - 2, tape.code, "#facc15");
+
+  // Arcade High Score Pill
+  ctx.fillStyle = "rgba(0, 0, 0, 0.9)";
+  ctx.fillRect(pX + 8, pY + 8, 130, 20);
+  ctx.strokeStyle = "#facc15";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(pX + 8, pY + 8, 130, 20);
+  ctx.fillStyle = "#facc15";
+  ctx.font = "bold 9px monospace";
+  ctx.textAlign = "center";
+  ctx.fillText("★ HI-SCORE: 999900 ★", pX + 73, pY + 22);
+
+  // Slanted Arcade Speed Title
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#facc15";
+  ctx.font = "italic 900 28px sans-serif";
+  drawTitleLines(ctx, tape.title, w / 2, 332, 28);
+
+  ctx.fillStyle = "#f43f5e";
+  ctx.font = "italic bold 11px monospace";
+  ctx.fillText("CHALLENGER STAGE 01 // OVERDRIVE", w / 2, 396);
+
+  ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+  ctx.font = "9px monospace";
+  ctx.fillText("INSERT COIN 25¢ • STEREO AUDIO", w / 2, 414);
+
+  // Bottom Arcade Coin-Op Badges
+  ctx.fillStyle = "#f43f5e";
+  ctx.font = "900 12px sans-serif";
+  ctx.textAlign = "left";
+  ctx.fillText("16-BIT", 28, 448);
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#facc15";
+  ctx.fillText(`[ ${tape.year} ]`, w / 2, 448);
+
+  ctx.textAlign = "right";
+  ctx.fillStyle = "#38bdf8";
+  ctx.fillText("COIN-OP", w - 28, 448);
+}
+
+// ============================================================================
+// ARCHETYPE 6: ECO-MODERN BOTANICAL (Ecobite)
+// ============================================================================
+function drawEcoCover(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  tape: TapeProject,
+  img?: HTMLImageElement | null
+) {
+  ctx.fillStyle = "#0c1f15";
+  ctx.fillRect(0, 0, w, h);
+  drawWear(ctx, w, h, 2026);
+
+  const mint = "#34d399";
+  const mintDim = "rgba(52, 211, 153, 0.4)";
+
+  // Clean Scandinavian border
+  ctx.strokeStyle = mintDim;
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(18, 18, w - 36, h - 36);
+
+  // Header: Sustainable IoT
+  ctx.fillStyle = mint;
+  ctx.font = "bold 10px monospace";
+  ctx.textAlign = "center";
+  ctx.fillText("🌿 CIRCULAR IOT INTELLIGENCE • ZERO WASTE", w / 2, 42);
+
+  // Image Frame
+  const pX = 26;
+  const pY = 54;
+  const pW = w - 52;
+  const pH = 236;
+
+  ctx.strokeStyle = mint;
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(pX, pY, pW, pH);
+  drawClippedImage(ctx, img, pX + 1, pY + 1, pW - 2, pH - 2, tape.code, mint);
+
+  // Recycled Badge Pill
+  ctx.fillStyle = "rgba(12, 31, 21, 0.9)";
+  ctx.fillRect(pX + 8, pY + 8, 134, 20);
+  ctx.strokeStyle = mint;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(pX + 8, pY + 8, 134, 20);
+  ctx.fillStyle = mint;
+  ctx.font = "bold 9px monospace";
+  ctx.textAlign = "center";
+  ctx.fillText("♻ 100% CIRCULAR TECH", pX + 75, pY + 22);
+
+  // Clean Neo-Grotesque Title
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 26px sans-serif";
+  drawTitleLines(ctx, tape.title, w / 2, 332, 28);
+
+  ctx.fillStyle = mint;
+  ctx.font = "10px monospace";
+  ctx.fillText("SMART PANTRY • REAL-TIME SPOILAGE", w / 2, 396);
+
+  ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+  ctx.font = "9px monospace";
+  ctx.fillText("ECOBITE IOT SENSOR ARCHIVE", w / 2, 414);
+
+  // Bottom Badges
+  ctx.strokeStyle = mintDim;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(28, 442, 60, 22);
+  ctx.fillStyle = mint;
+  ctx.font = "bold 10px monospace";
+  ctx.fillText("ECO SPEC", 58, 457);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "11px monospace";
+  ctx.fillText(String(tape.year), w / 2, 457);
+
+  ctx.strokeStyle = mintDim;
+  ctx.strokeRect(w - 88, 442, 60, 22);
+  ctx.fillStyle = mint;
+  ctx.font = "bold 10px monospace";
+  ctx.fillText("CERTIFIED", w - 58, 457);
+}
+
+/**
+ * Dispatches drawing to the bespoke archetype.
+ */
+function drawFrontCover(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  tape: TapeProject,
+  img?: HTMLImageElement | null
+) {
+  const archetype = getSleeveArchetype(tape);
+  switch (archetype) {
+    case "editorial":
+      return drawEditorialCover(ctx, w, h, tape, img);
+    case "cyber":
+      return drawCyberCover(ctx, w, h, tape, img);
+    case "swiss":
+      return drawSwissCover(ctx, w, h, tape, img);
+    case "expedition":
+      return drawExpeditionCover(ctx, w, h, tape, img);
+    case "arcade":
+      return drawArcadeCover(ctx, w, h, tape, img);
+    case "eco":
+      return drawEcoCover(ctx, w, h, tape, img);
+  }
+}
+
+/**
+ * Draws the vertical spine on the left side of the sleeve according to archetype.
  * Dimensions: 96 x 512.
  */
 function drawSpine(
@@ -173,36 +800,190 @@ function drawSpine(
   h: number,
   tape: TapeProject
 ) {
-  ctx.fillStyle = tape.color || "#1a1816";
+  const archetype = getSleeveArchetype(tape);
+
+  if (archetype === "editorial") {
+    ctx.fillStyle = tape.color || "#1a1614";
+    ctx.fillRect(0, 0, w, h);
+    drawWear(ctx, w, h, 8888 + tape.id.length);
+
+    const gold = "#d4af37";
+    ctx.fillStyle = gold;
+    ctx.font = "italic bold 13px serif";
+    ctx.textAlign = "center";
+    ctx.fillText("✦ VHS ✦", w / 2, 44);
+
+    ctx.fillStyle = "rgba(212, 175, 55, 0.7)";
+    ctx.font = "bold 10px monospace";
+    ctx.fillText(tape.code, w / 2, 72);
+
+    ctx.save();
+    ctx.translate(w / 2, 270);
+    ctx.rotate(Math.PI / 2);
+    ctx.fillStyle = "#fcf9f2";
+    ctx.font = "bold 16px serif";
+    ctx.textAlign = "center";
+    ctx.fillText(tape.title.toUpperCase(), 0, 5);
+    ctx.restore();
+
+    ctx.fillStyle = gold;
+    ctx.font = "11px serif";
+    ctx.fillText(`VOL. ${tape.year}`, w / 2, h - 30);
+    return;
+  }
+
+  if (archetype === "cyber") {
+    ctx.fillStyle = "#090d15";
+    ctx.fillRect(0, 0, w, h);
+    drawWear(ctx, w, h, 7777 + tape.id.length);
+
+    const cyan = "#38bdf8";
+    ctx.fillStyle = cyan;
+    ctx.font = "bold 13px monospace";
+    ctx.textAlign = "center";
+    ctx.fillText("SYS.REC", w / 2, 44);
+
+    ctx.fillStyle = "#f59e0b";
+    ctx.font = "bold 10px monospace";
+    ctx.fillText(tape.code, w / 2, 70);
+
+    ctx.save();
+    ctx.translate(w / 2, 260);
+    ctx.rotate(Math.PI / 2);
+    ctx.fillStyle = cyan;
+    ctx.font = "bold 15px monospace";
+    ctx.textAlign = "center";
+    ctx.fillText(tape.title.toUpperCase(), 0, 5);
+    ctx.restore();
+
+    drawBarcode(ctx, 16, h - 70, w - 32, 24, 666 + tape.id.length, cyan);
+    ctx.fillStyle = "rgba(56, 189, 248, 0.7)";
+    ctx.font = "9px monospace";
+    ctx.fillText(String(tape.year), w / 2, h - 25);
+    return;
+  }
+
+  if (archetype === "swiss") {
+    const isRed = tape.id === "student-life";
+    const bannerCol = isRed ? "#dc2626" : "#2563eb";
+    ctx.fillStyle = "#161618";
+    ctx.fillRect(0, 0, w, h);
+
+    // Top color band
+    ctx.fillStyle = bannerCol;
+    ctx.fillRect(0, 0, w, 110);
+    drawWear(ctx, w, h, 5555 + tape.id.length);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "900 36px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(tape.id === "student-life" ? "04" : "08", w / 2, 54);
+
+    ctx.font = "bold 10px sans-serif";
+    ctx.fillText("SWISS", w / 2, 80);
+
+    ctx.save();
+    ctx.translate(w / 2, 280);
+    ctx.rotate(Math.PI / 2);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "900 17px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(tape.title.toUpperCase(), 0, 5);
+    ctx.restore();
+
+    drawBarcode(ctx, 14, h - 65, w - 28, 22, 1122 + tape.id.length, "#ffffff");
+    ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+    ctx.font = "bold 10px monospace";
+    ctx.fillText(String(tape.year), w / 2, h - 22);
+    return;
+  }
+
+  if (archetype === "expedition") {
+    const isMountain = tape.id === "gunung-gede";
+    ctx.fillStyle = isMountain ? "#221913" : "#141e15";
+    ctx.fillRect(0, 0, w, h);
+    drawWear(ctx, w, h, 4444 + tape.id.length);
+
+    const brass = "#d97706";
+    ctx.fillStyle = brass;
+    ctx.font = "bold 12px serif";
+    ctx.textAlign = "center";
+    ctx.fillText("★ SURVEY ★", w / 2, 44);
+
+    ctx.fillStyle = "#f5ede0";
+    ctx.font = "bold 10px monospace";
+    ctx.fillText(tape.code, w / 2, 70);
+
+    ctx.save();
+    ctx.translate(w / 2, 270);
+    ctx.rotate(Math.PI / 2);
+    ctx.fillStyle = "#f5ede0";
+    ctx.font = "bold 15px serif";
+    ctx.textAlign = "center";
+    ctx.fillText(tape.title.toUpperCase(), 0, 5);
+    ctx.restore();
+
+    ctx.fillStyle = brass;
+    ctx.font = "bold 10px serif";
+    ctx.fillText(`VOL. ${tape.year}`, w / 2, h - 30);
+    return;
+  }
+
+  if (archetype === "arcade") {
+    ctx.fillStyle = "#07070b";
+    ctx.fillRect(0, 0, w, h);
+    drawWear(ctx, w, h, 3333);
+
+    ctx.fillStyle = "#facc15";
+    ctx.font = "900 14px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("ARCADE", w / 2, 44);
+
+    ctx.fillStyle = "#f43f5e";
+    ctx.font = "bold 10px monospace";
+    ctx.fillText("16-BIT", w / 2, 68);
+
+    ctx.save();
+    ctx.translate(w / 2, 270);
+    ctx.rotate(Math.PI / 2);
+    ctx.fillStyle = "#facc15";
+    ctx.font = "italic 900 17px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(tape.title.toUpperCase(), 0, 5);
+    ctx.restore();
+
+    ctx.fillStyle = "#f43f5e";
+    ctx.font = "900 12px sans-serif";
+    ctx.fillText("COIN-OP", w / 2, h - 30);
+    return;
+  }
+
+  // Eco archetype
+  ctx.fillStyle = "#0c1f15";
   ctx.fillRect(0, 0, w, h);
+  drawWear(ctx, w, h, 2222);
 
-  // Aged spine cardboard scuffs
-  drawWear(ctx, w, h, 8888 + tape.id.length);
-
-  // Top VHS logo
-  ctx.fillStyle = "#ef4444";
-  ctx.font = "bold 14px sans-serif";
+  const mint = "#34d399";
+  ctx.fillStyle = mint;
+  ctx.font = "bold 12px monospace";
   ctx.textAlign = "center";
-  ctx.fillText("VHS", w / 2, 44);
+  ctx.fillText("♻ ECO", w / 2, 44);
 
-  // Project code
-  ctx.fillStyle = "#f5a742";
-  ctx.font = "bold 11px monospace";
-  ctx.fillText(tape.code, w / 2, 74);
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 10px monospace";
+  ctx.fillText(tape.code, w / 2, 68);
 
-  // Vertical text: Title rotated 90 degrees
   ctx.save();
   ctx.translate(w / 2, 270);
   ctx.rotate(Math.PI / 2);
-  ctx.fillStyle = "#ece9e1";
-  ctx.font = "bold 17px sans-serif";
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 16px sans-serif";
   ctx.textAlign = "center";
   ctx.fillText(tape.title.toUpperCase(), 0, 5);
   ctx.restore();
 
-  // Bottom Year
-  ctx.fillStyle = "rgba(236, 233, 225, 0.6)";
-  ctx.font = "11px monospace";
+  ctx.fillStyle = mint;
+  ctx.font = "bold 10px monospace";
   ctx.fillText(String(tape.year), w / 2, h - 30);
 }
 
