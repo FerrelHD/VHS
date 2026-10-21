@@ -80,21 +80,21 @@ html.bw .tv {
   isolation: isolate;
 
   --u: min(calc(100cqw / 1728), calc(100cqh / 1117));
-  --pad-x: max(20px, 3.2cqw);
-  --pad-y: max(18px, 3.6cqh);
-  --margin: calc(40 * var(--u) + var(--pad-x));
-  --pj-top: calc(56px + var(--pad-y));
-  --pj-bottom: calc(50px + var(--pad-y));
+  --pad-x: clamp(32px, 4cqw, 56px);
+  --pad-y: clamp(34px, 4.8cqh, 50px);
+  --margin: calc(36 * var(--u) + var(--pad-x));
+  --pj-top: calc(52px + var(--pad-y));
+  --pj-bottom: calc(48px + var(--pad-y));
 }
 
 @media (max-width: 1024px) {
   .vhs-chamber {
     --u: calc(100cqw / 820);
-    --pad-x: 16px;
-    --pad-y: 16px;
+    --pad-x: clamp(18px, 4.5cqw, 28px);
+    --pad-y: clamp(24px, 4.5cqh, 34px);
     --margin: calc(16px + var(--pad-x));
-    --pj-top: calc(54px + var(--pad-y));
-    --pj-bottom: calc(48px + var(--pad-y));
+    --pj-top: calc(50px + var(--pad-y));
+    --pj-bottom: calc(46px + var(--pad-y));
   }
 }
 
