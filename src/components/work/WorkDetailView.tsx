@@ -272,37 +272,16 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
       >
         {/* 1. HERO INTRO: Physical Mini VHS Sleeve & Overview */}
         <section className="pj-screen-height flex items-center gap-6 sm:gap-10 md:gap-12 flex-shrink-0">
-          {/* Angled Mini VHS Sleeve with Archetype Personality */}
+          {/* Angled Authentic Physical VHS Sleeve with Elastic Parallax */}
           <div
             data-parallax="true"
-            className={`relative h-full max-h-[min(340px,50cqh)] min-h-[220px] aspect-[130/196] bg-[#141210] rounded-xs p-3 sm:p-3.5 border ${archetypeAccent.split(" ")[1]} shadow-2xl rotate-[-2deg] hover:rotate-0 transition-transform duration-500 flex flex-col justify-between group overflow-hidden shrink-0 will-change-transform`}
+            className="relative h-full max-h-[min(350px,52cqh)] min-h-[220px] aspect-[130/196] bg-[#141210] rounded-xs border border-crt-phosphor/30 shadow-[0_20px_50px_rgba(0,0,0,0.85)] rotate-[-2deg] hover:rotate-0 transition-transform duration-500 overflow-hidden shrink-0 will-change-transform group cursor-pointer"
           >
-            <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-mono font-bold z-10">
-              <span className={archetypeAccent.split(" ")[0]}>{tape.code}</span>
-              <span className="text-crt-phosphor/70">{tape.year}</span>
-            </div>
-
-            <div className="relative w-full aspect-[4/3] my-1 bg-black/80 rounded-xs overflow-hidden border border-crt-phosphor/20 shrink-0">
-              <img
-                src={tape.image}
-                alt={tape.title}
-                className="w-full h-full object-cover grayscale contrast-125 brightness-95 group-hover:grayscale-0 group-hover:contrast-100 transition-all duration-500 pointer-events-none"
-              />
-            </div>
-
-            <div className="text-center z-10 px-1">
-              <span className="text-[9px] sm:text-[10px] text-crt-phosphor/50 uppercase tracking-widest block truncate font-mono">
-                {tape.category}
-              </span>
-              <h3 className="font-bit text-lg sm:text-xl md:text-2xl font-bold text-crt-phosphor tracking-wider mt-0.5 truncate phosphor-glow">
-                {tape.title}
-              </h3>
-            </div>
-
-            <div className="flex items-center justify-between text-[8px] sm:text-[9px] text-crt-phosphor/40 border-t border-crt-phosphor/10 pt-1.5 z-10 font-mono">
-              <span className="uppercase">{archetype} ARCHIVE</span>
-              <span>{tape.meta.quality}</span>
-            </div>
+            <img
+              src={`/tapes/${tape.id}-front.webp`}
+              alt={tape.title}
+              className="w-full h-full object-cover rounded-xs pointer-events-none group-hover:scale-102 transition-transform duration-500"
+            />
           </div>
 
           {/* Title, Overview & Direct CTAs */}
