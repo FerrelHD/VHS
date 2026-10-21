@@ -11,6 +11,7 @@ import { WorkDetailView } from "@/components/work/WorkDetailView";
 import { ProfileView } from "@/components/hud/ProfileView";
 import { ArchiveView } from "@/components/hud/ArchiveView";
 import { ContactView } from "@/components/hud/ContactView";
+import { VhsLoader } from "@/components/hud/VhsLoader";
 import { useCrtBend } from "@/lib/useCrtBend";
 import { audio } from "@/lib/audio";
 
@@ -19,12 +20,7 @@ const TapeDeck = dynamic(
   () => import("@/components/deck/TapeDeck").then((mod) => mod.TapeDeck),
   {
     ssr: false,
-    loading: () => (
-      <div className="w-full h-full flex flex-col items-center justify-center font-mono text-xs text-crt-phosphor/40 gap-2">
-        <span className="w-3 h-3 border-2 border-crt-phosphor/20 border-t-crt-phosphor animate-spin rounded-full" />
-        <span className="tracking-widest uppercase">INITIALIZING CRT OPTICS</span>
-      </div>
-    ),
+    loading: () => null,
   }
 );
 
@@ -32,8 +28,40 @@ export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeView, setActiveView] = useState<ActiveSection>("deck");
 
+  // Entrance & Loading state choreography (100% Arc Marumo authentic)
+  const [isReady, setIsReady] = useState(false);
+  const [isLoaderFinished, setIsLoaderFinished] = useState(false);
+  const [introStarted, setIntroStarted] = useState(false);
+
   // Single permanent stage ref for subtle optical curvature on all HTML text & UI
   const bentUiRef = useCrtBend<HTMLDivElement>();
+
+  // Fallback safety: ensure ready within 1.5s even if canvas takes a beat
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleDeckReady = useCallback(() => {
+    setIsReady(true);
+  }, []);
+
+  const handleLoaderDone = useCallback(() => {
+    setIsLoaderFinished(true);
+  }, []);
+
+  // Trigger entrance animation once ready
+  useEffect(() => {
+    if (isReady) {
+      // Start text & 3D carousel reveal slightly before loader completely vanishes
+      const t = setTimeout(() => {
+        setIntroStarted(true);
+      }, 400);
+      return () => clearTimeout(t);
+    }
+  }, [isReady]);
 
   const handleIndexChange = useCallback((idx: number) => {
     setCurrentIndex(idx);
@@ -77,6 +105,11 @@ export default function Home() {
   return (
     <main className="relative w-screen h-screen overflow-hidden bg-[#050505] select-none font-mono">
       <CrtGlass>
+        {/* Layer 0: Authentic VHS CRT Loading Screen */}
+        {!isLoaderFinished && (
+          <VhsLoader ready={isReady} onDone={handleLoaderDone} />
+        )}
+
         {/* Layer 1: 3D Cylindrical Tape Deck (Only visible in deck view) */}
         <div
           className={`absolute inset-0 w-full h-full transition-opacity duration-500 ${
@@ -89,6 +122,8 @@ export default function Home() {
             currentIndex={currentIndex}
             onIndexChange={handleIndexChange}
             onOpenProject={handleOpenProject}
+            intro={introStarted}
+            onReady={handleDeckReady}
           />
         </div>
 
@@ -101,6 +136,7 @@ export default function Home() {
           <div className="pointer-events-auto w-full shrink-0">
             <AppHeader
               activeView={activeView}
+              intro={introStarted}
               onHomeClick={handleBackToCarousel}
               onProfileClick={() =>
                 setActiveView((prev) => (prev === "profile" ? "deck" : "profile"))
@@ -124,6 +160,7 @@ export default function Home() {
               <div className="self-center">
                 <TapeSubtitle
                   tape={currentTape}
+                  intro={introStarted}
                   onOpen={() => handleOpenProject(currentTape)}
                 />
               </div>
@@ -155,7 +192,7 @@ export default function Home() {
 
           {/* Footer (Bottom) */}
           <div className="pointer-events-auto w-full shrink-0">
-            <AppFooter />
+            <AppFooter intro={introStarted} />
           </div>
         </div>
       </CrtGlass>

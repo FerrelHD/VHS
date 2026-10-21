@@ -13,18 +13,23 @@ interface TapeDeckProps {
   currentIndex: number;
   onIndexChange: (index: number) => void;
   onOpenProject: (tape: TapeProject) => void;
+  intro?: boolean;
+  onReady?: () => void;
 }
 
 function TapeCarousel({
   targetOffset,
   currentIndex,
   onSelectTape,
+  intro = true,
 }: {
   targetOffset: number;
   currentIndex: number;
   onSelectTape: (index: number) => void;
+  intro?: boolean;
 }) {
   const currentOffsetRef = useRef(0);
+  const currentYRef = useRef(-240);
   const [, setRerender] = useState(0);
 
   useFrame((_, delta) => {
@@ -32,16 +37,22 @@ function TapeCarousel({
     const prev = currentOffsetRef.current;
     const next = expDecay(prev, targetOffset, 14, dt);
 
-    if (Math.abs(next - prev) > 0.05) {
+    const targetY = intro ? 28 : -240;
+    const prevY = currentYRef.current;
+    const nextY = expDecay(prevY, targetY, 6.5, dt);
+
+    if (Math.abs(next - prev) > 0.05 || Math.abs(nextY - prevY) > 0.1) {
       currentOffsetRef.current = next;
+      currentYRef.current = nextY;
       setRerender((v) => v + 1);
     }
   });
 
   const activeOffset = currentOffsetRef.current;
+  const activeY = currentYRef.current;
 
   return (
-    <group position={[0, 28, 0]}>
+    <group position={[0, activeY, 0]}>
       {/* Lighting setup: Phosphor tube fill + Key directional light */}
       <ambientLight intensity={0.55} />
       <directionalLight position={[0, 180, 420]} intensity={2.0} castShadow />
@@ -69,13 +80,23 @@ function TapeCarousel({
   );
 }
 
-export function TapeDeck({ currentIndex, onIndexChange, onOpenProject }: TapeDeckProps) {
+export function TapeDeck({
+  currentIndex,
+  onIndexChange,
+  onOpenProject,
+  intro = true,
+  onReady,
+}: TapeDeckProps) {
   const [targetOffset, setTargetOffset] = useState(currentIndex * VHS_METRICS.SLOT_SPACING);
 
   const isDraggingRef = useRef(false);
   const dragStartRef = useRef({ x: 0, offset: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const wheelLockRef = useRef(false);
+
+  useEffect(() => {
+    onReady?.();
+  }, [onReady]);
 
   const snapToIndex = useCallback(
     (index: number) => {
@@ -201,6 +222,7 @@ export function TapeDeck({ currentIndex, onIndexChange, onOpenProject }: TapeDec
         <TapeCarousel
           targetOffset={targetOffset}
           currentIndex={currentIndex}
+          intro={intro}
           onSelectTape={(idx) => {
             if (idx === currentIndex) {
               onOpenProject(TAPE_PROJECTS[idx]);
