@@ -12,7 +12,6 @@ import { ProfileView } from "@/components/hud/ProfileView";
 import { ArchiveView } from "@/components/hud/ArchiveView";
 import { ContactView } from "@/components/hud/ContactView";
 import { VhsLoader } from "@/components/hud/VhsLoader";
-import { useCrtBend } from "@/lib/useCrtBend";
 import { audio } from "@/lib/audio";
 
 // Client-only dynamic import for the WebGL Three.js Canvas to guarantee zero SSR hydration errors
@@ -33,10 +32,7 @@ export default function Home() {
   const [isLoaderFinished, setIsLoaderFinished] = useState(false);
   const [introStarted, setIntroStarted] = useState(false);
 
-  // Single permanent stage ref for subtle optical curvature on all HTML text & UI
-  const bentUiRef = useCrtBend<HTMLDivElement>();
-
-  // Fallback safety: ensure ready within 1.5s even if canvas takes a beat
+  // Fallback safety: ensure ready within 1.2s even if canvas takes a beat
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsReady(true);
@@ -55,7 +51,6 @@ export default function Home() {
   // Trigger entrance animation once ready
   useEffect(() => {
     if (isReady) {
-      // Start text & 3D carousel reveal slightly before loader completely vanishes
       const t = setTimeout(() => {
         setIntroStarted(true);
       }, 400);
@@ -112,7 +107,7 @@ export default function Home() {
 
         {/* Layer 1: 3D Cylindrical Tape Deck (Only visible in deck view) */}
         <div
-          className={`absolute inset-0 w-full h-full transition-opacity duration-500 ${
+          className={`absolute inset-0 w-full h-full transition-opacity duration-500 z-10 ${
             activeView === "deck"
               ? "opacity-100 pointer-events-auto"
               : "opacity-0 pointer-events-none"
@@ -127,73 +122,74 @@ export default function Home() {
           />
         </div>
 
-        {/* Layer 2: Single Permanent Phosphor UI Stage (Always fitted strictly within CRT frame) */}
-        <div
-          ref={bentUiRef}
-          className="absolute inset-0 pointer-events-none z-20 flex flex-col justify-between px-6 sm:px-12 md:px-16 pt-6 sm:pt-8 pb-6 sm:pb-8 overflow-hidden"
-        >
-          {/* Header (Top) */}
-          <div className="pointer-events-auto w-full shrink-0">
-            <AppHeader
-              activeView={activeView}
+        {/* Layer 2: Fixed Header across all views (Aligned to safe CRT chamber padding) */}
+        <div className="absolute top-0 left-0 right-0 z-40 px-[var(--pad-x)] pt-[var(--pad-y)] pointer-events-auto">
+          <AppHeader
+            activeView={activeView}
+            intro={introStarted}
+            onHomeClick={handleBackToCarousel}
+            onProfileClick={() =>
+              setActiveView((prev) => (prev === "profile" ? "deck" : "profile"))
+            }
+            onArchiveClick={() =>
+              setActiveView((prev) => (prev === "archive" ? "deck" : "archive"))
+            }
+            onContactClick={() =>
+              setActiveView((prev) => (prev === "contact" ? "deck" : "contact"))
+            }
+          />
+        </div>
+
+        {/* Layer 3: Main Active Views */}
+        {/* 3a. Reel Carousel Subtitle (When in Deck mode) */}
+        {activeView === "deck" && (
+          <div className="absolute bottom-[calc(var(--pad-y)+44px)] left-0 right-0 z-30 flex justify-center pointer-events-auto">
+            <TapeSubtitle
+              tape={currentTape}
               intro={introStarted}
-              onHomeClick={handleBackToCarousel}
-              onProfileClick={() =>
-                setActiveView((prev) => (prev === "profile" ? "deck" : "profile"))
-              }
-              onArchiveClick={() =>
-                setActiveView((prev) => (prev === "archive" ? "deck" : "archive"))
-              }
-              onContactClick={() =>
-                setActiveView((prev) => (prev === "contact" ? "deck" : "contact"))
-              }
+              onOpen={() => handleOpenProject(currentTape)}
             />
           </div>
+        )}
 
-          {/* Middle Stage: Subtitle below tape OR Full In-Screen Section Views (Never overflows or clips) */}
-          <div
-            className={`pointer-events-auto w-full flex-1 min-h-0 flex flex-col overflow-hidden my-2 sm:my-3 ${
-              activeView === "deck" ? "justify-end pb-3 sm:pb-5" : "justify-center"
-            }`}
-          >
-            {activeView === "deck" && (
-              <div className="self-center">
-                <TapeSubtitle
-                  tape={currentTape}
-                  intro={introStarted}
-                  onOpen={() => handleOpenProject(currentTape)}
-                />
-              </div>
-            )}
-
-            {activeView === "work" && (
-              <WorkDetailView
-                tape={currentTape}
-                onBack={handleBackToCarousel}
-                onNextProject={handleNextProject}
-              />
-            )}
-
-            {activeView === "profile" && (
-              <ProfileView onBack={handleBackToCarousel} />
-            )}
-
-            {activeView === "archive" && (
-              <ArchiveView
-                onBack={handleBackToCarousel}
-                onSelectProject={handleSelectFromArchive}
-              />
-            )}
-
-            {activeView === "contact" && (
-              <ContactView onBack={handleBackToCarousel} />
-            )}
+        {/* 3b. Work Detail Exhibition Gallery (Spanning full chamber with calculated margins) */}
+        {activeView === "work" && (
+          <div className="absolute inset-0 z-20 pointer-events-auto">
+            <WorkDetailView
+              tape={currentTape}
+              onBack={handleBackToCarousel}
+              onNextProject={handleNextProject}
+            />
           </div>
+        )}
 
-          {/* Footer (Bottom) */}
-          <div className="pointer-events-auto w-full shrink-0">
-            <AppFooter intro={introStarted} />
+        {/* 3c. Profile Biography View */}
+        {activeView === "profile" && (
+          <div className="absolute inset-0 z-20 pointer-events-auto flex items-center justify-center px-[var(--pad-x)] pt-[var(--pj-top)] pb-[var(--pj-bottom)]">
+            <ProfileView onBack={handleBackToCarousel} />
           </div>
+        )}
+
+        {/* 3d. Archive Matrix View */}
+        {activeView === "archive" && (
+          <div className="absolute inset-0 z-20 pointer-events-auto flex items-center justify-center px-[var(--pad-x)] pt-[var(--pj-top)] pb-[var(--pj-bottom)]">
+            <ArchiveView
+              onBack={handleBackToCarousel}
+              onSelectProject={handleSelectFromArchive}
+            />
+          </div>
+        )}
+
+        {/* 3e. Direct Contact View */}
+        {activeView === "contact" && (
+          <div className="absolute inset-0 z-20 pointer-events-auto flex items-center justify-center px-[var(--pad-x)] pt-[var(--pj-top)] pb-[var(--pj-bottom)]">
+            <ContactView onBack={handleBackToCarousel} />
+          </div>
+        )}
+
+        {/* Layer 4: Fixed Footer across all views (Aligned to safe CRT chamber padding) */}
+        <div className="absolute bottom-0 left-0 right-0 z-40 px-[var(--pad-x)] pb-[var(--pad-y)] pointer-events-auto">
+          <AppFooter intro={introStarted} />
         </div>
       </CrtGlass>
     </main>

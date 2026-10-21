@@ -9,20 +9,19 @@ interface CrtGlassProps {
 }
 
 /**
- * Clean Studio Monitor CRT Frame (Sony Trinitron / PVM style).
- * Symmetrical rounded chassis with generous inset and authentic inner cathode glass depth.
+ * Authentic Arc Marumo Studio Monitor CRT Chassis & Curved Optical Glass.
+ * Uses high-fidelity optical glass overlay (tv-glass.webp) at z-index 60,
+ * precisely aligned to the 2.6vh 2.4vw CRT chamber perimeter.
  */
 export function CrtGlass({ children }: CrtGlassProps) {
   return (
-    <div className="fixed inset-0 w-screen h-screen overflow-hidden bg-[#050505] select-none">
-      {/* 1. Symmetrical Studio Monitor Chassis */}
-      <div className="absolute inset-[2.4vh_2.6vw] sm:inset-[2.8vh_2.8vw] rounded-[36px] sm:rounded-[46px] overflow-hidden bg-crt-tube crt-monitor flex flex-col justify-between crt-bezel-shadow">
-        {/* Active Content Chamber */}
-        <div className="relative w-full h-full overflow-hidden">
-          {children}
-        </div>
+    <div className="tv select-none">
+      {/* 1. Active Cathode Tube Chamber */}
+      <div className="vhs-chamber">
+        {/* Child Views (TapeDeck 3D canvas, HUD, Detail views) */}
+        {children}
 
-        {/* Parabolic Scanlines Canvas (K = 0.07) */}
+        {/* Parabolic Curved Scanlines Overlay */}
         <CrtLines />
 
         {/* CRT Vertical Roll Bar */}
@@ -30,10 +29,10 @@ export function CrtGlass({ children }: CrtGlassProps) {
 
         {/* Film Grain Layer */}
         <CrtGrain />
-
-        {/* Optical Tube Glare & Inner Glass Vignette */}
-        <div className="absolute inset-0 tv-glass-overlay pointer-events-none z-30" />
       </div>
+
+      {/* 2. Authentic Physical CRT Glass Overlay */}
+      <div className="tv-glass" aria-hidden="true" />
     </div>
   );
 }

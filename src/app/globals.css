@@ -57,29 +57,71 @@ div[data-nextjs-toast],
   pointer-events: none !important;
 }
 
-/* Pristine Studio Monitor Bezel Shadow (Sony PVM style) */
-.crt-bezel-shadow {
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08),
-    inset 0 0 65px rgba(0, 0, 0, 0.88),
-    inset 0 0 22px rgba(0, 0, 0, 0.95);
+/* 1. Main TV Monitor Frame (100% Arc Marumo authentic) */
+.tv {
+  background: #050505;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  transition: filter 0.6s ease;
 }
 
-/* Subtle Optical Glass Glare across the tube perimeter */
-.tv-glass-overlay {
-  background: radial-gradient(
-    circle at 50% 18%,
-    rgba(255, 255, 255, 0.035) 0%,
-    rgba(255, 255, 255, 0.006) 55%,
-    rgba(0, 0, 0, 0.25) 85%,
-    rgba(0, 0, 0, 0.65) 100%
-  );
+html.bw .tv {
+  filter: grayscale(1) contrast(1.15) brightness(1.03);
+}
+
+/* 2. Active Screen Chamber (Bounded strictly to the glass perimeter) */
+.vhs-chamber {
+  position: absolute;
+  inset: 2.6vh 2.4vw;
+  overflow: hidden;
+  background: var(--crt-tube);
+  container-type: size;
+  isolation: isolate;
+
+  --u: min(calc(100cqw / 1728), calc(100cqh / 1117));
+  --pad-x: max(20px, 3.2cqw);
+  --pad-y: max(18px, 3.6cqh);
+  --margin: calc(40 * var(--u) + var(--pad-x));
+  --pj-top: calc(56px + var(--pad-y));
+  --pj-bottom: calc(50px + var(--pad-y));
+}
+
+@media (max-width: 1024px) {
+  .vhs-chamber {
+    --u: calc(100cqw / 820);
+    --pad-x: 16px;
+    --pad-y: 16px;
+    --margin: calc(16px + var(--pad-x));
+    --pj-top: calc(54px + var(--pad-y));
+    --pj-bottom: calc(48px + var(--pad-y));
+  }
+}
+
+/* 3. Physical Curved CRT Glass Overlay (Multi-resolution Arc Marumo glass) */
+.tv-glass {
+  z-index: 60;
   pointer-events: none;
+  background: url("/brand/tv-glass.webp") 0 0 / 100% 100% no-repeat;
+  position: absolute;
+  inset: 2.6vh 2.4vw;
 }
 
-/* Film Grain Layer */
+@media (min-width: 701px) and (max-width: 1024px) {
+  .tv-glass {
+    background-image: url("/brand/tv-glass-1280.webp");
+  }
+}
+
+@media (max-width: 700px) {
+  .tv-glass {
+    background-image: url("/brand/tv-glass-960.webp");
+  }
+}
+
+/* 4. Film Grain Layer */
 .grain-layer {
-  opacity: 0.035;
+  opacity: 0.04;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   animation: 0.8s step-end infinite grain-shift;
@@ -97,7 +139,7 @@ div[data-nextjs-toast],
   80% { transform: translate(3px, 5px); }
 }
 
-/* CRT Vertical Roll Bar */
+/* 5. CRT Vertical Roll Bar */
 .vhs-crt-roll {
   background: linear-gradient(
     transparent,
@@ -121,14 +163,9 @@ div[data-nextjs-toast],
   100% { transform: translateY(500%); }
 }
 
-/* B&W Mode filter applied to the monitor tube */
-html.bw .crt-monitor {
-  filter: grayscale(1) contrast(1.15) brightness(1.02);
-}
-
 /* Phosphor Glow on Active Text */
 .phosphor-glow {
-  text-shadow: 0 0 5px rgba(236, 233, 225, 0.4);
+  text-shadow: 0 0 6px rgba(236, 233, 225, 0.35), -0.6px 0 rgba(255, 40, 70, 0.3), 0.6px 0 rgba(40, 150, 255, 0.3);
 }
 
 /* Hide scrollbars for horizontal gallery track */
@@ -140,7 +177,7 @@ html.bw .crt-monitor {
   scrollbar-width: none;
 }
 
-/* Reveal Masking & Staggered Entrance (100% Arc Marumo authentic) */
+/* Reveal Masking & Staggered Entrance */
 .rv {
   clip-path: inset(0 -100vw);
   display: block;
@@ -185,3 +222,53 @@ html.bw .crt-monitor {
   );
 }
 
+/* 6. Detail View Layout & Strict Screen Fitting */
+.pj-view {
+  position: absolute;
+  inset: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  z-index: 10;
+}
+
+.pj-track {
+  display: flex;
+  align-items: stretch;
+  gap: calc(36 * var(--u) + 24px);
+  padding-left: var(--margin);
+  padding-right: calc(var(--margin) + 40px);
+  height: 100%;
+  width: max-content;
+  will-change: transform;
+}
+
+.pj-screen-height {
+  height: calc(100% - var(--pj-top) - var(--pj-bottom));
+  margin-top: var(--pj-top);
+  margin-bottom: var(--pj-bottom);
+  flex-shrink: 0;
+  display: flex;
+}
+
+@media (max-width: 1024px) {
+  .pj-view {
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+  }
+
+  .pj-track {
+    flex-direction: column;
+    gap: 32px;
+    padding: calc(var(--pj-top) + 8px) var(--margin) calc(var(--pj-bottom) + 32px);
+    height: auto;
+    width: 100%;
+  }
+
+  .pj-screen-height {
+    height: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    width: 100%;
+  }
+}

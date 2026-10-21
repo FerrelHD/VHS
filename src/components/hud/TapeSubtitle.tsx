@@ -11,28 +11,25 @@ interface TapeSubtitleProps {
 
 /**
  * Centered project summary block beneath the active tape.
- * Exactly matches the typographic lockup in the Arc Marumo reference:
- * - Huge bold pixelated NeueBit title
- * - Precision Neue Montreal Mono subtitle and metadata
- * - Smooth masked reveal animation
+ * Accurately scaled to fit comfortably below the 3D tape and above the CRT footer.
  */
 export function TapeSubtitle({ tape, onOpen, intro = true }: TapeSubtitleProps) {
   return (
     <div
       onClick={onOpen}
-      className="flex flex-col items-center justify-center text-center cursor-pointer select-none group transition-transform active:scale-95 px-4"
+      className="flex flex-col items-center justify-center text-center cursor-pointer select-none group transition-transform active:scale-95 px-4 max-w-xl"
       aria-label={`Open ${tape.title} details`}
     >
-      {/* Line 1: Big NeueBit Pixel Title */}
+      {/* Line 1: NeueBit Pixel Title */}
       <Reveal on={intro} i={3}>
-        <h2 className="font-bit text-3xl sm:text-5xl md:text-6xl font-bold tracking-wider text-crt-phosphor uppercase group-hover:text-white transition-colors phosphor-glow leading-none">
+        <h2 className="font-bit text-3xl sm:text-4xl md:text-5xl font-bold tracking-wider text-crt-phosphor uppercase group-hover:text-white transition-colors phosphor-glow leading-tight">
           {tape.title}
         </h2>
       </Reveal>
 
       {/* Line 2: Headline / Impact phrase */}
       <Reveal on={intro} i={4}>
-        <p className="font-mono text-[11px] sm:text-xs text-crt-phosphor/80 tracking-wider uppercase max-w-lg mt-2 leading-relaxed">
+        <p className="font-mono text-[11px] sm:text-xs text-crt-phosphor/80 tracking-wider uppercase max-w-md mt-1.5 leading-relaxed">
           {tape.headline}
         </p>
       </Reveal>
