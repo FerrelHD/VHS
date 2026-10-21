@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --crt-chassis: #050505;
+  --crt-tube: #09090b;
+  --crt-phosphor: #ece9e1;
+  --crt-amber: #f5a742;
+  --crt-red: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--crt-chassis);
+  color: var(--crt-phosphor);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+}
+
+/* Hide Next.js dev indicator floating badge completely */
+nextjs-portal,
+[data-nextjs-dev-tools-button],
+[data-next-badge],
+div[data-nextjs-toast],
+#__next-build-watcher {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Pristine Studio Monitor Bezel Shadow (Sony PVM style) */
+.crt-bezel-shadow {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    inset 0 0 65px rgba(0, 0, 0, 0.88),
+    inset 0 0 22px rgba(0, 0, 0, 0.95);
+}
+
+/* Subtle Optical Glass Glare across the tube perimeter */
+.tv-glass-overlay {
+  background: radial-gradient(
+    circle at 50% 18%,
+    rgba(255, 255, 255, 0.035) 0%,
+    rgba(255, 255, 255, 0.006) 55%,
+    rgba(0, 0, 0, 0.25) 85%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+  pointer-events: none;
+}
+
+/* Film Grain Layer */
+.grain-layer {
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  animation: 0.8s step-end infinite grain-shift;
+  position: absolute;
+  inset: -15%;
+  pointer-events: none;
+  z-index: 25;
+}
+
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-4px, 5px); }
+  40% { transform: translate(5px, -3px); }
+  60% { transform: translate(-2px, -4px); }
+  80% { transform: translate(3px, 5px); }
+}
+
+/* CRT Vertical Roll Bar */
+.vhs-crt-roll {
+  background: linear-gradient(
+    transparent,
+    rgba(236, 233, 225, 0.012) 45%,
+    rgba(236, 233, 225, 0.035) 50%,
+    rgba(236, 233, 225, 0.012) 55%,
+    transparent
+  );
+  height: 25%;
+  animation: 8s linear infinite crt-roll;
+  position: absolute;
+  top: -25%;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 24;
+}
+
+@keyframes crt-roll {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(500%); }
+}
+
+/* B&W Mode filter applied to the monitor tube */
+html.bw .crt-monitor {
+  filter: grayscale(1) contrast(1.15) brightness(1.02);
+}
+
+/* Phosphor Glow on Active Text */
+.phosphor-glow {
+  text-shadow: 0 0 5px rgba(236, 233, 225, 0.4);
+}
+
+/* Hide scrollbars for horizontal gallery track */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
