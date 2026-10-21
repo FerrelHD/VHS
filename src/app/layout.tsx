@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "OLDTAPE // Analog CRT & VHS Archive",
+  title: "OLDTAPE • Analog CRT & VHS Archive",
   description: "Interactive 3D VHS Tape Carousel with Optical CRT Barrel Distortion and Procedural Patina.",
 };
 

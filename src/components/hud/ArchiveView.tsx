@@ -8,31 +8,23 @@ import {
 } from "@/data/tapes";
 import { audio } from "@/lib/audio";
 
-interface ArchiveModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+interface ArchiveViewProps {
+  onBack: () => void;
   onSelectProject: (index: number) => void;
 }
 
-export function ArchiveModal({
-  isOpen,
-  onClose,
-  onSelectProject,
-}: ArchiveModalProps) {
+export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
   const [filter, setFilter] = useState<ArchiveCategoryFilter>("all");
 
   useEffect(() => {
-    if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        onClose();
+        onBack();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
+  }, [onBack]);
 
   const filteredProjects = TAPE_PROJECTS.filter((tape) => {
     if (filter === "all") return true;
@@ -40,19 +32,14 @@ export function ArchiveModal({
   });
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="archive-heading"
-      className="absolute inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-black/85 backdrop-blur-md animate-in fade-in duration-300"
-    >
-      <div className="relative w-full max-w-5xl max-h-[88vh] bg-[#121110]/95 border border-crt-phosphor/30 rounded-xs p-5 sm:p-7 overflow-hidden shadow-2xl flex flex-col justify-between gap-5 font-mono">
+    <div className="w-full h-full flex items-center justify-center p-2 sm:p-4 select-none animate-in fade-in duration-300">
+      <div className="w-full max-w-5xl max-h-[54vh] bg-black/60 border border-crt-phosphor/25 rounded-xs p-4 sm:p-5 flex flex-col justify-between gap-3 font-mono shadow-2xl">
         {/* Header Bar */}
-        <div className="flex items-center justify-between border-b border-crt-phosphor/20 pb-3">
-          <div className="flex items-center gap-3">
-            <span className="w-2.5 h-2.5 bg-crt-amber inline-block" />
-            <span className="text-xs text-crt-amber tracking-widest font-bold">
-              CATALOGUE ARCHIVE // ALL REELS [12 ENTRIES]
+        <div className="flex items-center justify-between border-b border-crt-phosphor/20 pb-2 shrink-0">
+          <div className="flex items-center gap-2.5">
+            <span className="w-2 h-2 bg-crt-phosphor inline-block" />
+            <span className="text-[11px] sm:text-xs text-crt-phosphor/80 tracking-widest font-bold uppercase">
+              ARCHIVE CATALOGUE • 12 WORKS
             </span>
           </div>
 
@@ -60,17 +47,16 @@ export function ArchiveModal({
             type="button"
             onClick={() => {
               audio.playClick(0.9);
-              onClose();
+              onBack();
             }}
-            className="text-xs text-crt-phosphor/70 hover:text-white transition-colors cursor-pointer px-2.5 py-1 border border-crt-phosphor/20 hover:border-crt-phosphor/60"
-            aria-label="Close archive"
+            className="text-[11px] text-crt-phosphor/60 hover:text-white transition-colors cursor-pointer px-2 py-0.5 border border-crt-phosphor/20 hover:border-crt-phosphor/50"
           >
-            [ ESC / CLOSE ✕ ]
+            [ ← RETURN / ESC ]
           </button>
         </div>
 
         {/* Filter Bar */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
           {ARCHIVE_CATEGORIES.map((cat) => (
             <button
               key={cat.id}
@@ -79,22 +65,22 @@ export function ArchiveModal({
                 audio.playClick(1.0);
                 setFilter(cat.id);
               }}
-              className={`px-3 py-1 text-[11px] uppercase tracking-wider transition-all cursor-pointer ${
+              className={`px-2.5 py-0.5 text-[10px] sm:text-[11px] uppercase tracking-wider transition-all cursor-pointer ${
                 filter === cat.id
-                  ? "bg-crt-amber text-black font-bold border border-crt-amber shadow-sm"
-                  : "bg-white/5 text-crt-phosphor/70 hover:text-white border border-crt-phosphor/20 hover:border-crt-phosphor/50"
+                  ? "bg-crt-phosphor/20 text-white font-bold border border-crt-phosphor"
+                  : "bg-white/5 text-crt-phosphor/60 hover:text-white border border-crt-phosphor/20 hover:border-crt-phosphor/40"
               }`}
             >
               {cat.label}
             </button>
           ))}
-          <span className="text-[10px] text-crt-phosphor/40 ml-auto">
-            SHOWING: {filteredProjects.length} OF {TAPE_PROJECTS.length}
+          <span className="text-[10px] text-crt-phosphor/40 ml-auto font-mono">
+            COUNT: {filteredProjects.length} / {TAPE_PROJECTS.length}
           </span>
         </div>
 
-        {/* Project Table / Grid */}
-        <div className="flex-1 overflow-y-auto no-scrollbar border border-crt-phosphor/15 rounded-xs bg-black/40">
+        {/* Project Table List */}
+        <div className="flex-1 overflow-y-auto no-scrollbar border border-crt-phosphor/15 rounded-xs bg-black/40 min-h-0">
           <div className="grid grid-cols-1 divide-y divide-crt-phosphor/10">
             {filteredProjects.map((tape) => {
               const globalIndex = TAPE_PROJECTS.findIndex((t) => t.id === tape.id);
@@ -104,13 +90,12 @@ export function ArchiveModal({
                   onClick={() => {
                     audio.playClick(1.2);
                     onSelectProject(globalIndex);
-                    onClose();
                   }}
-                  className="p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-white/[0.04] transition-colors cursor-pointer group"
+                  className="p-2.5 sm:p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-white/[0.04] transition-colors cursor-pointer group"
                 >
                   {/* Left: Code, Thumbnail, Title */}
-                  <div className="flex items-center gap-3.5 min-w-0">
-                    <span className="text-[11px] text-crt-amber font-bold font-mono w-16 shrink-0">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="text-[11px] text-crt-phosphor font-bold font-mono w-16 shrink-0">
                       [{tape.code}]
                     </span>
 
@@ -123,7 +108,7 @@ export function ArchiveModal({
                     </div>
 
                     <div className="min-w-0">
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-2">
                         <h4 className="font-bit text-xl sm:text-2xl font-bold text-crt-phosphor group-hover:text-white truncate uppercase leading-none">
                           {tape.title}
                         </h4>
@@ -137,14 +122,13 @@ export function ArchiveModal({
                     </div>
                   </div>
 
-                  {/* Right: Category, Stack & Action CTA */}
-                  <div className="flex items-center gap-4 shrink-0 sm:ml-auto">
-                    <span className="text-[10px] text-crt-phosphor/50 uppercase tracking-wider hidden md:inline-block">
+                  {/* Right: Category & Action CTA */}
+                  <div className="flex items-center gap-3 shrink-0 sm:self-center pl-1 sm:pl-0">
+                    <span className="text-[10px] text-crt-phosphor/50 uppercase tracking-widest hidden md:inline">
                       {tape.category}
                     </span>
-
-                    <span className="text-[11px] font-bold text-crt-amber group-hover:text-white transition-colors">
-                      [ LOAD TAPE → ]
+                    <span className="text-[10px] text-crt-phosphor/70 group-hover:text-white font-bold border border-crt-phosphor/20 group-hover:border-crt-phosphor/60 px-2 py-0.5 transition-colors">
+                      [ INSPECT REEL → ]
                     </span>
                   </div>
                 </div>
@@ -154,9 +138,9 @@ export function ArchiveModal({
         </div>
 
         {/* Footer info */}
-        <div className="flex items-center justify-between text-[10px] text-crt-phosphor/40 border-t border-crt-phosphor/20 pt-2">
-          <span>SOURCE INDEX: FERREL RASHAD ARCHIVE</span>
-          <span>SELECT ANY ROW TO ENGAGE DECK</span>
+        <div className="flex items-center justify-between text-[10px] text-crt-phosphor/40 border-t border-crt-phosphor/15 pt-2 shrink-0">
+          <span>SORT: CHRONOLOGICAL ARCHIVE</span>
+          <span>SELECT AN ENTRY TO PLAY REEL</span>
         </div>
       </div>
     </div>

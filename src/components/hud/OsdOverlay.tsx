@@ -45,7 +45,7 @@ export function OsdOverlay({
       {/* Center Guidance Overlay (when hovered/active) */}
       <div className="self-center text-center select-none pointer-events-none opacity-20 hover:opacity-100 transition-opacity">
         <span className="text-[10px] tracking-widest text-crt-phosphor/40 uppercase">
-          // DRAG OR USE ARROW KEYS TO BROWSE //
+          DRAG OR USE ARROW KEYS TO BROWSE
         </span>
       </div>
 

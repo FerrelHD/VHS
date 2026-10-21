@@ -4,13 +4,13 @@ import { useState, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { TAPE_PROJECTS, TapeProject } from "@/data/tapes";
 import { CrtGlass } from "@/components/crt/CrtGlass";
-import { AppHeader } from "@/components/hud/AppHeader";
+import { AppHeader, ActiveSection } from "@/components/hud/AppHeader";
 import { AppFooter } from "@/components/hud/AppFooter";
 import { TapeSubtitle } from "@/components/hud/TapeSubtitle";
 import { WorkDetailView } from "@/components/work/WorkDetailView";
-import { ProfileModal } from "@/components/hud/ProfileModal";
-import { ArchiveModal } from "@/components/hud/ArchiveModal";
-import { ContactModal } from "@/components/hud/ContactModal";
+import { ProfileView } from "@/components/hud/ProfileView";
+import { ArchiveView } from "@/components/hud/ArchiveView";
+import { ContactView } from "@/components/hud/ContactView";
 import { useCrtBend } from "@/lib/useCrtBend";
 import { audio } from "@/lib/audio";
 
@@ -22,7 +22,7 @@ const TapeDeck = dynamic(
     loading: () => (
       <div className="w-full h-full flex flex-col items-center justify-center font-mono text-xs text-crt-phosphor/40 gap-2">
         <span className="w-3 h-3 border-2 border-crt-phosphor/20 border-t-crt-phosphor animate-spin rounded-full" />
-        <span className="tracking-widest uppercase">// INITIALIZING CRT OPTICS //</span>
+        <span className="tracking-widest uppercase">INITIALIZING CRT OPTICS</span>
       </div>
     ),
   }
@@ -30,10 +30,7 @@ const TapeDeck = dynamic(
 
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isDetailView, setIsDetailView] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isArchiveOpen, setIsArchiveOpen] = useState(false);
-  const [isContactOpen, setIsContactOpen] = useState(false);
+  const [activeView, setActiveView] = useState<ActiveSection>("deck");
 
   // Single permanent stage ref for subtle optical curvature on all HTML text & UI
   const bentUiRef = useCrtBend<HTMLDivElement>();
@@ -44,15 +41,12 @@ export default function Home() {
 
   const handleOpenProject = useCallback((tape: TapeProject) => {
     audio.playClick(1.2);
-    setIsDetailView(true);
+    setActiveView("work");
   }, []);
 
   const handleBackToCarousel = useCallback(() => {
     audio.playClick(0.9);
-    setIsDetailView(false);
-    setIsProfileOpen(false);
-    setIsArchiveOpen(false);
-    setIsContactOpen(false);
+    setActiveView("deck");
   }, []);
 
   const handleNextProject = useCallback(() => {
@@ -61,31 +55,34 @@ export default function Home() {
 
   const handleSelectFromArchive = useCallback((idx: number) => {
     setCurrentIndex(idx);
-    setIsDetailView(true);
+    setActiveView("work");
   }, []);
 
-  // Keyboard shortcut: Space or Enter opens active project if in carousel and modals are closed
+  // Keyboard shortcut: Space or Enter opens active project if in carousel
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      const anyModalOpen = isProfileOpen || isArchiveOpen || isContactOpen;
-      if (!isDetailView && !anyModalOpen && (e.key === "Enter" || e.key === " ")) {
+      if (activeView === "deck" && (e.key === "Enter" || e.key === " ")) {
         e.preventDefault();
-        setIsDetailView(true);
+        setActiveView("work");
+      } else if (activeView !== "deck" && e.key === "Escape") {
+        setActiveView("deck");
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isDetailView, isProfileOpen, isArchiveOpen, isContactOpen]);
+  }, [activeView]);
 
   const currentTape = TAPE_PROJECTS[currentIndex] || TAPE_PROJECTS[0];
 
   return (
     <main className="relative w-screen h-screen overflow-hidden bg-[#050505] select-none font-mono">
       <CrtGlass>
-        {/* Layer 1: 3D Cylindrical Tape Deck (Only rendered in carousel mode) */}
+        {/* Layer 1: 3D Cylindrical Tape Deck (Only visible in deck view) */}
         <div
           className={`absolute inset-0 w-full h-full transition-opacity duration-500 ${
-            isDetailView ? "opacity-0 pointer-events-none" : "opacity-100"
+            activeView === "deck"
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none"
           }`}
         >
           <TapeDeck
@@ -95,64 +92,70 @@ export default function Home() {
           />
         </div>
 
-        {/* Layer 2: Single Permanent Phosphor UI Stage (Generous breathing room & padding) */}
+        {/* Layer 2: Single Permanent Phosphor UI Stage (Always fitted strictly within CRT frame) */}
         <div
           ref={bentUiRef}
-          className="absolute inset-0 pointer-events-none z-20 flex flex-col justify-between px-10 sm:px-16 md:px-20 pt-8 sm:pt-9 pb-8 sm:pb-9 overflow-hidden"
+          className="absolute inset-0 pointer-events-none z-20 flex flex-col justify-between px-6 sm:px-12 md:px-16 pt-6 sm:pt-8 pb-6 sm:pb-8 overflow-hidden"
         >
           {/* Header (Top) */}
-          <div className="pointer-events-auto w-full">
+          <div className="pointer-events-auto w-full shrink-0">
             <AppHeader
-              isDetailView={isDetailView}
+              activeView={activeView}
               onHomeClick={handleBackToCarousel}
-              onProfileClick={() => setIsProfileOpen(true)}
-              onArchiveClick={() => setIsArchiveOpen(true)}
-              onContactClick={() => setIsContactOpen(true)}
+              onProfileClick={() =>
+                setActiveView((prev) => (prev === "profile" ? "deck" : "profile"))
+              }
+              onArchiveClick={() =>
+                setActiveView((prev) => (prev === "archive" ? "deck" : "archive"))
+              }
+              onContactClick={() =>
+                setActiveView((prev) => (prev === "contact" ? "deck" : "contact"))
+              }
             />
           </div>
 
-          {/* Middle Stage: Subtitle below tape OR Full-Height Horizontal Exhibition */}
+          {/* Middle Stage: Subtitle below tape OR Full In-Screen Section Views (Never overflows or clips) */}
           <div
-            className={`pointer-events-auto w-full h-full flex flex-col overflow-hidden my-auto ${
-              !isDetailView ? "justify-end pb-3 sm:pb-6" : "justify-center"
+            className={`pointer-events-auto w-full flex-1 min-h-0 flex flex-col overflow-hidden my-2 sm:my-3 ${
+              activeView === "deck" ? "justify-end pb-3 sm:pb-5" : "justify-center"
             }`}
           >
-            {!isDetailView ? (
+            {activeView === "deck" && (
               <div className="self-center">
                 <TapeSubtitle
                   tape={currentTape}
                   onOpen={() => handleOpenProject(currentTape)}
                 />
               </div>
-            ) : (
+            )}
+
+            {activeView === "work" && (
               <WorkDetailView
                 tape={currentTape}
                 onBack={handleBackToCarousel}
                 onNextProject={handleNextProject}
               />
             )}
+
+            {activeView === "profile" && (
+              <ProfileView onBack={handleBackToCarousel} />
+            )}
+
+            {activeView === "archive" && (
+              <ArchiveView
+                onBack={handleBackToCarousel}
+                onSelectProject={handleSelectFromArchive}
+              />
+            )}
+
+            {activeView === "contact" && (
+              <ContactView onBack={handleBackToCarousel} />
+            )}
           </div>
 
           {/* Footer (Bottom) */}
-          <div className="pointer-events-auto w-full">
+          <div className="pointer-events-auto w-full shrink-0">
             <AppFooter />
-          </div>
-
-          {/* Overlays / Modals (Rendered inside CRT Phosphor chamber) */}
-          <div className="pointer-events-auto">
-            <ProfileModal
-              isOpen={isProfileOpen}
-              onClose={() => setIsProfileOpen(false)}
-            />
-            <ArchiveModal
-              isOpen={isArchiveOpen}
-              onClose={() => setIsArchiveOpen(false)}
-              onSelectProject={handleSelectFromArchive}
-            />
-            <ContactModal
-              isOpen={isContactOpen}
-              onClose={() => setIsContactOpen(false)}
-            />
           </div>
         </div>
       </CrtGlass>

@@ -172,7 +172,7 @@ function drawSpine(
   ctx.fillStyle = "#ece9e1";
   ctx.font = "bold 18px monospace";
   ctx.textAlign = "center";
-  ctx.fillText(`${tape.code} // ${tape.title}`, 0, 6);
+  ctx.fillText(`${tape.code} • ${tape.title}`, 0, 6);
   ctx.restore();
 
   drawWear(ctx, w, h, tape.wearSeed);
@@ -221,7 +221,7 @@ function createCassetteFrontTexture(tape: TapeProject): THREE.CanvasTexture {
   ctx.fillStyle = "#111111";
   ctx.font = "bold 10px monospace";
   ctx.textAlign = "left";
-  ctx.fillText(`T-120 // HQ`, lX + 8, lY + 22);
+  ctx.fillText(`T-120 • HQ`, lX + 8, lY + 22);
 
   ctx.fillStyle = "#991b1b";
   ctx.font = "bold 12px sans-serif";

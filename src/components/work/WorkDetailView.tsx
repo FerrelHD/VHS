@@ -12,9 +12,10 @@ interface WorkDetailViewProps {
 }
 
 /**
- * Editorial Exhibition Gallery (100% Arc Marumo authentic format).
- * Powered by Lenis for silky-smooth horizontal inertia scrolling.
- * Zero neon badges - purely muted studio phosphor aesthetics.
+ * Editorial Exhibition Gallery (Arc Marumo inspired format).
+ * Powered by Lenis for smooth horizontal inertia scrolling.
+ * Muted studio phosphor aesthetics, responsive sizing fitted to the CRT frame.
+ * Zero modals, zero AI slop, zero double slashes (//).
  */
 export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewProps) {
   const scrollWrapperRef = useRef<HTMLDivElement>(null);
@@ -84,18 +85,18 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
     >
       <div
         ref={scrollContentRef}
-        className="h-full flex items-center py-2 gap-12 sm:gap-16 w-max"
+        className="h-full flex items-center py-2 gap-10 sm:gap-14 w-max pl-4 sm:pl-8 pr-12 sm:pr-16"
       >
         {/* 1. HERO INTRO: Physical VHS Sleeve & Overview */}
-        <div className="flex-shrink-0 flex items-center gap-8 sm:gap-12 pl-2">
-          {/* Angled Mini VHS Sleeve */}
-          <div className="relative w-[180px] sm:w-[210px] aspect-[130/196] bg-[#1a1816] rounded-xs p-3.5 border border-crt-phosphor/25 shadow-2xl rotate-[-3deg] hover:rotate-0 transition-transform duration-500 flex flex-col justify-between group overflow-hidden shrink-0">
+        <div className="flex-shrink-0 flex items-center gap-6 sm:gap-10">
+          {/* Angled Mini VHS Sleeve - Height Constrained */}
+          <div className="relative h-[42vh] max-h-[300px] min-h-[220px] aspect-[130/196] bg-[#1a1816] rounded-xs p-3 border border-crt-phosphor/25 shadow-2xl rotate-[-2.5deg] hover:rotate-0 transition-transform duration-500 flex flex-col justify-between group overflow-hidden shrink-0">
             <div className="flex items-center justify-between text-[10px] text-crt-phosphor/70 font-mono font-bold z-10">
               <span>{tape.code}</span>
               <span>{tape.year}</span>
             </div>
 
-            <div className="relative w-full aspect-[4/3] my-2 bg-black/80 rounded-xs overflow-hidden border border-crt-phosphor/20">
+            <div className="relative w-full aspect-[4/3] my-1 bg-black/80 rounded-xs overflow-hidden border border-crt-phosphor/20 shrink-0">
               <img
                 src={tape.image}
                 alt={tape.title}
@@ -112,30 +113,30 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
               </h3>
             </div>
 
-            <div className="flex items-center justify-between text-[8px] text-crt-phosphor/40 border-t border-crt-phosphor/10 pt-2 z-10 font-mono">
+            <div className="flex items-center justify-between text-[8px] text-crt-phosphor/40 border-t border-crt-phosphor/10 pt-1.5 z-10 font-mono">
               <span>{tape.meta.format}</span>
               <span>{tape.meta.quality}</span>
             </div>
           </div>
 
-          {/* Title, Editorial Lead & Direct Links */}
-          <div className="w-[320px] sm:w-[440px] flex flex-col justify-center gap-3 shrink-0 font-mono">
-            <div className="flex items-center gap-2 text-[11px] text-crt-phosphor/60 tracking-widest uppercase">
-              <span>[{tape.code} // {tape.year}]</span>
+          {/* Title, Overview & Direct CTAs */}
+          <div className="w-[300px] sm:w-[400px] max-h-[46vh] flex flex-col justify-center gap-2.5 shrink-0 font-mono">
+            <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-crt-phosphor/60 tracking-widest uppercase">
+              <span>[{tape.code} • {tape.year}]</span>
               <span>•</span>
-              <span>{tape.category}</span>
+              <span className="truncate">{tape.category}</span>
             </div>
 
-            <h1 className="font-bit text-4xl sm:text-6xl font-bold leading-none tracking-tight text-crt-phosphor phosphor-glow uppercase">
+            <h1 className="font-bit text-3xl sm:text-5xl font-bold leading-none tracking-tight text-crt-phosphor phosphor-glow uppercase truncate">
               {tape.title}
             </h1>
 
-            <p className="text-xs text-crt-phosphor/80 leading-relaxed max-w-md">
+            <p className="text-xs text-crt-phosphor/80 leading-relaxed line-clamp-3 sm:line-clamp-4">
               {tape.summary}
             </p>
 
             {/* Metadata Specs Bar */}
-            <div className="grid grid-cols-2 gap-3 border-y border-crt-phosphor/15 py-2.5 text-[10px]">
+            <div className="grid grid-cols-2 gap-2 border-y border-crt-phosphor/15 py-2 text-[10px]">
               <div>
                 <span className="text-crt-phosphor/40 block text-[9px]">ROLE</span>
                 <span className="text-crt-phosphor font-bold">{tape.role}</span>
@@ -149,14 +150,14 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
             </div>
 
             {/* Action CTAs: Visit Live & GitHub */}
-            <div className="flex flex-wrap items-center gap-3 pt-1 text-xs">
+            <div className="flex flex-wrap items-center gap-2.5 pt-0.5 text-xs">
               {tape.liveUrl && (
                 <a
                   href={tape.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => audio.playClick(1.1)}
-                  className="px-3.5 py-1.5 bg-crt-phosphor/10 hover:bg-crt-phosphor/20 border border-crt-phosphor/40 hover:border-crt-phosphor text-white font-bold tracking-wider transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+                  className="px-3 py-1.5 bg-crt-phosphor/10 hover:bg-crt-phosphor/20 border border-crt-phosphor/40 hover:border-crt-phosphor text-white font-bold tracking-wider transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
                 >
                   <span>[ VISIT LIVE ↗ ]</span>
                 </a>
@@ -168,7 +169,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => audio.playClick(1.0)}
-                  className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-crt-phosphor/25 hover:border-crt-phosphor/50 text-crt-phosphor tracking-wider transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+                  className="px-2.5 py-1.5 bg-white/5 hover:bg-white/10 border border-crt-phosphor/25 hover:border-crt-phosphor/50 text-crt-phosphor tracking-wider transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
                 >
                   <span>[ SOURCE CODE ↗ ]</span>
                 </a>
@@ -188,9 +189,9 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
           </div>
         </div>
 
-        {/* 2. CINEMATIC LARGE-SCALE VISUAL HERO (Edge-to-Edge Project Image) */}
-        <div className="flex-shrink-0 w-[440px] sm:w-[560px] flex flex-col justify-center gap-2">
-          <div className="relative aspect-[16/10] bg-black/90 border border-crt-phosphor/20 rounded-xs overflow-hidden shadow-2xl group">
+        {/* 2. CINEMATIC LARGE-SCALE VISUAL HERO */}
+        <div className="flex-shrink-0 w-[380px] sm:w-[480px] max-h-[46vh] flex flex-col justify-center gap-2">
+          <div className="relative aspect-[16/10] max-h-[38vh] bg-black/90 border border-crt-phosphor/20 rounded-xs overflow-hidden shadow-2xl group">
             <img
               src={tape.image}
               alt={tape.title}
@@ -199,16 +200,16 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
           </div>
           <div className="flex items-center justify-between text-[10px] font-mono text-crt-phosphor/40 px-1">
-            <span>PLATE 01 // OVERVIEW CAPTURE</span>
-            <span>{tape.title}</span>
+            <span>01 • INTERFACE CAPTURE</span>
+            <span className="truncate max-w-[200px]">{tape.title}</span>
           </div>
         </div>
 
-        {/* 3. EDITORIAL CHAPTER 01: Concept & Narrative */}
+        {/* 3. CHAPTER 01: Concept */}
         {tape.problem && (
-          <div className="flex-shrink-0 w-[300px] sm:w-[380px] flex flex-col justify-center gap-3 border-l border-crt-phosphor/15 pl-8 sm:pl-10 font-mono">
-            <span className="text-xs text-crt-phosphor/50 tracking-widest uppercase">
-              01 · NARRATIVE & CONCEPT
+          <div className="flex-shrink-0 w-[260px] sm:w-[320px] max-h-[46vh] overflow-y-auto no-scrollbar flex flex-col justify-center gap-2.5 border-l border-crt-phosphor/15 pl-6 sm:pl-8 font-mono">
+            <span className="text-[11px] text-crt-phosphor/50 tracking-widest uppercase">
+              01 · CONCEPT
             </span>
 
             <h2 className="font-bit text-2xl sm:text-3xl font-bold leading-tight text-crt-phosphor phosphor-glow uppercase">
@@ -221,22 +222,22 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
           </div>
         )}
 
-        {/* 4. EDITORIAL CHAPTER 02: Architecture & Directive */}
+        {/* 4. CHAPTER 02: Architecture & Implementation */}
         {tape.architecture && (
-          <div className="flex-shrink-0 w-[320px] sm:w-[420px] flex flex-col justify-center gap-3 border-l border-crt-phosphor/15 pl-8 sm:pl-10 font-mono">
-            <span className="text-xs text-crt-phosphor/50 tracking-widest uppercase">
-              02 · ARCHITECTURE & DIRECTIVE
+          <div className="flex-shrink-0 w-[280px] sm:w-[360px] max-h-[46vh] overflow-y-auto no-scrollbar flex flex-col justify-center gap-2.5 border-l border-crt-phosphor/15 pl-6 sm:pl-8 font-mono">
+            <span className="text-[11px] text-crt-phosphor/50 tracking-widest uppercase">
+              02 · SYSTEM DESIGN
             </span>
 
             <h2 className="font-bit text-2xl sm:text-3xl font-bold leading-tight text-crt-phosphor phosphor-glow uppercase">
               {tape.architecture.headline}
             </h2>
 
-            <div className="flex flex-col gap-2.5 pt-1">
+            <div className="flex flex-col gap-2 pt-0.5">
               {tape.architecture.highlights.map((h, idx) => (
                 <div key={idx} className="flex flex-col gap-0.5">
                   <span className="text-[11px] font-bold text-crt-phosphor flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-crt-phosphor/50 inline-block" />
+                    <span className="w-1.5 h-1.5 bg-crt-phosphor/50 inline-block shrink-0" />
                     <span>{h.title}</span>
                   </span>
                   <span className="text-[10px] text-crt-phosphor/65 pl-3.5 leading-snug">
@@ -248,22 +249,22 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
           </div>
         )}
 
-        {/* 5. EDITORIAL CHAPTER 03: Pipeline & Systems */}
-        <div className="flex-shrink-0 w-[280px] sm:w-[360px] flex flex-col justify-center gap-3 border-l border-crt-phosphor/15 pl-8 sm:pl-10 font-mono">
-          <span className="text-xs text-crt-phosphor/50 tracking-widest uppercase">
-            03 · PIPELINE & SYSTEMS
+        {/* 5. CHAPTER 03: Tech Stack */}
+        <div className="flex-shrink-0 w-[260px] sm:w-[320px] max-h-[46vh] overflow-y-auto no-scrollbar flex flex-col justify-center gap-2.5 border-l border-crt-phosphor/15 pl-6 sm:pl-8 font-mono">
+          <span className="text-[11px] text-crt-phosphor/50 tracking-widest uppercase">
+            03 · TECH STACK
           </span>
 
           <h2 className="font-bit text-2xl sm:text-3xl font-bold leading-tight text-crt-phosphor phosphor-glow uppercase">
-            TECHNOLOGICAL MATRIX
+            CORE TECHNOLOGIES
           </h2>
 
-          <p className="text-[11px] text-crt-phosphor/75 leading-relaxed">
+          <p className="text-[11px] text-crt-phosphor/75 leading-relaxed line-clamp-3 sm:line-clamp-4">
             {tape.story}
           </p>
 
-          {/* Tech Stack Pills */}
-          <div className="flex flex-wrap gap-1.5 pt-1 text-[10px]">
+          {/* Tech Stack Badges */}
+          <div className="flex flex-wrap gap-1.5 pt-0.5 text-[10px]">
             {tape.tags.map((tag) => (
               <span
                 key={tag}
@@ -276,17 +277,17 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
         </div>
 
         {/* 6. ADVANCE TO NEXT REEL CARD */}
-        <div className="flex-shrink-0 flex items-center justify-center pr-8 pl-4">
+        <div className="flex-shrink-0 flex items-center justify-center pr-12 pl-4">
           <button
             type="button"
             onClick={() => {
               audio.playClick(1.2);
               onNextProject();
             }}
-            className="p-6 sm:p-8 border border-crt-phosphor/25 hover:border-crt-phosphor/60 bg-white/[0.02] hover:bg-white/[0.06] transition-all flex flex-col items-center gap-3 text-center cursor-pointer active:scale-95 group rounded-xs font-mono"
+            className="p-5 sm:p-7 max-h-[42vh] border border-crt-phosphor/25 hover:border-crt-phosphor/60 bg-white/[0.02] hover:bg-white/[0.06] transition-all flex flex-col items-center gap-2.5 text-center cursor-pointer active:scale-95 group rounded-xs font-mono"
           >
             <span className="text-[10px] text-crt-phosphor/50 tracking-widest uppercase">
-              NEXT REEL // [{nextTape.code}]
+              NEXT REEL • [{nextTape.code}]
             </span>
 
             <span className="font-bit text-3xl sm:text-4xl font-bold text-crt-phosphor group-hover:text-white uppercase leading-none">
