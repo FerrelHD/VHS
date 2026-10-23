@@ -39,7 +39,7 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
           <div className="flex items-center gap-2.5">
             <span className="w-2 h-2 bg-crt-phosphor inline-block" />
             <span className="text-[11px] sm:text-xs text-crt-phosphor/80 tracking-widest font-bold uppercase">
-              ARCHIVE CATALOGUE • 12 WORKS
+              ARCHIVE CATALOGUE • {TAPE_PROJECTS.length} SHARDS
             </span>
           </div>
 

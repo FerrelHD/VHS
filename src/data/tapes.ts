@@ -66,709 +66,959 @@ export interface TapeProject {
 }
 
 export const ARCHIVE_CATEGORIES: { id: ArchiveCategoryFilter; label: string }[] = [
-  { id: "all", label: "ALL" },
-  { id: "web", label: "WEB & APPS" },
-  { id: "creative", label: "CREATIVE MOTION" },
-  { id: "ml", label: "MACHINE LEARNING" },
-  { id: "games", label: "3D & GAMES" },
+  { id: "all", label: "ALL EPISODES" },
+  { id: "creative", label: "SEASON 1 (10 SHARDS)" },
 ];
 
 export const TAPE_PROJECTS: TapeProject[] = [
   {
-    id: "araki-art",
-    code: "FRA_00",
-    title: "ARAKI ART ARCHIVE",
-    headline: "Haute-couture editorial web archive exploring Hirohiko Araki.",
-    year: 2026,
-    category: "HAUTE-COUTURE EDITORIAL ARCHIVE",
-    categoryFilter: "creative",
-    role: "Creative Developer & UI Engineer",
-    client: "Hirohiko Araki Retrospective",
-    system: "Vue 3 · TypeScript · Tailwind CSS · GSAP · Lenis",
-    tags: ["Vue 3", "TypeScript", "Tailwind CSS", "GSAP 3", "Lenis"],
-    summary:
-      "Haute-couture editorial web archive exploring Hirohiko Araki’s intersection with high-fashion, classical sculpture, and Swiss architectural grid design.",
-    story:
-      "Structured upon a persistent 12-column Swiss modernist grid overlay with kinetic GSAP timelines, dual-palette chromatic state machine, expanding anatomical accordions, and a live fashion capital world clock.",
-    color: "#080f24",
-    wearSeed: 198701,
-    image: "/projects/Araki Poster.png",
-    liveUrl: "https://araki-art.vercel.app",
-    githubUrl: "https://github.com/FerrelHD/Araki-Art",
-    metrics: [
-      { label: "Grid Architecture", value: "12-Col Swiss" },
-      { label: "Motion Frame Rate", value: "60 FPS Locked" },
-      { label: "Theme States", value: "Dual Palette Engine" },
-      { label: "Curated Milestones", value: "4 Capsules" },
+    "id": "ep-01",
+    "code": "EP.01",
+    "title": "LET YOU DOWN",
+    "headline": "A kid from Santo Domingo with zero eddies and a military Sandevistan.",
+    "year": 2076,
+    "category": "BRAINDANCE SHARD",
+    "categoryFilter": "creative",
+    "role": "David & Gloria Martinez",
+    "client": "Franz Ferdinand: This Fffire",
+    "system": "Studio Trigger · CDPR · Hiroyuki Imaishi",
+    "tags": [
+      "Sandevistan",
+      "Santo Domingo",
+      "Arasaka Academy",
+      "Gloria Martinez"
     ],
-    problem: {
-      headline: "Elevating manga narrative artistry into high-fashion architectural digital curation.",
-      description:
-        "Most anime and manga web exhibits resort to casual, cluttered fansite conventions, failing to reflect that Hirohiko Araki is a world-class artist exhibited at the Musée du Louvre and an official collaborator of historic luxury houses like Gucci and Bulgari. The challenge was crafting an avant-garde digital lookbook inspired by European editorial benchmarks while preserving the signature dramatic tension and color fluidity of JoJo’s Bizarre Adventure.",
+    "summary": "David Martinez's world shatters on a rain-slicked highway in Santo Domingo. A stray gang bullet tears through his mother's cheap sedan, leaving him with an empty bank account, a jar of ashes, and an experimental military Sandevistan spine.",
+    "story": "A sudden nosebleed, the world grinding to a dead halt, and a blue sonic blur through the hallway. David slips under Katsuo's jab and drives his fist clean through the jaw of Arasaka's golden boy, cracking his skull against the lockers.",
+    "color": "#0a0414",
+    "wearSeed": 2076014,
+    "image": "/projects/Cyberpunk Edgerunners_ Let You Down.png",
+    "metrics": [
+      {
+        "label": "HARDWARE",
+        "value": "Sandevistan Mk.V"
+      },
+      {
+        "label": "NEURAL STRESS",
+        "value": "Critical Peak"
+      },
+      {
+        "label": "BOUNTY",
+        "value": "Arasaka Red"
+      },
+      {
+        "label": "TARGET",
+        "value": "Katsuo Hospitalized"
+      }
+    ],
+    "problem": {
+      "headline": "The Inciting Incident: Blood on the Santo Domingo Freeway.",
+      "description": "A sudden highway shootout leaves Gloria mortally wounded. At the underfunded municipal clinic, lack of trauma insurance means zero care. Evicted and alone, David refuses to pawn Gloria's salvaged military Sandevistan, choosing instead to bolt it onto his spine."
     },
-    architecture: {
-      headline: "Swiss 12-column architectural blueprint with kinetic GSAP timelines and zero-jank Lenis scrolling.",
-      description:
-        "Engineered an editorial experience structured upon a persistent 12-column Swiss modernist grid overlay. Micro-interactions and typography are strictly aligned to coordinate boundaries, decoupling layout calculations from the viewport to guarantee 60 FPS motion even during complex height expansions and theme shifts.",
-      highlights: [
+    "architecture": {
+      "headline": "Climax: The Sandevistan Hallway Retribution.",
+      "description": "Mourning in silence and cornered by corporate bullies, David confronts Katsuo Tanaka in the academy corridor. One tap of his neural reflex triggers the forbidden military overdrive.",
+      "highlights": [
         {
-          title: "Modular 12-Column Blueprint Grid",
-          detail: "Hardware-accelerated grid overlay dynamically adapting from a 4-column mobile matrix to a full 12-column architectural framework on desktop.",
+          "title": "Zero-Latency Neural Warp",
+          "detail": "Time dilates to a standstill as David accelerates past human perception, leaving trailing chromatic afterimages across the hallway."
         },
         {
-          title: "Dual Palette Chromatic State Machine",
-          detail: "Instant theme toggling between high-fashion 'Runway Paper' (#f4ede2) and psychological 'Menacing Color Shift' (#170b1e violet & acid chartreuse).",
-        },
-        {
-          title: "Kinetic Slot-Machine Micro-Interactions",
-          detail: "GSAP-powered vertical rolling text buttons, infinite live-timezone capital tickers (Paris, Milan, Tokyo), and dynamic silhouette hover displacement.",
-        },
-      ],
+          "title": "One-Punch Skull Fracture",
+          "detail": "A kinetic strike shatters Katsuo's reinforced jaw, humiliating Arasaka's golden elite and marking David as a fugitive."
+        }
+      ]
     },
-    features: [
-      {
-        title: "Curated Runway Capsules Slider",
-        description: "Interactive showcase documenting historic collaborations with Gucci (2011, 2013), Musée du Louvre (2009), and Bulgari (2017) with interactive silhouettes.",
-        tag: "Editorial",
-      },
-      {
-        title: "Fashion Capital Live Clock Marquee",
-        description: "Real-time multi-timezone clocks tracking international fashion capitals and exhibition landmarks with hover-pause physics.",
-        tag: "Kinetic Motion",
-      },
-      {
-        title: "Expanding Anatomy Accordion",
-        description: "Deep-dive analytical accordion deconstructing The Pose (contrapposto), Chromatic Fluidity, Rock & Roll Heritage, and Couture Tailoring.",
-        tag: "Interactive",
-      },
+    "takeaways": [
+      "I'm doing this for you, David. I know you're gonna make it to the top of Arasaka Tower. (Gloria Martinez)",
+      "In Night City, grief is an unaffordable luxury; chrome is the only currency that speaks."
     ],
-    takeaways: [
-      "Strict architectural grid systems provide a timeless foundation that allows aggressive, avant-garde typography and motion to coexist harmoniously.",
-      "Decoupling layout transformations from native scroll events using Lenis and requestAnimationFrame is crucial for zero-jank editorial micro-interactions.",
+    "shots": [
+      {
+        "title": "THE SANTO DOMINGO FREEWAY",
+        "tag": "INCIDENT",
+        "caption": "Gloria Martinez moments before the fatal crossfire on the highway.",
+        "mediaUrl": "/edgerunners/ep-01/shot-01-incident.webp"
+      },
+      {
+        "title": "BACK-ALLEY CYBERWARE",
+        "tag": "HARDWARE",
+        "caption": "The experimental military Sandevistan wired into Doc's operating bench.",
+        "mediaUrl": "/edgerunners/ep-01/shot-02-cyberware.webp"
+      },
+      {
+        "title": "ACADEMY STANDOFF",
+        "tag": "CLIMAX",
+        "caption": "David confronting Katsuo Tanaka seconds before the Sandevistan activation.",
+        "mediaUrl": "/edgerunners/ep-01/shot-03-climax.webp"
+      },
+      {
+        "title": "ARASAKA ACADEMY MONOLITH",
+        "tag": "WIDE PANORAMA",
+        "caption": "The towering corporate complex casting its shadow over Santo Domingo.",
+        "mediaUrl": "/edgerunners/ep-01/shot-04-panoramic.webp"
+      }
     ],
-    shots: [
-      {
-        title: "12-COLUMN BLUEPRINT GRID",
-        tag: "EDITORIAL GRID",
-        caption: "Swiss typographic blueprint with modular hairline division rules.",
-        accent: "#f59e0b",
-        mediaUrl: "/projects/Araki Aesthetic.png",
-      },
-      {
-        title: "KINETIC RUNWAY CAPSULES",
-        tag: "MICRO-INTERACTIONS",
-        caption: "Physics-driven horizontal carousel showcasing curated luxury collaborations.",
-        accent: "#eab308",
-        mediaUrl: "/projects/Araki Capsules.png",
-      },
-      {
-        title: "CHROMATIC STATE MACHINE",
-        tag: "PALETTE ENGINE",
-        caption: "Instant dual-palette shift between monochromatic noir and runway crimson.",
-        accent: "#ef4444",
-        mediaUrl: "/projects/Araki Valentine.png",
-      },
-      {
-        title: "COLLABORATION ARCHIVE PANORAMA",
-        tag: "21:9 CINEMASCOPE",
-        caption: "Curated showcase documenting historical luxury and museum exhibitions.",
-        accent: "#f59e0b",
-        mediaUrl: "/projects/Araki Gallery.png",
-      },
-      {
-        title: "ANATOMY ACCORDION & COUTURE INDEX",
-        tag: "EDITORIAL ANATOMY",
-        caption: "Deep-dive analytical accordion deconstructing Contrapposto and couture tailoring.",
-        accent: "#eab308",
-        mediaUrl: "/projects/Araki Footer.png",
-      },
-    ],
-    meta: {
-      duration: "01:45:00",
-      format: "NTSC-SP",
-      channel: "CH 02",
-      quality: "HQ-HI-FI",
-    },
+    "meta": {
+      "duration": "24:12",
+      "format": "BD SHARD",
+      "channel": "S1.EP01",
+      "quality": "1080P MASTER"
+    }
   },
   {
-    id: "tactiq",
-    code: "FRA_02",
-    title: "TACTIQ ANALYTICS",
-    headline: "Real-time football telemetry, tactical overlays & player intelligence.",
-    year: 2026,
-    category: "FOOTBALL ANALYTICS • TELEMETRY",
-    categoryFilter: "web",
-    role: "Front-End Lead & UI Engineer",
-    client: "Tactical Performance Labs",
-    system: "Next.js 14 · TypeScript · HTML5 Canvas · Socket.io · Tailwind · Chart.js",
-    tags: ["Next.js 14", "TypeScript", "HTML5 Canvas", "Socket.io", "Chart.js", "Tailwind CSS"],
-    summary:
-      "Enterprise-grade football intelligence platform featuring real-time 2D pitch tracking overlay, multi-criteria player scouting, and AI match probability forecasting.",
-    story:
-      "High-frequency Canvas 2D telemetry synchronized over WebSockets. Isolating high-frequency coordinate broadcasts from React DOM reconciliations via double-buffered HTML5 Canvas 2D engine driven by requestAnimationFrame.",
-    color: "#141410",
-    wearSeed: 199402,
-    image: "/projects/TactIQ Poster.png",
-    githubUrl: "https://github.com/LuthfiMirza/TactIQ",
-    metrics: [
-      { label: "Render Frame Rate", value: "60 FPS" },
-      { label: "Socket Latency", value: "< 45ms" },
-      { label: "Radar Dimensions", value: "7 Axes" },
-      { label: "Match Data Points", value: "10K+ / match" },
+    "id": "ep-02",
+    "code": "EP.02",
+    "title": "LIKE A BOY",
+    "headline": "Pickpocketing on the NCART line. The girl with dreams of the Moon.",
+    "year": 2076,
+    "category": "BRAINDANCE SHARD",
+    "categoryFilter": "creative",
+    "role": "David Martinez & Lucy",
+    "client": "Rosa Walton: I Really Want to Stay at Your House",
+    "system": "Studio Trigger · CDPR · Hiroyuki Imaishi",
+    "tags": [
+      "Lucy",
+      "The Moon",
+      "Braindance",
+      "NCART Metro"
     ],
-    problem: {
-      headline: "Bridging the gap between raw computer vision tracking and tactical decision-making.",
-      description:
-        "Modern football coaching staff and analysts face an information overload: telemetry data streams, raw tracking coordinates, and delayed video recordings exist in fragmented silos. Analysts spent hours manually reconciling coordinate feeds with video timestamps, lacking an intuitive platform capable of overlaying spatial vectors and predicting match trajectories in real time.",
+    "summary": "Running military chrome without immunosuppressants pushes David to the brink of collapse. On the NCART train line, he crosses paths with Lucy, an enigmatic netrunner slicing corporate shards. After an adrenaline-fueled heist, she jacks him into an illicit BD simulation of the Moon.",
+    "story": "Drifting together over gray lunar dust in dead silence. While sirens scream fifty stories below on the streets, Lucy whispers her dream of escaping Night City forever.",
+    "color": "#0f0e0a",
+    "wearSeed": 2076023,
+    "image": "/projects/Vintage Cyberpunk Edgerunners VHS Poster.png",
+    "metrics": [
+      {
+        "label": "SHARD HEIST",
+        "value": "14 Encrypted Shards"
+      },
+      {
+        "label": "SIMULATION",
+        "value": "Lunar Surface 1.0"
+      },
+      {
+        "label": "NETRUNNER",
+        "value": "Lucyna Kushinada"
+      },
+      {
+        "label": "ALERT",
+        "value": "Maine Squad Tracking"
+      }
+    ],
+    "problem": {
+      "headline": "The Setup: A Blood Pact on the NCART Metro.",
+      "description": "Suffering intense neural backlash from consecutive Sandevistan activations, David stumbles onto the morning metro. He catches Lucy slicing data shards from Arasaka suits and uses his burst speed to aid her escape, striking an equal profit-sharing pact as street partners."
     },
-    architecture: {
-      headline: "High-frequency Canvas 2D telemetry synchronized over WebSockets.",
-      description:
-        "As Front-End Lead, I architected the core visualization pipeline. We isolated high-frequency coordinate broadcasts from React DOM reconciliations by utilizing a double-buffered HTML5 Canvas 2D engine driven by requestAnimationFrame. Incoming player and ball coordinates are interpolated smoothly to prevent packet jitter, ensuring fluid 60 FPS motion.",
-      highlights: [
+    "architecture": {
+      "headline": "Climax: The Lunar Braindance Sanctuary.",
+      "description": "Taking David back to her high-rise flat, Lucy jacks him into an unauthorized braindance wreath, transporting both of them to the silent expanse of the Moon.",
+      "highlights": [
         {
-          title: "Sub-50ms Socket.io Transport",
-          detail: "Real-time coordinate broadcasts from computer-vision tracking feeds parsed into spatial vectors with linear interpolation to eliminate visual stutter.",
+          "title": "Zero-Gravity Sanctuary",
+          "detail": "A breathtaking contrast to Night City's neon grime, bathing David and Lucy in cold lunar sunlight."
         },
         {
-          title: "Canvas 2D Pitch Heatmaps",
-          detail: "Custom particle density accumulation algorithm producing live spatial dominance heatmaps and passing corridors directly over the pitch layout.",
-        },
-        {
-          title: "Multivariate Similarity Engine",
-          detail: "Euclidean distance algorithms matching players across 25+ statistical attributes to identify stylistic alternatives for tactical scouting.",
-        },
-      ],
+          "title": "The Solemn Promise",
+          "detail": "Hearing Lucy's dream of never returning to earth, David promises he will buy her a one-way ticket to the Moon."
+        }
+      ]
     },
-    features: [
-      {
-        title: "Interactive 2D Pitch Telemetry",
-        description: "Smooth 60 FPS canvas visualization showing real-time player vectors, passing lanes, and team defensive compactness.",
-        tag: "Core Visualization",
-      },
-      {
-        title: "7-Axis Multivariate Radar",
-        description: "Bespoke Chart.js radar charts comparing player metrics against league percentiles with instant side-by-side scouting comparison.",
-        tag: "Analytics Engine",
-      },
-      {
-        title: "Live Match Forecast Simulator",
-        description: "Predictive win and draw probability curves updating dynamically based on tactical momentum shifts and territory dominance.",
-        tag: "Machine Learning",
-      },
+    "takeaways": [
+      "The Moon is quiet. No Arasaka, no corporations, no noise. Just peace. (Lucy)",
+      "In a city where everyone sells their soul for chrome, a shared dream is the most dangerous contraband."
     ],
-    takeaways: [
-      "Decoupling high-frequency data ingestion from the DOM render loop is essential for maintaining a silky 60 FPS on data-heavy dashboards.",
-      "Data visualization is only as good as its cognitive legibility: complex multidimensional matrices require clear hierarchical design.",
+    "shots": [
+      {
+        "title": "EDGE RUNNER JACKET",
+        "tag": "SETUP",
+        "caption": "David donning Gloria's oversized paramedic jacket on the streets.",
+        "mediaUrl": "/edgerunners/ep-02/shot-01-incident.webp"
+      },
+      {
+        "title": "LUCYNA KUSHINADA",
+        "tag": "CHARACTER",
+        "caption": "The enigmatic netrunner introducing David to the underworld.",
+        "mediaUrl": "/edgerunners/ep-02/shot-02-character.webp"
+      },
+      {
+        "title": "LUNAR ROVER BD",
+        "tag": "CLIMAX",
+        "caption": "Cruising the virtual lunar surface together in Lucy's flat.",
+        "mediaUrl": "/edgerunners/ep-02/shot-03-climax.webp"
+      },
+      {
+        "title": "LUNAR PANORAMA",
+        "tag": "DREAM",
+        "caption": "Earth rising over the crater horizon during the braindance sequence.",
+        "mediaUrl": "/edgerunners/ep-02/shot-04-panoramic.webp"
+      }
     ],
-    shots: [
-      {
-        title: "SUB-50MS WEBSOCKET TRANSPORT",
-        tag: "REAL-TIME PIPELINE",
-        caption: "High-frequency player spatial coordinates stream over bi-directional websockets.",
-        accent: "#10b981",
-      },
-      {
-        title: "CANVAS 2D PITCH HEATMAPS",
-        tag: "SPATIAL ENGINE",
-        caption: "Real-time gaussian density heatmaps rendering territory dominance.",
-        accent: "#06b6d4",
-      },
-      {
-        title: "7-AXIS MULTIVARIATE RADAR",
-        tag: "ANALYTICS DSP",
-        caption: "Multivariate player intelligence comparing tactical profiles across top leagues.",
-        accent: "#3b82f6",
-      },
-    ],
-    meta: {
-      duration: "02:15:30",
-      format: "PAL-HQ",
-      channel: "CH 04",
-      quality: "STEREO-DOLBY",
-    },
+    "meta": {
+      "duration": "23:48",
+      "format": "BD SHARD",
+      "channel": "S1.EP02",
+      "quality": "1080P MASTER"
+    }
   },
   {
-    id: "persona-3",
-    code: "FRA_03",
-    title: "PERSONA 3 RELOAD",
-    headline: "Authentic 60 FPS console experience featuring procedural Web Audio.",
-    year: 2026,
-    category: "GAME CONSOLE UI • WEB AUDIO ENGINE",
-    categoryFilter: "creative",
-    role: "Creative Developer & UI Engineer",
-    client: "Creative Technologist Showcase",
-    system: "React 18 · TypeScript · Web Audio API · Tailwind · CSS 3D",
-    tags: ["React 18", "TypeScript", "Web Audio API", "CSS 3D Transforms", "Tailwind CSS"],
-    summary:
-      "Cinematic game-console developer portfolio inspired by Persona 3 Reload, featuring procedural Web Audio synthesis, 1080p character loop videos, and zero-scroll canvas navigation.",
-    story:
-      "Acoustic feedback engine using native Web Audio API oscillators and gain nodes (avoiding bulky sound MP3 assets) while providing zero-latency acoustic clicks, thuds, and menu swooshes. Navigation is driven by a finite state machine mimicking console controller inputs.",
-    color: "#0c1936",
-    wearSeed: 200607,
-    image: "/projects/Retro VHS Persona Poster.png",
-    liveUrl: "https://persona.ferrelrashadakeyla2014.workers.dev/",
-    githubUrl: "https://github.com/FerrelHD/Persona",
-    metrics: [
-      { label: "Target Framerate", value: "60 FPS Locked" },
-      { label: "Audio Latency", value: "0ms Procedural" },
-      { label: "Viewport Mode", value: "1080p Zero-Scroll" },
-      { label: "Asset Audio Size", value: "0 KB (Synthesized)" },
+    "id": "ep-03",
+    "code": "EP.03",
+    "title": "SMOOTH CRIMINAL",
+    "headline": "Ambushed by Maine's crew. A trial by fire on the industrial highway.",
+    "year": 2076,
+    "category": "BRAINDANCE SHARD",
+    "categoryFilter": "creative",
+    "role": "Maine, Dorio, Kiwi, Pilar & David",
+    "client": "The Armed: Night City Aliens",
+    "system": "Studio Trigger · CDPR · Hiroyuki Imaishi",
+    "tags": [
+      "Maine",
+      "Dorio",
+      "Gorilla Arms",
+      "Highway Heist"
     ],
-    problem: {
-      headline: "Pushing web interactivity beyond sterile modern UI conventions.",
-      description:
-        "Most developer portfolios follow identical grid patterns and neutral aesthetics. I wanted to break the mold entirely by building an authentic, 60 FPS console experience inspired by Persona 3 Reload that pushes web browser audio and animation to its absolute limit.",
+    "summary": "Lucy delivers David straight into the crosshairs of Maine's merc crew, who originally paid Gloria for the Sandevistan. Instead of having his spine ripped out on an operating table, David proves his cyberware tolerance and earns a trial run on a high-risk transport heist.",
+    "story": "Pumping lead through the windshield at eighty miles an hour. David drops from the flatbed directly onto Kuznetsov's limousine, tearing open the biometric safe with his bare hands while Maine provides heavy suppression.",
+    "color": "#140507",
+    "wearSeed": 2076032,
+    "image": "/projects/Cyberpunk Edgerunners_ Smooth Criminal.png",
+    "metrics": [
+      {
+        "label": "CREW LEADER",
+        "value": "Maine Syndicate"
+      },
+      {
+        "label": "OPERATION",
+        "value": "Kuznetsov Transport"
+      },
+      {
+        "label": "SANDY BURSTS",
+        "value": "7 Overdrives"
+      },
+      {
+        "label": "STATUS",
+        "value": "Recruited as Runner"
+      }
+    ],
+    "problem": {
+      "headline": "The Confrontation: Debt Paid in Blood and Chrome.",
+      "description": "Cornered in an abandoned shipping lot, David faces Maine's hulking gorilla arms. Rather than surrender Gloria's cyberware, David negotiates an ultimatum: let him work off the cost of the implant as the crew's speed runner."
     },
-    architecture: {
-      headline: "Procedural Web Audio synthesis and zero-scroll state machines.",
-      description:
-        "Built an acoustic feedback engine using native Web Audio API oscillators and gain nodes while providing zero-latency acoustic clicks, thuds, and menu swooshes. Navigation is driven by a finite state machine mimicking console controller inputs.",
-      highlights: [
+    "architecture": {
+      "headline": "Climax: The Kuznetsov Vehicle Interception.",
+      "description": "The crew ambushes Arasaka director Maxim Kuznetsov on the outer highway. David activates his Sandevistan under heavy fire to retrieve the classified navigation data shard.",
+      "highlights": [
         {
-          title: "Procedural Audio Synthesizer",
-          detail: "Native Web Audio API oscillators synthesizing UI mechanical sounds, eliminating audio load latency entirely.",
+          "title": "High-Speed Car-Surfing",
+          "detail": "David sprints across moving vehicle rooftops under automatic rifle fire, using bullet-time reflexes to bypass defense drones."
         },
         {
-          title: "Dynamic Stylized Typography",
-          detail: "Procedural angle, padding, and font-weight jitter algorithms creating the signature Persona 3 Reload visual style.",
-        },
-        {
-          title: "CSS 3D Diagonal Perspective",
-          detail: "Hardware-accelerated CSS transforms giving menus sharp diagonal angularity without dropping frames.",
-        },
-      ],
+          "title": "Safe Crack Under Fire",
+          "detail": "Slicing through the limousine bulkhead seconds before the escort convoy closes the perimeter."
+        }
+      ]
     },
-    features: [
-      {
-        title: "Console Menu State Machine",
-        description: "Full keyboard and mouse navigation modeled after game controller menus with sound feedback.",
-        tag: "State Machine",
-      },
-      {
-        title: "1080p Character Loop Integration",
-        description: "Hardware-accelerated video loop integration with alpha blending and dynamic UI color shifting.",
-        tag: "Creative Tech",
-      },
-      {
-        title: "Themed Interactive System",
-        description: "Atmospheric UI system styled with iconic Persona 3 Reload aesthetics and sound design.",
-        tag: "Interactive UI",
-      },
+    "takeaways": [
+      "You got chrome, kid. But out here, chrome don't mean shit without output. (Maine)",
+      "Survival in a merc crew isn't about avoiding fire; it's about moving faster than the trigger pull."
     ],
-    takeaways: [
-      "The Web Audio API is immensely powerful for UI feedback: synthesizing micro-sounds on the fly delivers zero network lag and a tiny bundle footprint.",
-      "Crafting bold, rule-breaking aesthetics requires disciplined performance profiling to ensure heavy visual styling doesn't compromise smoothness.",
+    "shots": [
+      {
+        "title": "SMOOTH CRIMINAL",
+        "tag": "INCIDENT",
+        "caption": "The crew cornering David in the abandoned industrial district.",
+        "mediaUrl": "/edgerunners/ep-03/shot-01-incident.webp"
+      },
+      {
+        "title": "FREIGHT STATION RENDEZVOUS",
+        "tag": "MEETING",
+        "caption": "David facing down Maine in the abandoned shipping district.",
+        "mediaUrl": "/edgerunners/ep-03/shot-02-character.webp"
+      },
+      {
+        "title": "MAINE'S ARM CANNON",
+        "tag": "LEADER",
+        "caption": "Maine locking and loading his heavy cyberware cannons.",
+        "mediaUrl": "/edgerunners/ep-03/shot-03-climax.webp"
+      },
+      {
+        "title": "PILAR'S NIGHT CITY PERIMETER",
+        "tag": "CREW",
+        "caption": "Pilar providing optical reconnaissance before the convoy assault.",
+        "mediaUrl": "/edgerunners/ep-03/shot-04-panoramic.webp"
+      }
     ],
-    shots: [
-      {
-        title: "CONSOLE HOME & ZERO-SCROLL MATRIX",
-        tag: "CONSOLE UI",
-        caption: "1080p game-console interface featuring procedural Web Audio, diagonal perspective ribbons, and zero layout shift.",
-        accent: "#38bdf8",
-        mediaUrl: "/projects/Persona Home.png",
-      },
-      {
-        title: "TARTARUS EXPEDITION & MISSION ENGINE",
-        tag: "TACTICAL ENGINE",
-        caption: "Dynamic mission deployment matrix with sheared CSS 3D perspective and real-time state machine choreography.",
-        accent: "#60a5fa",
-        mediaUrl: "/projects/Persona Missions.png",
-      },
-      {
-        title: "SOCIAL LINK COMMS TERMINAL",
-        tag: "COMMS INTERFACE",
-        caption: "Real-time communication hub modeled after game controller dialogue sequences with procedural audio clicks.",
-        accent: "#00d2ff",
-        mediaUrl: "/projects/Persona Comms.png",
-      },
-      {
-        title: "VELVET ROOFTOP HIDEOUT PANORAMA",
-        tag: "21:9 CINEMASCOPE",
-        caption: "Cinematic Velvet Room hideout panorama with high-contrast character art and dynamic lighting overlay.",
-        accent: "#0284c7",
-        mediaUrl: "/projects/Persona Hideout.png",
-      },
-      {
-        title: "OPERATIVE DOSSIER & PROFILE TELEMETRY",
-        tag: "PROFILE DOSSIER",
-        caption: "Protagonist character breakdown with dynamic typography jitter, stats telemetry, and stylized equipment slots.",
-        accent: "#38bdf8",
-        mediaUrl: "/projects/Persona About.png",
-      },
-    ],
-    meta: {
-      duration: "00:54:12",
-      format: "NTSC-SP",
-      channel: "CH 03",
-      quality: "HI-FI STEREO",
-    },
+    "meta": {
+      "duration": "24:05",
+      "format": "BD SHARD",
+      "channel": "S1.EP03",
+      "quality": "1080P MASTER"
+    }
   },
   {
-    id: "nusantara-observatory",
-    code: "FRA_01",
-    title: "NUSANTARA OBSERVATORY",
-    headline: "Interactive geospatial hazard observatory consolidating archipelago feeds.",
-    year: 2026,
-    category: "GEOSPATIAL HAZARD • EVENT REPLAY",
-    categoryFilter: "web",
-    role: "Frontend & Geospatial Engineer",
-    client: "Indonesian Crustal Research",
-    system: "React 19 · TypeScript · Canvas 2D · GeoJSON · Tailwind",
-    tags: ["React 19", "TypeScript", "HTML5 Canvas 2D", "GeoJSON", "Tailwind CSS", "Vite"],
-    summary:
-      "Interactive geospatial hazard tracker integrating real-time disaster feeds into visual 2D mapping with custom zero-dependency projections and temporal replay.",
-    story:
-      "Bespoke Canvas 2D rendering pipeline using custom equirectangular coordinate transforms. Kept the initial payload under 90 KB while sustaining 60 FPS rendering of thousands of historical earthquake epicenters, plate boundary polygons, and active volcano alerts.",
-    color: "#1f1810",
-    wearSeed: 202616,
-    image: "/projects/Crustal Poster.png",
-    liveUrl: "https://nusantara-observatory.vercel.app/",
-    githubUrl: "https://github.com/FerrelHD/Global-Seismic-Tracker",
-    metrics: [
-      { label: "Render Engine", value: "Canvas 2D" },
-      { label: "Feed Sources", value: "Real-time APIs" },
-      { label: "Bundle Footprint", value: "< 90 KB" },
-      { label: "Replay Speed", value: "1x - 100x" },
+    "id": "ep-04",
+    "code": "EP.04",
+    "title": "LUCKY YOU",
+    "headline": "Chaos with Rebecca, Maelstrom labs, and the deadly cost of street life.",
+    "year": 2076,
+    "category": "BRAINDANCE SHARD",
+    "categoryFilter": "creative",
+    "role": "Rebecca, Pilar, Lucy & David",
+    "client": "Mastiff: Acid Breaker",
+    "system": "Studio Trigger · CDPR · Hiroyuki Imaishi",
+    "tags": [
+      "Rebecca",
+      "Maelstrom",
+      "Shotgun Carnage",
+      "Pilar"
     ],
-    problem: {
-      headline: "Consolidating fragmented archipelago hazard feeds into unified situational awareness.",
-      description:
-        "Indonesia sits along the Pacific Ring of Fire, experiencing frequent tectonic shifts, volcanic eruptions, and tsunami warnings. Historically, public information has been scattered across separate agency portals. Researchers and disaster response teams struggled to visualize spatial clusters, event depth correlations, and historical patterns in a single coherent interface.",
+    "summary": "Fully initiated into Maine's crew, David partners with the trigger-happy solo Rebecca for a lethal raid on a Maelstrom weapons laboratory. But Night City delivers a brutal reminder that death lurks in every alley when Pilar crosses paths with a street cyberpsycho.",
+    "story": "Guns blazing, spent brass bouncing off concrete, and Rebecca laughing hysterically as she empties a drum magazine into chrome-faced cyberpsychos. Then a flash of light outside the bodega, and Pilar is gone before anyone can draw iron.",
+    "color": "#0e1307",
+    "wearSeed": 2076042,
+    "image": "/projects/Lucky You Edgerunners VHS Poster.png",
+    "metrics": [
+      {
+        "label": "HEAVY SOLO",
+        "value": "Rebecca (Carnage)"
+      },
+      {
+        "label": "MAELSTROM LOSS",
+        "value": "24 Hostiles Flatlined"
+      },
+      {
+        "label": "CREW CASUALTY",
+        "value": "Pilar KIA"
+      },
+      {
+        "label": "ALERT LEVEL",
+        "value": "NCPD Code Red"
+      }
+    ],
+    "problem": {
+      "headline": "The Infiltration: Storming the Maelstrom Den.",
+      "description": "The crew needs navigation data hidden inside a heavily fortified Maelstrom chop shop. David and Rebecca breach through the ceiling while Lucy cuts the security ICE from a distance."
     },
-    architecture: {
-      headline: "Lightweight coordinate projection engine and in-memory temporal event scrubber.",
-      description:
-        "Rather than bundling heavy multi-megabyte GIS libraries, engineered a bespoke Canvas 2D rendering pipeline using custom equirectangular coordinate transforms, sustaining 60 FPS rendering without thermal throttling.",
-      highlights: [
+    "architecture": {
+      "headline": "Climax: Bloodshed Outside the Bodega.",
+      "description": "Celebrating their successful run with cheap synth-beer, Pilar mocks an unstable vagrant urinating in the alley. The man's oculars flash red as cyberpsychosis claims him in an instant.",
+      "highlights": [
         {
-          title: "Zero-Dependency Map Projection",
-          detail: "Mathematical projection routines translating spherical latitude/longitude into viewport coordinates with smooth mouse and touch zoom/pan matrix transformations.",
+          "title": "Point-Blank Headshot",
+          "detail": "A hidden wrist-mounted blaster vaporizes Pilar without warning, spraying gore across Rebecca and David."
         },
         {
-          title: "Temporal Event Replay Engine",
-          detail: "Time-scrubber allowing historical replay of seismic swarms with adjustable playback speeds and depth coloring.",
-        },
-        {
-          title: "Proximity Exposure Analysis",
-          detail: "Sub-millisecond Haversine distance calculations determining earthquake proximity to densely populated urban centers and coastal infrastructures.",
-        },
-      ],
+          "title": "David's Reflex Execution",
+          "detail": "Overriding his panic, David triggers his Sandevistan to flank and execute the cyberpsycho before more crew fall."
+        }
+      ]
     },
-    features: [
-      {
-        title: "Real-Time Seismic Swarm Visualizer",
-        description: "Epicenters scaled dynamically by Richter magnitude and colored according to focal depth to highlight subduction zone mechanics.",
-        tag: "Geospatial",
-      },
-      {
-        title: "Volcanic Alert Matrix",
-        description: "Active volcano monitoring tracking real-time status levels (Normal to Awas) with elevation profiles and regional alert zones.",
-        tag: "Monitoring",
-      },
-      {
-        title: "Historical Timeline Scrubber",
-        description: "Intuitive playback controls enabling researchers to scrub through months of seismic activity to identify swarm precursors.",
-        tag: "Analytics",
-      },
+    "takeaways": [
+      "Hands off the merch, choom. Next warning comes through your skull. (Rebecca)",
+      "In Night City, you can survive twenty military shootouts and still die outside a liquor store."
     ],
-    takeaways: [
-      "Custom lightweight canvas rendering often outperforms heavy general-purpose map libraries when rendering thousands of custom dynamic particles.",
-      "Accessibility and clarity during crisis information visualization requires strict color contrast and unambiguous typography.",
+    "shots": [
+      {
+        "title": "LUCKY YOU",
+        "tag": "INCIDENT",
+        "caption": "The crew gearing up in the underground safehouse.",
+        "mediaUrl": "/edgerunners/ep-04/shot-01-incident.webp"
+      },
+      {
+        "title": "REBECCA: DUAL WEAPONS",
+        "tag": "GUNNER",
+        "caption": "Rebecca dual-wielding high-caliber pistols with lethal joy.",
+        "mediaUrl": "/edgerunners/ep-04/shot-02-character.webp"
+      },
+      {
+        "title": "REBECCA & DAVID STANDOFF",
+        "tag": "CLIMAX",
+        "caption": "David and Rebecca holding the choke point during the Maelstrom raid.",
+        "mediaUrl": "/edgerunners/ep-04/shot-03-climax.webp"
+      },
+      {
+        "title": "NCART PLATFORM ESCAPE",
+        "tag": "ESCAPE",
+        "caption": "The crew boarding the monorail under high-alert lockdown.",
+        "mediaUrl": "/edgerunners/ep-04/shot-04-panoramic.webp"
+      }
     ],
-    shots: [
-      {
-        title: "SEISMIC SWARM VISUALIZER",
-        tag: "REAL-TIME GEO",
-        caption: "Cluster analysis tracking subduction zone micro-tremors in real time.",
-        accent: "#f59e0b",
-        mediaUrl: "/projects/Indonesian Crustal Observatory.png",
-      },
-      {
-        title: "VOLCANIC ALERT MATRIX",
-        tag: "EARLY WARNING",
-        caption: "Multi-parameter telemetry monitoring Magma Indonesia active volcanic statuses.",
-        accent: "#dc2626",
-      },
-      {
-        title: "TEMPORAL TIMELINE SCRUBBER",
-        tag: "HISTORICAL REPLAY",
-        caption: "Scrubbable 4D event timeline recreating historical mega-thrust tsunamis.",
-        accent: "#ea580c",
-      },
-    ],
-    meta: {
-      duration: "03:00:00",
-      format: "PAL-HQ",
-      channel: "CH 08",
-      quality: "HQ-HI-FI",
-    },
+    "meta": {
+      "duration": "23:55",
+      "format": "BD SHARD",
+      "channel": "S1.EP04",
+      "quality": "1080P MASTER"
+    }
   },
   {
-    id: "charles-leclerc",
-    code: "FRA_04",
-    title: "CHARLES LECLERC #16",
-    headline: "High-octane Formula 1 telemetry & kinetic motion showcase.",
-    year: 2025,
-    category: "CREATIVE MOTION • F1 PHYSICS",
-    categoryFilter: "creative",
-    role: "Creative Frontend Developer",
-    client: "Motorsport Visual Lab",
-    system: "React 18 · GSAP · Canvas 2D · Tailwind",
-    tags: ["React 18", "GSAP", "HTML5 Canvas", "Tailwind CSS"],
-    summary:
-      "High-octane Formula 1 showcase with canvas telemetry visualizers, velocity-driven tachometer, dynamic redline shaders, and fluid kinetic transitions.",
-    story:
-      "Translating the sensory velocity and telemetry of Formula 1 into interactive web form. Interactive tachometer dial that revs based on user scroll velocity, paired with smooth video scrub triggers and microsecond sector deltas.",
-    color: "#1f0606",
-    wearSeed: 201916,
-    image: "/projects/Leclerc Poster.png",
-    liveUrl: "https://leclerc-redline.vercel.app/",
-    githubUrl: "https://github.com/FerrelHD",
-    metrics: [
-      { label: "Animation Engine", value: "GSAP 3" },
-      { label: "Telemetry Visuals", value: "RPM & G-Force" },
-      { label: "Theme", value: "Scuderia Ferrari" },
-      { label: "Frame Pacing", value: "Smooth 60 FPS" },
+    "id": "ep-05",
+    "code": "EP.05",
+    "title": "ALL EYEZ ON ME",
+    "headline": "The dark art of braindance tuning. Trapped in Jimmy Kurosaki's nightmare.",
+    "year": 2076,
+    "category": "BRAINDANCE SHARD",
+    "categoryFilter": "creative",
+    "role": "Jimmy Kurosaki, David, Faraday & Lucy",
+    "client": "Dawid Podsiadło: Where Did Your Love Go",
+    "system": "Studio Trigger · CDPR · Hiroyuki Imaishi",
+    "tags": [
+      "Jimmy Kurosaki",
+      "Braindance",
+      "Faraday",
+      "Psychosis Loop"
     ],
-    problem: {
-      headline: "Translating the sensory velocity and telemetry of Formula 1 into interactive web form.",
-      description:
-        "Motorsport enthusiasts love granular telemetry: throttle traces, braking curves, and sector deltas. This project explores high-impact sports storytelling using typography, audio cues, and telemetry charts.",
+    "summary": "Hired by the shadowy four-eyed fixer Faraday, the crew tracks legendary BD tuner Jimmy Kurosaki, who has been splicing classified Arasaka behavioral research. But JK turns the tables on David, jacking him into an uncalibrated death-state simulation.",
+    "story": "Convulsing in the technician's chair as the neuro-wreath burns into his cortex. David experiences the dying screams of James Norris over and over, feeling cyberpsychosis scrape against the inside of his skull until the crew kicks down the reinforced blast doors.",
+    "color": "#150503",
+    "wearSeed": 2076052,
+    "image": "/projects/Cyberpunk Edgerunners_ All Eyez on Me.png",
+    "metrics": [
+      {
+        "label": "BD TUNER",
+        "value": "Jimmy Kurosaki"
+      },
+      {
+        "label": "FIXER",
+        "value": "Faraday (Santo)"
+      },
+      {
+        "label": "NEURAL DAMAGE",
+        "value": "Extreme Seizure"
+      },
+      {
+        "label": "INTEL SECURED",
+        "value": "Arasaka Tanaka Shard"
+      }
+    ],
+    "problem": {
+      "headline": "The Ambush: Walking into the BD Tuner's Parlor.",
+      "description": "Tracking JK to a high-end commercial recording studio, David moves ahead to secure the console. He is blinded by an EMP flash and trapped in an operating harness before the squad can breach."
     },
-    architecture: {
-      headline: "Canvas-driven RPM tachometer and kinetic scrub animations.",
-      description:
-        "Engineered an interactive tachometer dial that revs based on user scroll velocity, paired with smooth video scrub triggers and glow filters simulating steering wheel shift LEDs.",
-      highlights: [
+    "architecture": {
+      "headline": "Climax: The Torture Loop and Extraction.",
+      "description": "JK subjects David to the unfiltered death memories of cyberpsychos to prove his philosophy that all chromed humans end in madness.",
+      "highlights": [
         {
-          title: "Velocity-Driven UI Feedback",
-          detail: "Scroll velocity feeds directly into tachometer needle position with spring physics.",
+          "title": "Sensory Overload Shock",
+          "detail": "Neurochemical synapses redlining as phantom bullet wounds and neural rot flood David's brain in real time."
         },
         {
-          title: "Dynamic Redline Shader",
-          detail: "Glow filters simulating race steering wheel shift indicator LEDs.",
-        },
-      ],
+          "title": "Faraday's Cold Handshake",
+          "detail": "Maine captures JK alive and delivers the unencrypted Tanaka data directly to fixer Faraday, sealing their fateful contract."
+        }
+      ]
     },
-    features: [
-      {
-        title: "Interactive F1 Tachometer",
-        description: "Dynamic RPM gauge reacting to scroll speed with redline sound triggers.",
-        tag: "Interactive",
-      },
-      {
-        title: "Sector Delta Timeline",
-        description: "Qualifying lap breakdown comparing telemetry across Monaco and Monza.",
-        tag: "Telemetry",
-      },
+    "takeaways": [
+      "You want reality, Martinez? In this city, raw reality is whatever I edit into the shard. (Jimmy Kurosaki)",
+      "A braindance can kill just as cleanly as a hollow-point bullet; all it takes is the right frequency."
     ],
-    takeaways: [
-      "Tying scroll velocity to mechanical feedback creates an immediate physical connection between user input and visual response.",
+    "shots": [
+      {
+        "title": "ALL EYEZ ON ME",
+        "tag": "INCIDENT",
+        "caption": "Night City's illicit Braindance broadcast frequency glowing in the dark.",
+        "mediaUrl": "/edgerunners/ep-05/shot-01-incident.webp"
+      },
+      {
+        "title": "FARADAY'S PRIVATE SUITE",
+        "tag": "FIXER",
+        "caption": "Four-eyed fixer Faraday outlining the Tanaka extraction contract.",
+        "mediaUrl": "/edgerunners/ep-05/shot-02-character.webp"
+      },
+      {
+        "title": "PSYCHOSIS RECALL",
+        "tag": "CLIMAX",
+        "caption": "JK's illegal BD rig forcing David to relive the cyberpsycho death memory.",
+        "mediaUrl": "/edgerunners/ep-05/shot-03-climax.webp"
+      },
+      {
+        "title": "MAXTAC INTERVENTION",
+        "tag": "AFTERMATH",
+        "caption": "The sensory shockwaves of the trauma team and MaxTac firing line.",
+        "mediaUrl": "/edgerunners/ep-05/shot-04-panoramic.webp"
+      }
     ],
-    shots: [
-      {
-        title: "CANVAS F1 TACHOMETER",
-        tag: "REAL-TIME TELEMETRY",
-        caption: "RPM redline indicator syncing needle momentum with throttle acceleration curves.",
-        accent: "#dc2626",
-      },
-      {
-        title: "SECTOR DELTA TIMELINE",
-        tag: "LAP COMPARISON",
-        caption: "Microsecond telemetry comparing pole position qualifying micro-deltas.",
-        accent: "#ef4444",
-      },
-      {
-        title: "V10 ACOUSTIC DRIFT",
-        tag: "AUDIO SYNTHESIS",
-        caption: "Frequency-modulated oscillator bank synthesizing high-revving Ferrari engine notes.",
-        accent: "#b91c1c",
-      },
-    ],
-    meta: {
-      duration: "01:16:16",
-      format: "PAL-HQ",
-      channel: "CH 16",
-      quality: "MONO-RAW",
-    },
+    "meta": {
+      "duration": "24:18",
+      "format": "BD SHARD",
+      "channel": "S1.EP05",
+      "quality": "1080P MASTER"
+    }
   },
   {
-    id: "student-life",
-    code: "FRA_08",
-    title: "STUDENT LIFE",
-    headline: "All-in-one offline-first academic productivity ecosystem.",
-    year: 2025,
-    category: "PRODUCTIVITY PWA • WORKER PERSISTENCE",
-    categoryFilter: "web",
-    role: "Lead Developer & Product Designer",
-    client: "Academic Productivity Product",
-    system: "React 19 · TypeScript · Supabase · PWA · Tailwind",
-    tags: ["React 19", "TypeScript", "Supabase", "Progressive Web App", "IndexedDB", "Tailwind CSS"],
-    summary:
-      "All-in-one offline-first academic productivity ecosystem consolidating schedules, tasks, and precision focus sessions.",
-    story:
-      "Progressive Web App with optimistic local-first state synchronization. Designed an offline-first architecture utilizing IndexedDB for instantaneous local reads and writes, paired with Supabase for cloud persistence.",
-    color: "#08090d",
-    wearSeed: 202631,
-    image: "/projects/Student Life Poster.png",
-    liveUrl: "https://ferrelhd.github.io/Student-Life/",
-    githubUrl: "https://github.com/FerrelHD/Student-Life",
-    metrics: [
-      { label: "Offline Support", value: "100% PWA Cache" },
-      { label: "Sync Engine", value: "Local-First" },
-      { label: "Focus Modules", value: "Timer & Kanban" },
-      { label: "PWA Lighthouse", value: "100 / 100" },
+    "id": "ep-06",
+    "code": "EP.06",
+    "title": "GIRL ON FIRE",
+    "headline": "Maine's tragic cyberpsychosis. Blood, ash, and the fall of a legend.",
+    "year": 2076,
+    "category": "BRAINDANCE SHARD",
+    "categoryFilter": "creative",
+    "role": "Maine, Dorio, David & Kiwi",
+    "client": "Gazelle Twin: History",
+    "system": "Studio Trigger · CDPR · Hiroyuki Imaishi",
+    "tags": [
+      "Cyberpsychosis",
+      "Maine",
+      "Dorio",
+      "MaxTac Siege"
     ],
-    problem: {
-      headline: "Consolidating fragmented student productivity tools into a single offline-ready hub.",
-      description:
-        "Students frequently juggle assignments, course schedules, and Pomodoro timers across three or four separate disconnected applications. Unreliable campus Wi-Fi often leads to lost edits or out-of-sync schedules.",
+    "summary": "Maine's chrome addiction reaches a catastrophic breaking point during an executive interrogation. As trauma team and MaxTac converge on the safehouse, Dorio falls in the crossfire, sending Maine into a terminal berserker rage that ends in a blinding explosion.",
+    "story": "Hallucinating endless desert sand while heavy machine-gun fire tears the walls apart. Maine stacks dead corporate bodies and fuel barrels into a funeral pyre, shoving David toward the exit with his last shred of humanity.",
+    "color": "#190510",
+    "wearSeed": 2076062,
+    "image": "/projects/Cyberpunk Girl on Fire VHS Poster.png",
+    "metrics": [
+      {
+        "label": "PSYCHOSIS STAGE",
+        "value": "Terminal Level 5"
+      },
+      {
+        "label": "CASUALTIES",
+        "value": "Maine & Dorio KIA"
+      },
+      {
+        "label": "TACTICAL THREAT",
+        "value": "MaxTac Gunship Strike"
+      },
+      {
+        "label": "SUCCESSION",
+        "value": "David Inherits Crew"
+      }
+    ],
+    "problem": {
+      "headline": "The Breakdown: A Commander Lost to the Glitch.",
+      "description": "Trapped inside the abandoned electrical facility with an unconscious Tanaka, Maine's cyberware overheats. He strikes Kiwi in a blind delirium, compromising their digital firewall and alerting Arasaka tactical units."
     },
-    architecture: {
-      headline: "Progressive Web App with optimistic local-first state synchronization.",
-      description:
-        "Designed an offline-first architecture utilizing IndexedDB for instantaneous local reads and writes, paired with Supabase for cloud persistence. State changes queue locally in IndexedDB and reconcile on reconnect.",
-      highlights: [
+    "architecture": {
+      "headline": "Climax: The Last Stand of Maine.",
+      "description": "With Dorio shot dead before his eyes, Maine awakens from his stupor only to embrace total annihilation against the incoming MaxTac squad.",
+      "highlights": [
         {
-          title: "Optimistic State Architecture",
-          detail: "Immediate UI updates for task completions and schedule shifts with background Supabase mutation queues.",
+          "title": "Fuel Pyre Detonation",
+          "detail": "Maine empties his heavy arm cannons into stacked fuel drums, obliterating himself, the Arasaka strike team, and the entire facility."
         },
         {
-          title: "Dedicated Worker Focus Timer",
-          detail: "Web Worker-backed Pomodoro cycle preventing background tab throttling and maintaining precision timing.",
-        },
-        {
-          title: "Academic Schedule Matrix",
-          detail: "Conflict-detecting schedule calendar with automated reminders and priority weighting.",
-        },
-      ],
+          "title": "The Torch Passed",
+          "detail": "David escapes through the burning rubble, clutching Maine's discarded arm chrome as his new purpose crystallizes."
+        }
+      ]
     },
-    features: [
-      {
-        title: "Smart Coursework Manager",
-        description: "Kanban and list views with due-date countdowns and priority tags.",
-        tag: "Productivity",
-      },
-      {
-        title: "Precision Pomodoro Timer",
-        description: "Customizable work/break cycles running on dedicated Web Workers.",
-        tag: "Focus Tool",
-      },
-      {
-        title: "Offline PWA Support",
-        description: "Installable on desktop and mobile with full offline functionality and automatic sync.",
-        tag: "PWA",
-      },
+    "takeaways": [
+      "Run, David. Run and don't stop. You're the one who makes it out. (Maine)",
+      "Night City doesn't bury legends; it turns them into scrap and sells the copper by the pound."
     ],
-    takeaways: [
-      "Building for students means designing for imperfect network conditions: optimistic local-first storage transforms the UX from fragile to dependable.",
-      "Web Workers are critical for web timers to avoid browser background tab sleep throttling.",
-    ],
-    shots: [
+    "shots": [
       {
-        title: "OFFLINE INDEXEDDB SYNC",
-        tag: "CACHE-FIRST ARCHITECTURE",
-        caption: "Background synchronization worker merging offline updates upon reconnection.",
-        accent: "#3b82f6",
-        mediaUrl: "/projects/student-life.png",
+        "title": "MAINE & DORIO",
+        "tag": "INCIDENT",
+        "caption": "The final quiet moment in the safehouse before the cognitive breakdown.",
+        "mediaUrl": "/edgerunners/ep-06/shot-01-incident.webp"
       },
       {
-        title: "DEDICATED WEB WORKER TIMER",
-        tag: "BACKGROUND THREAD",
-        caption: "Drift-free focus countdown maintaining millisecond accuracy across backgrounded tabs.",
-        accent: "#6366f1",
+        "title": "DORIO IN POSITION",
+        "tag": "PROTECTION",
+        "caption": "Dorio providing cover fire against incoming corporate squads.",
+        "mediaUrl": "/edgerunners/ep-06/shot-02-character.webp"
       },
+      {
+        "title": "ARM CANNON OVERDRIVE",
+        "tag": "CLIMAX",
+        "caption": "Maine unleashing his heavy gorilla cannons into the facility.",
+        "mediaUrl": "/edgerunners/ep-06/shot-03-climax.webp"
+      },
+      {
+        "title": "PERIMETER SHIELD FALLS",
+        "tag": "AFTERMATH",
+        "caption": "Kiwi witnessing the defensive firewall collapse under MaxTac assault.",
+        "mediaUrl": "/edgerunners/ep-06/shot-04-panoramic.webp"
+      }
     ],
-    meta: {
-      duration: "01:30:00",
-      format: "PAL-HQ",
-      channel: "CH 09",
-      quality: "HQ-HI-FI",
-    },
+    "meta": {
+      "duration": "25:02",
+      "format": "BD SHARD",
+      "channel": "S1.EP06",
+      "quality": "1080P MASTER"
+    }
   },
   {
-    id: "gunung-gede",
-    code: "FRA_11",
-    title: "GUNUNG GEDE SIMULATION",
-    headline: "Realistic environmental simulation replicating Mount Gede hiking trail.",
-    year: 2024,
-    category: "3D TRAIL & ENVIRONMENT DESIGN",
-    categoryFilter: "games",
-    role: "Environment Artist & Scripter",
-    client: "Virtual Trail Simulation",
-    system: "Luau · Roblox Studio · Terrain Modeling",
-    tags: ["Luau", "Roblox Studio", "Terrain Sculpting", "Atmospheric Lighting"],
-    summary:
-      "Realistic environmental simulation replicating the Mount Gede hiking trail via Gunung Putri route.",
-    story:
-      "Heightmap terrain sculpting and altitude-triggered volumetric weather zones. Scripted altitude-based weather zones that dynamically adjust ambient temperature, fog density, and wind audio cues as players hike up the mountain slope.",
-    color: "#0b0c0e",
-    wearSeed: 202634,
-    image: "/projects/Gunung Gede Poster.png",
-    liveUrl: "https://www.roblox.com/games/125712163693709/Mount-Gede-Via-Gunung-Putri",
-    githubUrl: "https://github.com/FerrelHD",
-    metrics: [
-      { label: "Trail Length", value: "Full Virtual Route" },
-      { label: "Lighting", value: "Dynamic Volumetric" },
-      { label: "Terrain", value: "Custom Heightmaps" },
-      { label: "Platform", value: "Roblox Engine" },
+    "id": "ep-07",
+    "code": "EP.07",
+    "title": "STRONGER",
+    "headline": "Chrome-plated captain. David rises to the pinnacle of Night City's underworld.",
+    "year": 2076,
+    "category": "BRAINDANCE SHARD",
+    "categoryFilter": "creative",
+    "role": "David Martinez (Leader), Lucy, Rebecca & Falco",
+    "client": "Tomb Mold: Flesh & Iron",
+    "system": "Studio Trigger · CDPR · Hiroyuki Imaishi",
+    "tags": [
+      "Time Skip",
+      "Quadra V-Tech",
+      "Afterlife Elite",
+      "Full Chrome"
     ],
-    problem: {
-      headline: "Recreating authentic mountaineering topography and atmospheric conditions virtually.",
-      description:
-        "Simulating the physical feel of ascending the Gunung Putri route on Mount Gede, spanning dense lower tropical rainforest to the rocky summit plateau and Surya Kencana meadow.",
+    "summary": "Months after Maine's death, David has transformed his physical form into a monolithic chromed warlord. Leading Rebecca, Kiwi, and wheelman Falco, he commands the most lethal merc cell in Night City, drowning his impending cyberpsychosis in massive immunosuppressant cocktails.",
+    "story": "Tearing down the freeway at two hundred miles per hour in his custom gold Quadra. David fires forearm missile barrages without blinking, tearing rival mercenary convoys to shreds while his doctor warns him that his nervous system is hanging by a single wire.",
+    "color": "#0c1409",
+    "wearSeed": 2076072,
+    "image": "/projects/Cyberpunk Edgerunners_ Stronger Episode 07.png",
+    "metrics": [
+      {
+        "label": "CHROME MASS",
+        "value": "+340% Total Body"
+      },
+      {
+        "label": "SUPPRESSANT DOSE",
+        "value": "8 Injections / Day"
+      },
+      {
+        "label": "REPUTATION",
+        "value": "Afterlife Top Bracket"
+      },
+      {
+        "label": "WHEELMAN",
+        "value": "Falco Recruited"
+      }
+    ],
+    "problem": {
+      "headline": "The Burden: Walking the Edge of Sanity.",
+      "description": "Taking up Maine's contracts, David takes more chrome than any human should survive. Despite winning every firefight, his hands begin to develop the telltale tremors of terminal neural decay."
     },
-    architecture: {
-      headline: "Heightmap terrain sculpting and altitude-triggered volumetric weather zones.",
-      description:
-        "Scripted altitude-based weather zones that dynamically adjust ambient temperature, fog density, and wind audio cues as players hike up the mountain slope.",
-      highlights: [
+    "architecture": {
+      "headline": "Climax: The Highway Convoy Annihilation.",
+      "description": "Hired to eliminate a rival corporate transport crew, David showcases the sheer overwhelming firepower of his chromed physique.",
+      "highlights": [
         {
-          title: "Altitude Atmosphere Controller",
-          detail: "Dynamic Luau scripts transitioning sunlight scattering, wind particles, and fog as elevation increases.",
+          "title": "Micro-Missile Salvo",
+          "detail": "Shoulder pods deploy and saturate the roadway with thermal explosives, deleting five armored interceptors in three seconds."
         },
         {
-          title: "Topographic Accuracy",
-          detail: "Modeled after real GPS trail waypoints from Pos 1 to Surya Kencana savanna.",
-        },
-      ],
+          "title": "Lucy's Deep-Net Wall",
+          "detail": "While David burns chrome on the streets, Lucy stays isolated in the shadows, quietly assassinating Arasaka agents hunting him."
+        }
+      ]
     },
-    features: [
-      {
-        title: "Realistic Rainforest Foliage",
-        description: "Carefully staged Indonesian mossy forest vegetation and root-strewn trail obstacles.",
-        tag: "Environment",
-      },
-      {
-        title: "Surya Kencana Edelweiss Meadow",
-        description: "Vast volcanic savanna with iconic edelweiss fields and morning mist effects.",
-        tag: "Atmosphere",
-      },
+    "takeaways": [
+      "I'm built different, Doc. You said it yourself. Give me more immunosuppressants. (David Martinez)",
+      "The stronger you become in Night City, the faster the clock counts down to zero."
     ],
-    takeaways: [
-      "Atmospheric cues (ambient soundscapes, subtle fog depth, and directional lighting) do the heaviest lifting in creating environmental immersion.",
-    ],
-    shots: [
+    "shots": [
       {
-        title: "VOLUMETRIC FOG CONTROLLER",
-        tag: "ATMOSPHERE",
-        caption: "Elevation-dependent Rayleigh scattering and tropical cloud layers.",
-        accent: "#10b981",
-        mediaUrl: "/projects/Gunung-Gede.webp",
+        "title": "STRONGER",
+        "tag": "EPISODE",
+        "caption": "David leading the crew with a monolithic chromed military frame.",
+        "mediaUrl": "/edgerunners/ep-07/shot-01-incident.webp"
       },
       {
-        title: "SURYA KENCANA MEADOW",
-        tag: "TERRAIN TOPOGRAPHY",
-        caption: "1:1 GPS elevation survey replication from Pos 1 to summit saddle.",
-        accent: "#84cc16",
+        "title": "LUCY'S RETREAT",
+        "tag": "ISOLATION",
+        "caption": "Lucy burning through ICE layers in seclusion to wipe David's data trace.",
+        "mediaUrl": "/edgerunners/ep-07/shot-02-character.webp"
       },
+      {
+        "title": "ARASAKA MEMORY",
+        "tag": "FLASHBACK",
+        "caption": "The haunting flashback of young Lucy fleeing Arasaka's deep-net facilities.",
+        "mediaUrl": "/edgerunners/ep-07/shot-03-climax.webp"
+      },
+      {
+        "title": "NIGHT CITY HORIZON",
+        "tag": "LEADER",
+        "caption": "David commanding the operation overlooking the sprawling neon skyline.",
+        "mediaUrl": "/edgerunners/ep-07/shot-04-panoramic.webp"
+      }
     ],
-    meta: {
-      duration: "01:20:00",
-      format: "PAL-HQ",
-      channel: "CH 22",
-      quality: "HQ-HI-FI",
-    },
+    "meta": {
+      "duration": "24:30",
+      "format": "BD SHARD",
+      "channel": "S1.EP07",
+      "quality": "1080P MASTER"
+    }
   },
+  {
+    "id": "ep-08",
+    "code": "EP.08",
+    "title": "STAY",
+    "headline": "The digital net closes. A secret war to protect the one you love.",
+    "year": 2076,
+    "category": "BRAINDANCE SHARD",
+    "categoryFilter": "creative",
+    "role": "Lucy, David, Kiwi & Faraday",
+    "client": "Rosa Walton: I Really Want to Stay at Your House",
+    "system": "Studio Trigger · CDPR · Hiroyuki Imaishi",
+    "tags": [
+      "Deep Net",
+      "ICE Breaker",
+      "Betrayal",
+      "Faraday's Trap"
+    ],
+    "summary": "Lucy operates in total secrecy, burning Arasaka netrunners before they can uncover David's compatibility with the prototype Cyberskeleton. But fixer Faraday and Arasaka detect the pattern, turning Kiwi against the crew and springing a trap that takes Lucy hostage.",
+    "story": "A quiet apartment, cold neon reflecting on polished glass, and David begging Lucy to stop running away. When he returns from a routine hit, the door is kicked off its hinges, and Lucy's netrunner wreath lies broken in a puddle of water.",
+    "color": "#1a0a03",
+    "wearSeed": 2076082,
+    "image": "/projects/Cyberpunk Edgerunners_ Stay Orange.png",
+    "metrics": [
+      {
+        "label": "NETRUNNERS DEAD",
+        "value": "4 Arasaka Analysts"
+      },
+      {
+        "label": "ICE BREACH",
+        "value": "Compromised by Kiwi"
+      },
+      {
+        "label": "COLLUSION",
+        "value": "Faraday & Arasaka"
+      },
+      {
+        "label": "HOSTAGE",
+        "value": "Lucyna Kushinada"
+      }
+    ],
+    "problem": {
+      "headline": "The Shadow War: Lucy's Desperate Cover-Up.",
+      "description": "Refusing to tell David about Arasaka's interest in him, Lucy hunts down every analyst looking into the Tanaka files. Her ruthless deep-net assassinations trigger high-level corporate alarms."
+    },
+    "architecture": {
+      "headline": "Climax: Kiwi's Calculated Betrayal.",
+      "description": "Faraday corners Kiwi with an offer of corporate immunity. Together, they lure Lucy into a false extraction meeting, tasing her into submission.",
+      "highlights": [
+        {
+          "title": "Monowire Server Decapitation",
+          "detail": "Lucy uses her glowing monowire to shred an entire corporate server rack before being ambushed by Faraday's assault squad."
+        },
+        {
+          "title": "The Empty Bed",
+          "detail": "David discovers Lucy missing and realizes the walls of Night City have finally closed around them."
+        }
+      ]
+    },
+    "takeaways": [
+      "I can't let them find you. Not Arasaka, not anyone. That's why I have to kill them first. (Lucy)",
+      "The secrets we keep to protect each other are the exact wedges that tear us apart."
+    ],
+    "shots": [
+      {
+        "title": "STAY",
+        "tag": "EPISODE",
+        "caption": "Lucy submerged in the chilling deep-net ice tub.",
+        "mediaUrl": "/edgerunners/ep-08/shot-01-incident.webp"
+      },
+      {
+        "title": "CORPORATE TOWERS",
+        "tag": "DISTRICT",
+        "caption": "Arasaka corporate district looming over the deep-net war.",
+        "mediaUrl": "/edgerunners/ep-08/shot-02-character.webp"
+      },
+      {
+        "title": "HIGHWAY PATROL",
+        "tag": "SURVEILLANCE",
+        "caption": "Corporate agents moving through Night City under the cover of dusk.",
+        "mediaUrl": "/edgerunners/ep-08/shot-03-climax.webp"
+      },
+      {
+        "title": "THE EMPTY RENDEZVOUS",
+        "tag": "ABDUCTION",
+        "caption": "David searching the freight station for traces of Lucy.",
+        "mediaUrl": "/edgerunners/ep-08/shot-04-panoramic.webp"
+      }
+    ],
+    "meta": {
+      "duration": "24:14",
+      "format": "BD SHARD",
+      "channel": "S1.EP08",
+      "quality": "1080P MASTER"
+    }
+  },
+  {
+    "id": "ep-09",
+    "code": "EP.09",
+    "title": "HUMANITY",
+    "headline": "The prototype cyberskeleton. A highway war against Militech and Arasaka.",
+    "year": 2076,
+    "category": "BRAINDANCE SHARD",
+    "categoryFilter": "creative",
+    "role": "David Martinez, Rebecca, Falco & Faraday",
+    "client": "Health: Major Crimes",
+    "system": "Studio Trigger · CDPR · Hiroyuki Imaishi",
+    "tags": [
+      "Cyberskeleton",
+      "Anti-Gravity",
+      "Militech War",
+      "Highway Battle"
+    ],
+    "summary": "Desperate to rescue Lucy from Faraday's claws, David knowingly steps into Arasaka's ultimate mouse trap: the experimental Cyberskeleton. Bolted into the anti-gravity frame, he unleashes cataclysmic destructive force across the badlands highway, obliterating entire Militech divisions.",
+    "story": "Hovering fifty feet above the asphalt with multi-jointed hydraulic appendages ripping through steel. David pulls tanks out of the dirt with localized gravity wells and slams them into each other like toy cars, bleeding from every orifice as his humanity slips away.",
+    "color": "#04091a",
+    "wearSeed": 2076092,
+    "image": "/projects/Distressed Cyberpunk Humanity VHS Cover.png",
+    "metrics": [
+      {
+        "label": "SUPERWEAPON",
+        "value": "Arasaka Cyberskeleton"
+      },
+      {
+        "label": "GRAVITY WEAPONRY",
+        "value": "Magnetic Pulse Cannons"
+      },
+      {
+        "label": "MILITECH SQUAD",
+        "value": "2 Battalions Crushed"
+      },
+      {
+        "label": "SANITY THRESHOLD",
+        "value": "2% Remaining"
+      }
+    ],
+    "problem": {
+      "headline": "The Bait: Stepping into the Devil's Armor.",
+      "description": "Faraday broadcasts footage of Lucy held hostage at gunpoint, ordering David to secure the prototype Arasaka Cyberskeleton. Knowing it is suicide, David dons the armor anyway."
+    },
+    "architecture": {
+      "headline": "Climax: The Badlands Convoy Massacre.",
+      "description": "Militech mobilizes heavy battle armor to capture the rogue skeleton. David and Falco turn the open desert interstate into an apocalyptic graveyard.",
+      "highlights": [
+        {
+          "title": "Magnetic Gravitational Crush",
+          "detail": "David compresses three Militech heavy gunships into compact metal spheres and hurls them into the pursuing convoy."
+        },
+        {
+          "title": "Rebecca's Desperate Triage",
+          "detail": "Rebecca repeatedly injects immunosuppressants directly into David's neck as cyberpsychotic delusions threaten to take him over."
+        }
+      ]
+    },
+    "takeaways": [
+      "You're going to use me as bait? Then watch what happens when the cage breaks. (David Martinez)",
+      "When you trade your humanity for godlike power, you become a monster just in time to watch everything burn."
+    ],
+    "shots": [
+      {
+        "title": "HUMANITY",
+        "tag": "EPISODE",
+        "caption": "The titan frame rising above the badlands dust.",
+        "mediaUrl": "/edgerunners/ep-09/shot-01-incident.webp"
+      },
+      {
+        "title": "PROTOTYPE CYBERSKELETON",
+        "tag": "SUPERWEAPON",
+        "caption": "The multi-limbed gravitational exoskeleton locked onto David's spine.",
+        "mediaUrl": "/edgerunners/ep-09/shot-02-character.webp"
+      },
+      {
+        "title": "FALCO'S HIGHWAY WAR",
+        "tag": "HIGHWAY",
+        "caption": "Falco steering the armored carrier through a storm of anti-tank artillery.",
+        "mediaUrl": "/edgerunners/ep-09/shot-03-climax.webp"
+      },
+      {
+        "title": "MILITECH ARMOR CRUSH",
+        "tag": "DESTRUCTION",
+        "caption": "Heavy Militech missile batteries pulverized by gravitational compression.",
+        "mediaUrl": "/edgerunners/ep-09/shot-04-panoramic.webp"
+      }
+    ],
+    "meta": {
+      "duration": "25:40",
+      "format": "BD SHARD",
+      "channel": "S1.EP09",
+      "quality": "1080P MASTER"
+    }
+  },
+  {
+    "id": "ep-10",
+    "code": "EP.10",
+    "title": "MY MOON MY MAN",
+    "headline": "The final stand at Arasaka Tower. Adam Smasher, a promise kept, and the Moon.",
+    "year": 2076,
+    "category": "BRAINDANCE SHARD",
+    "categoryFilter": "creative",
+    "role": "David Martinez, Lucy, Rebecca & Adam Smasher",
+    "client": "Rosa Walton: I Really Want to Stay at Your House",
+    "system": "Studio Trigger · CDPR · Hiroyuki Imaishi",
+    "tags": [
+      "Arasaka Tower",
+      "Adam Smasher",
+      "The Moon",
+      "Final Climax"
+    ],
+    "summary": "Crashing through the glass zenith of Arasaka Tower, David frees Lucy and executes Faraday. But Night City's ultimate nightmare drops from the sky: Adam Smasher. With Rebecca crushed and his cyberware burning out, David makes his final stand so Lucy can escape to the stars.",
+    "story": "A blinding flash of Sandevistan versus Sandevistan high above Night City. David smiles through blood-stained teeth as Smasher tears his mechanical limbs apart. In the quiet aftermath, Lucy walks alone across the white dust of the Moon, feeling the warm ghost of David's sunlight on her skin.",
+    "color": "#100e08",
+    "wearSeed": 2076102,
+    "image": "/projects/My Moon My Man VHS Poster.png",
+    "metrics": [
+      {
+        "label": "FINAL BATTLE",
+        "value": "Arasaka Tower Plaza"
+      },
+      {
+        "label": "CASUALTIES",
+        "value": "David & Rebecca KIA"
+      },
+      {
+        "label": "NIGHTMARE",
+        "value": "Adam Smasher Victorious"
+      },
+      {
+        "label": "LUNAR TICKET",
+        "value": "Delivered to Lucy"
+      }
+    ],
+    "problem": {
+      "headline": "The Climax: Storming the Top of the World.",
+      "description": "David hurls himself into Arasaka Tower's penthouse, rescuing Lucy from Faraday's grasp and fulfilling his mother's prophecy of reaching the top of Arasaka Tower."
+    },
+    "architecture": {
+      "headline": "The End: Smasher's Arrival and the Promise Kept.",
+      "description": "Arasaka deploys their ultimate weapon. Adam Smasher drops like a meteor, flattening Rebecca instantly and ripping David's exoskeleton apart piece by piece.",
+      "highlights": [
+        {
+          "title": "The Final Kiss",
+          "detail": "Suspended in mid-air above the skyscrapers, David hands Lucy to Falco and gives her one last kiss before activating his remaining Sandevistan burst."
+        },
+        {
+          "title": "Walking on the Moon",
+          "detail": "Lucy stands in Apollo silence beneath the radiant blue sphere of Earth, carrying David's memory forever."
+        }
+      ]
+    },
+    "takeaways": [
+      "I'm sorry. I couldn't take you to the Moon myself. But you're going, Lucy. You're going. (David Martinez)",
+      "In the end, you don't beat Night City; you just decide what you are willing to die for."
+    ],
+    "shots": [
+      {
+        "title": "DAVID'S FINAL SMILE",
+        "tag": "EPISODE",
+        "caption": "David facing down Adam Smasher with zero regrets high above Night City.",
+        "mediaUrl": "/edgerunners/ep-10/shot-01-incident.webp"
+      },
+      {
+        "title": "GETAWAY PROTOCOL",
+        "tag": "ESCAPE",
+        "caption": "Falco and Rebecca executing the emergency evacuation maneuver.",
+        "mediaUrl": "/edgerunners/ep-10/shot-02-character.webp"
+      },
+      {
+        "title": "ORBITAL ASCENT",
+        "tag": "LUNAR SHUTTLE",
+        "caption": "The civilian lunar transport leaving Earth's atmosphere.",
+        "mediaUrl": "/edgerunners/ep-10/shot-03-climax.webp"
+      },
+      {
+        "title": "THE MOON",
+        "tag": "MOON",
+        "caption": "Lucy standing alone beneath the radiant blue Earth in lunar silence.",
+        "mediaUrl": "/edgerunners/ep-10/shot-04-panoramic.webp"
+      }
+    ],
+    "meta": {
+      "duration": "26:10",
+      "format": "BD SHARD",
+      "channel": "S1.EP10",
+      "quality": "1080P MASTER"
+    }
+  }
 ];

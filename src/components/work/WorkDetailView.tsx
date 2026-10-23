@@ -307,11 +307,15 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
             {/* Metadata Specs Bar */}
             <div className="grid grid-cols-2 gap-2.5 border-y border-crt-phosphor/20 py-2 sm:py-2.5 text-[10px] sm:text-[11px]">
               <div>
-                <span className="text-crt-phosphor/40 block text-[9px] sm:text-[10px] tracking-wider">ROLE</span>
+                <span className="text-crt-phosphor/40 block text-[9px] sm:text-[10px] tracking-wider">
+                  {tape.id.startsWith("ep-") ? "FEATURED CHARACTER" : "ROLE"}
+                </span>
                 <span className="text-crt-phosphor font-bold truncate block">{tape.role}</span>
               </div>
               <div>
-                <span className="text-crt-phosphor/40 block text-[9px] sm:text-[10px] tracking-wider">DISCIPLINE</span>
+                <span className="text-crt-phosphor/40 block text-[9px] sm:text-[10px] tracking-wider">
+                  {tape.id.startsWith("ep-") ? "KEY SOUNDTRACK" : "DISCIPLINE"}
+                </span>
                 <span className="text-crt-phosphor font-bold truncate block">
                   {tape.client}
                 </span>
@@ -367,7 +371,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
             <img
               src={tape.shots[0]?.mediaUrl || tape.image}
               alt={tape.shots[0]?.title || tape.title}
-              className="w-full h-full object-cover contrast-110 brightness-95 group-hover:scale-105 transition-transform duration-700 pointer-events-none"
+              className="w-full h-full object-cover contrast-110 brightness-95 grayscale-[40%] group-hover:grayscale-0 group-hover:contrast-105 group-hover:brightness-100 group-hover:scale-105 transition-[filter,transform] duration-500 pointer-events-none"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
           </div>
@@ -387,7 +391,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
 
             <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-crt-phosphor/50 tracking-widest uppercase z-10">
               <span className="w-1.5 h-1.5 bg-crt-phosphor/70 inline-block" />
-              <span>01 // THE CHALLENGE</span>
+              <span>{tape.id.startsWith("ep-") ? "01 // THE INCITING INCIDENT" : "01 // THE CHALLENGE"}</span>
             </div>
 
             <h2 className="font-bit text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-crt-phosphor phosphor-glow uppercase z-10">
@@ -399,7 +403,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
             </p>
 
             <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 bg-crt-phosphor/10 border border-crt-phosphor/30 text-[10px] text-crt-phosphor w-fit font-bold tracking-wider z-10">
-              <span>[ CORE ARCHIVAL DIRECTION ]</span>
+              <span>{tape.id.startsWith("ep-") ? "[ INCIDENT DOSSIER ]" : "[ CORE ARCHIVAL DIRECTION ]"}</span>
             </div>
           </section>
         )}
@@ -415,7 +419,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
               <img
                 src={tape.shots[1]?.mediaUrl || tape.shots[0]?.mediaUrl || tape.image}
                 alt={tape.shots[1]?.title || "Shot 01"}
-                className="w-full h-full object-cover object-top scale-105 group-hover:scale-110 transition-transform duration-700 pointer-events-none"
+                className="w-full h-full object-cover object-top scale-105 contrast-110 brightness-95 grayscale-[40%] group-hover:grayscale-0 group-hover:contrast-105 group-hover:brightness-100 group-hover:scale-110 transition-[filter,transform] duration-500 pointer-events-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
             </div>
@@ -433,7 +437,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
               <img
                 src={tape.shots[2]?.mediaUrl || tape.shots[1]?.mediaUrl || tape.image}
                 alt={tape.shots[2]?.title || "Shot 02"}
-                className="w-full h-full object-cover object-bottom contrast-125 group-hover:scale-110 transition-transform duration-700 pointer-events-none"
+                className="w-full h-full object-cover object-bottom contrast-110 brightness-95 grayscale-[40%] group-hover:grayscale-0 group-hover:contrast-105 group-hover:brightness-100 group-hover:scale-110 transition-[filter,transform] duration-500 pointer-events-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
             </div>
@@ -453,7 +457,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
 
             <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-crt-phosphor/50 tracking-widest uppercase z-10">
               <span className="w-1.5 h-1.5 bg-crt-phosphor/70 inline-block" />
-              <span>02 // ARCHITECTURE & METRICS</span>
+              <span>{tape.id.startsWith("ep-") ? "02 // CLIMAX & TURNING POINT" : "02 // ARCHITECTURE & METRICS"}</span>
             </div>
 
             <h2 className="font-bit text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-crt-phosphor phosphor-glow uppercase z-10">
@@ -502,7 +506,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
             <img
               src={tape.shots[3]?.mediaUrl || tape.shots[2]?.mediaUrl || tape.image}
               alt={tape.shots[3]?.title || "Panoramic View"}
-              className="w-full h-full object-cover contrast-110 brightness-95 group-hover:scale-105 transition-transform duration-700 pointer-events-none"
+              className="w-full h-full object-cover contrast-110 brightness-95 grayscale-[40%] group-hover:grayscale-0 group-hover:contrast-105 group-hover:brightness-100 group-hover:scale-105 transition-[filter,transform] duration-500 pointer-events-none"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
           </div>
@@ -521,11 +525,11 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
 
           <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-crt-phosphor/50 tracking-widest uppercase z-10">
             <span className="w-1.5 h-1.5 bg-crt-phosphor/70 inline-block" />
-            <span>03 // CORE ENGINE & STACK</span>
+            <span>{tape.id.startsWith("ep-") ? "03 // DIALOGUE & AFTERMATH" : "03 // CORE ENGINE & STACK"}</span>
           </div>
 
           <h2 className="font-bit text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-crt-phosphor phosphor-glow uppercase z-10">
-            CORE TECHNOLOGIES
+            {tape.id.startsWith("ep-") ? "ICONIC DIALOGUE" : "CORE TECHNOLOGIES"}
           </h2>
 
           <p className="text-[11px] sm:text-xs text-crt-phosphor/80 leading-relaxed z-10">
@@ -548,7 +552,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
           {tape.takeaways && tape.takeaways.length > 0 && (
             <div className="flex flex-col gap-1.5 pt-2 border-t border-crt-phosphor/15 z-10">
               <span className="text-[9px] text-crt-phosphor/50 tracking-wider uppercase">
-                TAKEAWAY NOTES
+                {tape.id.startsWith("ep-") ? "KEY QUOTE" : "TAKEAWAY NOTES"}
               </span>
               <p className="text-[10px] sm:text-[11px] text-crt-phosphor/75 italic leading-snug">
                 &ldquo;{tape.takeaways[0]}&rdquo;
