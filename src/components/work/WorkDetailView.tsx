@@ -282,7 +282,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
             className="relative h-full max-h-[min(350px,52cqh)] min-h-[220px] aspect-[130/196] bg-[#141210] rounded-xs border border-crt-phosphor/30 shadow-[0_20px_50px_rgba(0,0,0,0.85)] rotate-[-2deg] hover:rotate-0 transition-transform duration-500 overflow-hidden shrink-0 will-change-transform group cursor-pointer"
           >
             <img
-              src={`/tapes/${tape.id}-front.webp`}
+              src={`/tapes/${tape.id}-front.webp?v=${tape.wearSeed}`}
               alt={tape.title}
               className="w-full h-full object-cover rounded-xs pointer-events-none group-hover:scale-102 transition-transform duration-500"
             />
@@ -365,20 +365,15 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
             className="relative h-[88%] aspect-[16/10] bg-black/95 border border-crt-phosphor/25 rounded-xs overflow-hidden shadow-2xl group will-change-transform"
           >
             <img
-              src={tape.image}
-              alt={tape.title}
+              src={tape.shots[0]?.mediaUrl || tape.image}
+              alt={tape.shots[0]?.title || tape.title}
               className="w-full h-full object-cover contrast-110 brightness-95 group-hover:scale-105 transition-transform duration-700 pointer-events-none"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
-            
-            {/* Top-Right HUD Badge */}
-            <div className="absolute top-2.5 right-2.5 px-2 py-0.5 bg-black/80 border border-crt-phosphor/30 text-[9px] text-crt-phosphor font-mono tracking-widest uppercase">
-              <span>NTSC-SP • MASTER REEL</span>
-            </div>
           </div>
           <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-crt-phosphor/50 px-1">
-            <span>01 • PRIMARY INTERFACE CAPTURE</span>
-            <span className="truncate max-w-[240px]">{tape.title}</span>
+            <span>01 • {tape.shots[0]?.title || "PRIMARY INTERFACE CAPTURE"}</span>
+            <span className="truncate max-w-[240px]">{tape.shots[0]?.caption || tape.title}</span>
           </div>
         </section>
 
@@ -418,17 +413,14 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
               className="relative h-full aspect-[16/10] max-w-full bg-black/90 border border-crt-phosphor/25 rounded-xs overflow-hidden group will-change-transform shadow-lg"
             >
               <img
-                src={tape.shots[0]?.mediaUrl || tape.image}
-                alt={tape.shots[0]?.title || "Shot 01"}
+                src={tape.shots[1]?.mediaUrl || tape.shots[0]?.mediaUrl || tape.image}
+                alt={tape.shots[1]?.title || "Shot 01"}
                 className="w-full h-full object-cover object-top scale-105 group-hover:scale-110 transition-transform duration-700 pointer-events-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute top-2 left-2 px-1.5 py-0.5 bg-black/85 border border-crt-phosphor/30 text-[8px] sm:text-[9px] text-crt-phosphor font-mono">
-                {tape.shots[0]?.tag || "INTERFACE"}
-              </div>
             </div>
             <div className="flex items-center justify-between text-[9px] sm:text-[10px] font-mono text-crt-phosphor/60 px-0.5">
-              <span className="truncate">02.A • {tape.shots[0]?.title || "SYSTEM INTERFACE"}</span>
+              <span className="truncate">02.A • {tape.shots[1]?.title || tape.shots[0]?.title || "SYSTEM INTERFACE"}</span>
             </div>
           </div>
 
@@ -439,17 +431,14 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
               className="relative h-full aspect-[16/10] max-w-full bg-black/90 border border-crt-phosphor/25 rounded-xs overflow-hidden group will-change-transform shadow-lg"
             >
               <img
-                src={tape.shots[1]?.mediaUrl || tape.image}
-                alt={tape.shots[1]?.title || "Shot 02"}
+                src={tape.shots[2]?.mediaUrl || tape.shots[1]?.mediaUrl || tape.image}
+                alt={tape.shots[2]?.title || "Shot 02"}
                 className="w-full h-full object-cover object-bottom contrast-125 group-hover:scale-110 transition-transform duration-700 pointer-events-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute top-2 left-2 px-1.5 py-0.5 bg-black/85 border border-crt-phosphor/30 text-[8px] sm:text-[9px] text-crt-phosphor font-mono">
-                {tape.shots[1]?.tag || "TELEMETRY"}
-              </div>
             </div>
             <div className="flex items-center justify-between text-[9px] sm:text-[10px] font-mono text-crt-phosphor/60 px-0.5">
-              <span className="truncate">02.B • {tape.shots[1]?.title || "TELEMETRY OVERLAY"}</span>
+              <span className="truncate">02.B • {tape.shots[2]?.title || tape.shots[1]?.title || "TELEMETRY OVERLAY"}</span>
             </div>
           </div>
         </section>
@@ -511,18 +500,15 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
             className="relative h-[66%] aspect-[21/9] min-w-[340px] sm:min-w-[460px] md:min-w-[540px] bg-black/95 border border-crt-phosphor/30 rounded-xs overflow-hidden shadow-2xl group will-change-transform"
           >
             <img
-              src={tape.shots[2]?.mediaUrl || tape.image}
-              alt={tape.shots[2]?.title || "Panoramic View"}
+              src={tape.shots[3]?.mediaUrl || tape.shots[2]?.mediaUrl || tape.image}
+              alt={tape.shots[3]?.title || "Panoramic View"}
               className="w-full h-full object-cover contrast-110 brightness-95 group-hover:scale-105 transition-transform duration-700 pointer-events-none"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
-            <div className="absolute top-2.5 right-2.5 px-2 py-0.5 bg-black/85 border border-crt-phosphor/30 text-[9px] text-crt-phosphor font-mono">
-              21:9 CINEMASCOPE
-            </div>
           </div>
           <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-crt-phosphor/50 px-1">
-            <span>03 • {tape.shots[2]?.title || "EXPANDED TELEMETRY DISPLAY"}</span>
-            <span className="truncate max-w-[240px]">{tape.title}</span>
+            <span>03 • {tape.shots[3]?.title || tape.shots[2]?.title || "EXPANDED TELEMETRY DISPLAY"}</span>
+            <span className="truncate max-w-[240px]">{tape.shots[3]?.caption || tape.title}</span>
           </div>
         </section>
 
@@ -570,6 +556,30 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
             </div>
           )}
         </section>
+
+        {/* 7.B ADDITIONAL ARCHIVAL CAPTURES (if > 4 shots) */}
+        {tape.shots && tape.shots.slice(4).map((shot, idx) => (
+          <section
+            key={shot.title + idx}
+            className="pj-screen-height flex flex-col justify-center gap-2 flex-shrink-0"
+          >
+            <div
+              data-parallax="true"
+              className="relative h-[84%] aspect-[16/10] bg-black/95 border border-crt-phosphor/25 rounded-xs overflow-hidden shadow-2xl group will-change-transform"
+            >
+              <img
+                src={shot.mediaUrl || tape.image}
+                alt={shot.title}
+                className="w-full h-full object-cover contrast-110 brightness-95 group-hover:scale-105 transition-transform duration-700 pointer-events-none"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+            </div>
+            <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-crt-phosphor/50 px-1">
+              <span>0{4 + idx} • {shot.title}</span>
+              <span className="truncate max-w-[280px]">{shot.caption}</span>
+            </div>
+          </section>
+        ))}
 
         {/* 8. ADVANCE TO NEXT REEL CARD with elastic parallax */}
         <section className="pj-screen-height flex items-center justify-center pr-16 sm:pr-20 pl-6 flex-shrink-0">

@@ -163,9 +163,15 @@ html.bw .tv {
   100% { transform: translateY(500%); }
 }
 
-/* Phosphor Glow on Active Text */
-.phosphor-glow {
-  text-shadow: 0 0 6px rgba(236, 233, 225, 0.35), -0.6px 0 rgba(255, 40, 70, 0.3), 0.6px 0 rgba(40, 150, 255, 0.3);
+/* Phosphor Glow on Active Text & HUD elements (Arc Marumo Authentic) */
+.phosphor-glow,
+.vhs-head,
+.vhs-foot,
+.vhs-caption,
+.pj-intro {
+  text-shadow: rgba(236, 233, 225, 0.22) 0px 0px 6px,
+               rgba(255, 40, 70, 0.35) -0.6px 0px,
+               rgba(40, 150, 255, 0.35) 0.6px 0px;
 }
 
 /* Hide scrollbars for horizontal gallery track */
@@ -177,20 +183,32 @@ html.bw .tv {
   scrollbar-width: none;
 }
 
-/* Reveal Masking & Staggered Entrance */
+/* Reveal Masking & Staggered Entrance (100% Arc Marumo Production Pattern) */
 .rv {
-  clip-path: inset(0 -100vw);
+  clip-path: inset(0px -100vw);
   display: block;
 }
-.rv-inline {
-  clip-path: inset(0 -100vw);
-  display: inline-block;
+.rv:has(> .rv-in) {
+  clip-path: inset(-24px -100vw);
+  transition: clip-path 2.2s;
 }
+
+.rv-inline {
+  clip-path: inset(0px -100vw);
+  display: inline-flex;
+  vertical-align: bottom;
+}
+.rv-inline:has(> .rv-in) {
+  clip-path: inset(-24px -100vw);
+  transition: clip-path 2.2s;
+}
+
 .rv-i {
   opacity: 0;
-  transform: translateY(115%);
-  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease-out;
-  display: block;
+  transform: translateY(110%);
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-block;
+  will-change: transform, opacity;
 }
 .rv-in {
   opacity: 1;

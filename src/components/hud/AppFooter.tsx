@@ -50,22 +50,26 @@ export function AppFooter({ intro = true }: AppFooterProps) {
   return (
     <footer className="w-full flex items-center justify-between select-none z-40 tracking-wider shrink-0 font-mono text-[clamp(13px,1.15vw,16px)]">
       {/* 1. Left: Local Timezone Clock & B&W Mode Switch (36px gap) */}
-      <Reveal on={intro} i={3}>
-        <div className="flex items-center gap-[clamp(18px,2.5vw,36px)]">
+      <div className="flex items-center gap-[clamp(18px,2.5vw,36px)]">
+        <Reveal on={intro} i={3} inline>
           <span className="text-crt-phosphor/70 tracking-widest">
             {timeStr}
           </span>
+        </Reveal>
+        <Reveal on={intro} i={4} inline>
           <BwToggle />
-        </div>
-      </Reveal>
+        </Reveal>
+      </div>
 
       {/* 2. Right: Hardware Source Stamp & Interactive Email Copy (60px gap) */}
-      <Reveal on={intro} i={4}>
-        <div className="flex items-center gap-[clamp(24px,4.2vw,60px)]">
+      <div className="flex items-center gap-[clamp(24px,4.2vw,60px)]">
+        <Reveal on={intro} i={4} inline>
           <span className="text-crt-phosphor/50 tracking-wider">
             SOURCE: MAC
           </span>
+        </Reveal>
 
+        <Reveal on={intro} i={5} inline>
           <button
             type="button"
             onClick={handleCopyEmail}
@@ -74,8 +78,8 @@ export function AppFooter({ intro = true }: AppFooterProps) {
           >
             {copied ? "[ COPIED ]" : "EMAIL"}
           </button>
-        </div>
-      </Reveal>
+        </Reveal>
+      </div>
     </footer>
   );
 }

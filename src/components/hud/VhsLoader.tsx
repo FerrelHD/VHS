@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 interface VhsLoaderProps {
   ready?: boolean;
   onDone: () => void;
+  onStartOut?: () => void;
 }
 
 /**
@@ -12,15 +13,20 @@ interface VhsLoaderProps {
  * Features bottom tabular loading percentage, vintage CRT ticks bar,
  * dashed inactive progress rail, and smooth exponential easing.
  */
-export function VhsLoader({ ready = false, onDone }: VhsLoaderProps) {
+export function VhsLoader({ ready = false, onDone, onStartOut }: VhsLoaderProps) {
   const [percent, setPercent] = useState(0);
   const [isOut, setIsOut] = useState(false);
   const animRef = useRef(0);
   const onDoneRef = useRef(onDone);
+  const onStartOutRef = useRef(onStartOut);
 
   useEffect(() => {
     onDoneRef.current = onDone;
   }, [onDone]);
+
+  useEffect(() => {
+    onStartOutRef.current = onStartOut;
+  }, [onStartOut]);
 
   // Exponential progress interpolation
   useEffect(() => {
@@ -56,15 +62,16 @@ export function VhsLoader({ ready = false, onDone }: VhsLoaderProps) {
   useEffect(() => {
     if (percent < 100) return;
 
-    // Hold 100% for 350ms, then trigger fade-out
+    // Hold 100% for 300ms, then trigger fade-out & entrance animation choreography
     const tOut = setTimeout(() => {
       setIsOut(true);
-    }, 350);
+      onStartOutRef.current?.();
+    }, 300);
 
-    // After 850ms (350ms hold + 500ms fade), signal parent completion
+    // After 800ms (300ms hold + 500ms fade), signal parent completion
     const tDone = setTimeout(() => {
       onDoneRef.current();
-    }, 850);
+    }, 800);
 
     return () => {
       clearTimeout(tOut);

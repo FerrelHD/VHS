@@ -55,3 +55,14 @@ export function unbendPoint(
 export function expDecay(current: number, target: number, speed: number, dt: number): number {
   return target + (current - target) * Math.exp(-speed * dt);
 }
+
+/**
+ * Ultra-smooth physical entrance easing with zero initial jerk and luxurious deceleration tail.
+ * f(t) = 1 - (1 - t^2)^3
+ * Derivative f'(0) = 0 (smooth, gentle takeoff), f'(1) = 0 (silky cushioned landing).
+ */
+export function smoothEntranceEase(t: number): number {
+  const clamped = Math.max(0, Math.min(1, t));
+  const oneMinusT2 = 1 - clamped * clamped;
+  return 1 - oneMinusT2 * oneMinusT2 * oneMinusT2;
+}

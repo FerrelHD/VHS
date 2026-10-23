@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { TapeProject } from "@/data/tapes";
-import { onArc, VHS_METRICS } from "@/lib/math";
+import { TapeProject, TAPE_PROJECTS } from "@/data/tapes";
+import { onArc, VHS_METRICS, smoothEntranceEase } from "@/lib/math";
 
 export interface CarouselSharedState {
   currentOffset: number;
@@ -32,11 +32,9 @@ export type SleeveArchetype =
 
 export function getSleeveArchetype(tape: TapeProject): SleeveArchetype {
   if (tape.id === "araki-art" || tape.id === "ferrel-portfolio") return "editorial";
-  if (tape.id === "tactiq" || tape.id === "stock-predictor") return "cyber";
-  if (tape.id === "student-life" || tape.id === "fersya-shop") return "swiss";
+  if (tape.id === "tactiq") return "cyber";
+  if (tape.id === "student-life") return "swiss";
   if (tape.id === "gunung-gede" || tape.id === "nusantara-observatory") return "expedition";
-  if (tape.id === "street-rush") return "arcade";
-  if (tape.id === "ecobite") return "eco";
 
   if (tape.categoryFilter === "ml") return "cyber";
   if (tape.categoryFilter === "games") return "arcade";
@@ -61,14 +59,15 @@ export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMe
     }
     const loader = new THREE.TextureLoader();
 
-    const front = loader.load(`/tapes/${tape.id}-front.webp`);
+    const v = tape.wearSeed || 1;
+    const front = loader.load(`/tapes/${tape.id}-front.webp?v=${v}`);
     front.colorSpace = THREE.SRGBColorSpace;
     front.anisotropy = 16;
     front.minFilter = THREE.LinearMipmapLinearFilter;
     front.magFilter = THREE.LinearFilter;
     front.generateMipmaps = true;
 
-    const spine = loader.load(`/tapes/${tape.id}-spine.webp`);
+    const spine = loader.load(`/tapes/${tape.id}-spine.webp?v=${v}`);
     spine.colorSpace = THREE.SRGBColorSpace;
     spine.anisotropy = 16;
     spine.minFilter = THREE.LinearMipmapLinearFilter;
@@ -76,7 +75,7 @@ export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMe
     spine.generateMipmaps = true;
 
     return { frontTexture: front, spineTexture: spine };
-  }, [tape.id]);
+  }, [tape.id, tape.wearSeed]);
 
   // 2. Load authentic industrial VHS cassette textures (Smoky acrylic window, reel spoke hub, fluted grip ribs)
   const { cassetteFrontTex, cassetteRoughnessTex, cassetteTopTex } = useMemo(() => {
@@ -194,48 +193,67 @@ export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMe
     const dt = Math.min(delta, 0.05);
     const M = state.enterProgress;
 
-    // 1. Linear distance from active center slot
+    const N = TAPE_PROJECTS.length;
+    const loopPeriod = N * VHS_METRICS.SLOT_SPACING;
+    const halfPeriod = loopPeriod / 2;
+
+    // 1. Linear distance from active center slot with circular wrapping (Infinite Looping)
     const tapeLinearPos = index * VHS_METRICS.SLOT_SPACING;
-    const offset = tapeLinearPos - state.currentOffset;
+    const rawOffset = tapeLinearPos - state.currentOffset;
+    let offset = ((rawOffset + halfPeriod) % loopPeriod);
+    if (offset < 0) offset += loopPeriod;
+    offset -= halfPeriod;
+
     const distUnits = Math.abs(offset) / VHS_METRICS.SLOT_SPACING;
 
-    // 2. Frustum Culling
-    if (distUnits > 4.5) {
+    // 2. Frustum Culling & Entrance Visibility (Zero pop-in before animation starts)
+    const easeM = smoothEntranceEase(M);
+    if (distUnits > 3.4 || easeM <= 0.0001) {
       group.visible = false;
       return;
     }
     group.visible = true;
 
-    // 3. Cylindrical Arc Positioning
+    // 3. Cylindrical Arc Positioning (Ultra-smooth physical entrance)
     const arc = onArc(offset, VHS_METRICS.ARC_RADIUS);
     const baseY = 24;
-    const riseY = (1 - M) * 260; // Swoops up from -260 below
+    const riseY = (1 - easeM) * 380; // Starts 380 units below, completely hidden outside screen
     const pushZ = Math.abs(offset) * 0.045 * state.squash;
 
     group.position.set(arc.x, baseY - riseY, -arc.dropZ - pushZ);
 
     // 4. 3D Physical Swoop Tilt + Velocity Banking + Mouse Parallax
     const isCenter = Math.max(0, 1 - distUnits);
-    const tiltX = -0.88 * (1 - M) - 0.38 * state.squash - 0.16 * state.tilt.y * isCenter;
+    const tiltX = -0.32 * (1 - easeM) - 0.38 * state.squash - 0.16 * state.tilt.y * isCenter;
     const bankY = Math.max(-0.45, Math.min(0.45, -0.00014 * state.velocity)) + 0.22 * state.tilt.x * isCenter;
 
     group.rotation.set(tiltX, arc.rotationY + bankY, 0);
 
-    // 5. Cassette Peek Animation (Only emerges when selected, fully tucked when idle)
-    const targetPeek = isSelected ? VHS_METRICS.PEEK : VHS_METRICS.PEEK_IDLE;
+    // 5. Cassette Peek Animation (Slides out gracefully once sleeve reaches resting position)
+    const shouldPeek = isSelected && easeM > 0.65;
+    const targetPeek = shouldPeek ? VHS_METRICS.PEEK : VHS_METRICS.PEEK_IDLE;
     currentPeekRef.current += (targetPeek - currentPeekRef.current) * (1 - Math.exp(-9 * dt));
     cassette.position.y = currentPeekRef.current;
     cassette.visible = isSelected || currentPeekRef.current > 0.5;
 
-    // 6. Dynamic Phosphor Smoothstep Lighting Falloff
+    // 6. Dynamic Phosphor Smoothstep Lighting Falloff & Entrance Fade-In
     const litFactor = Math.max(0, 1 - distUnits / 1.75);
-    const lit = litFactor * litFactor * (3 - 2 * litFactor) * M;
+    const lit = litFactor * litFactor * (3 - 2 * litFactor) * easeM;
+    const ambientFade = Math.min(1, easeM * 2.5); // Fades in smoothly from deep shadows
 
     if (frontMatRef.current) {
-      frontMatRef.current.color.setRGB(0.25 + 0.75 * lit, 0.25 + 0.75 * lit, 0.25 + 0.75 * lit);
+      frontMatRef.current.color.setRGB(
+        0.25 * ambientFade + 0.75 * lit,
+        0.25 * ambientFade + 0.75 * lit,
+        0.25 * ambientFade + 0.75 * lit
+      );
     }
     if (spineMatRef.current) {
-      spineMatRef.current.color.setRGB(0.25 + 0.75 * lit, 0.25 + 0.75 * lit, 0.25 + 0.75 * lit);
+      spineMatRef.current.color.setRGB(
+        0.25 * ambientFade + 0.75 * lit,
+        0.25 * ambientFade + 0.75 * lit,
+        0.25 * ambientFade + 0.75 * lit
+      );
     }
   });
 

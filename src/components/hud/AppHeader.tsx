@@ -41,8 +41,8 @@ export function AppHeader({
   return (
     <header className="w-full flex items-center justify-between select-none z-40 font-mono tracking-wider shrink-0 relative">
       {/* 1. Left: Home status & Running Timecode (Fixed 214px broadcast gap) */}
-      <Reveal on={intro} i={1}>
-        <div className="flex items-center gap-[clamp(48px,14vw,214px)]">
+      <div className="flex items-center gap-[clamp(48px,14vw,214px)]">
+        <Reveal on={intro} i={1} inline>
           <button
             type="button"
             onClick={() => {
@@ -67,12 +67,14 @@ export function AppHeader({
               {activeView === "deck" ? "HOME" : "← REELS"}
             </span>
           </button>
+        </Reveal>
 
-          <span className="hidden sm:inline-block text-crt-phosphor/60 tracking-widest tabular-nums select-none whitespace-nowrap text-[clamp(13px,1.2vw,17px)]">
+        <Reveal on={intro} i={2} inline className="hidden sm:inline-flex">
+          <span className="text-crt-phosphor/60 tracking-widest tabular-nums select-none whitespace-nowrap text-[clamp(13px,1.2vw,17px)]">
             {formatTimecode(seconds)}
           </span>
-        </div>
-      </Reveal>
+        </Reveal>
+      </div>
 
       {/* 2. Center: Brand Lockup (Dead Center, calibrated 36px font in authentic NeueBit pixel font) */}
       <div
@@ -94,8 +96,8 @@ export function AppHeader({
       </div>
 
       {/* 3. Right: Nav Links (Fixed 52px gutter, 15px font) */}
-      <Reveal on={intro} i={2}>
-        <nav className="flex items-center gap-[clamp(20px,3.8vw,52px)] text-[clamp(12px,1.1vw,15px)]">
+      <nav className="flex items-center gap-[clamp(20px,3.8vw,52px)] text-[clamp(12px,1.1vw,15px)]">
+        <Reveal on={intro} i={2} inline>
           <button
             type="button"
             onClick={() => {
@@ -110,7 +112,9 @@ export function AppHeader({
           >
             PROFILE
           </button>
+        </Reveal>
 
+        <Reveal on={intro} i={3} inline>
           <button
             type="button"
             onClick={() => {
@@ -125,7 +129,9 @@ export function AppHeader({
           >
             ARCHIVE
           </button>
+        </Reveal>
 
+        <Reveal on={intro} i={4} inline>
           <button
             type="button"
             onClick={() => {
@@ -140,8 +146,8 @@ export function AppHeader({
           >
             CONTACT
           </button>
-        </nav>
-      </Reveal>
+        </Reveal>
+      </nav>
     </header>
   );
 }

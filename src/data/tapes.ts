@@ -152,18 +152,35 @@ export const TAPE_PROJECTS: TapeProject[] = [
         tag: "EDITORIAL GRID",
         caption: "Swiss typographic blueprint with modular hairline division rules.",
         accent: "#f59e0b",
-      },
-      {
-        title: "CHROMATIC STATE MACHINE",
-        tag: "PALETTE ENGINE",
-        caption: "Instant dual-palette shift between monochromatic noir and runway crimson.",
-        accent: "#ef4444",
+        mediaUrl: "/projects/Araki Aesthetic.png",
       },
       {
         title: "KINETIC RUNWAY CAPSULES",
         tag: "MICRO-INTERACTIONS",
         caption: "Physics-driven horizontal carousel showcasing curated luxury collaborations.",
         accent: "#eab308",
+        mediaUrl: "/projects/Araki Capsules.png",
+      },
+      {
+        title: "CHROMATIC STATE MACHINE",
+        tag: "PALETTE ENGINE",
+        caption: "Instant dual-palette shift between monochromatic noir and runway crimson.",
+        accent: "#ef4444",
+        mediaUrl: "/projects/Araki Valentine.png",
+      },
+      {
+        title: "COLLABORATION ARCHIVE PANORAMA",
+        tag: "21:9 CINEMASCOPE",
+        caption: "Curated showcase documenting historical luxury and museum exhibitions.",
+        accent: "#f59e0b",
+        mediaUrl: "/projects/Araki Gallery.png",
+      },
+      {
+        title: "ANATOMY ACCORDION & COUTURE INDEX",
+        tag: "EDITORIAL ANATOMY",
+        caption: "Deep-dive analytical accordion deconstructing Contrapposto and couture tailoring.",
+        accent: "#eab308",
+        mediaUrl: "/projects/Araki Footer.png",
       },
     ],
     meta: {
@@ -345,22 +362,39 @@ export const TAPE_PROJECTS: TapeProject[] = [
     ],
     shots: [
       {
-        title: "PROCEDURAL AUDIO SYNTHESIZER",
-        tag: "DSP ENGINE",
-        caption: "Zero-sample Web Audio synthesizers recreating mechanical menu clicks and gunshots.",
+        title: "CONSOLE HOME & ZERO-SCROLL MATRIX",
+        tag: "CONSOLE UI",
+        caption: "1080p game-console interface featuring procedural Web Audio, diagonal perspective ribbons, and zero layout shift.",
         accent: "#38bdf8",
+        mediaUrl: "/projects/Persona Home.png",
       },
       {
-        title: "CSS 3D DIAGONAL PERSPECTIVE",
-        tag: "TRANSFORM MATRIX",
-        caption: "Sheared menu ribbons with synchronized kinetic character choreography.",
+        title: "TARTARUS EXPEDITION & MISSION ENGINE",
+        tag: "TACTICAL ENGINE",
+        caption: "Dynamic mission deployment matrix with sheared CSS 3D perspective and real-time state machine choreography.",
         accent: "#60a5fa",
+        mediaUrl: "/projects/Persona Missions.png",
       },
       {
-        title: "ZERO-SCROLL CANVAS ARCHITECTURE",
-        tag: "VIEWPORT ENGINE",
-        caption: "State machine orchestrating instant scene transitions with zero layout shift.",
-        accent: "#818cf8",
+        title: "SOCIAL LINK COMMS TERMINAL",
+        tag: "COMMS INTERFACE",
+        caption: "Real-time communication hub modeled after game controller dialogue sequences with procedural audio clicks.",
+        accent: "#00d2ff",
+        mediaUrl: "/projects/Persona Comms.png",
+      },
+      {
+        title: "VELVET ROOFTOP HIDEOUT PANORAMA",
+        tag: "21:9 CINEMASCOPE",
+        caption: "Cinematic Velvet Room hideout panorama with high-contrast character art and dynamic lighting overlay.",
+        accent: "#0284c7",
+        mediaUrl: "/projects/Persona Hideout.png",
+      },
+      {
+        title: "OPERATIVE DOSSIER & PROFILE TELEMETRY",
+        tag: "PROFILE DOSSIER",
+        caption: "Protagonist character breakdown with dynamic typography jitter, stats telemetry, and stylized equipment slots.",
+        accent: "#38bdf8",
+        mediaUrl: "/projects/Persona About.png",
       },
     ],
     meta: {
@@ -387,7 +421,7 @@ export const TAPE_PROJECTS: TapeProject[] = [
     story:
       "Bespoke Canvas 2D rendering pipeline using custom equirectangular coordinate transforms. Kept the initial payload under 90 KB while sustaining 60 FPS rendering of thousands of historical earthquake epicenters, plate boundary polygons, and active volcano alerts.",
     color: "#1f1810",
-    wearSeed: 202604,
+    wearSeed: 202616,
     image: "/projects/Crustal Poster.png",
     liveUrl: "https://nusantara-observatory.vercel.app/",
     githubUrl: "https://github.com/FerrelHD/Global-Seismic-Tracker",
@@ -448,6 +482,7 @@ export const TAPE_PROJECTS: TapeProject[] = [
         tag: "REAL-TIME GEO",
         caption: "Cluster analysis tracking subduction zone micro-tremors in real time.",
         accent: "#f59e0b",
+        mediaUrl: "/projects/Indonesian Crustal Observatory.png",
       },
       {
         title: "VOLCANIC ALERT MATRIX",
@@ -559,263 +594,6 @@ export const TAPE_PROJECTS: TapeProject[] = [
     },
   },
   {
-    id: "ecobite",
-    code: "FRA_05",
-    title: "ECOBITE RESCUE",
-    headline: "Campus food rescue & SDG 12 sustainability platform.",
-    year: 2026,
-    category: "CAMPUS FOOD RESCUE • SDG 12 PLATFORM",
-    categoryFilter: "web",
-    role: "Fullstack Engineer & UI Lead",
-    client: "Campus Sustainability Initiative",
-    system: "Next.js 14 · TypeScript · Prisma · Tailwind · Supabase",
-    tags: ["Next.js 14", "TypeScript", "Prisma ORM", "Tailwind CSS", "PostgreSQL"],
-    summary:
-      "Campus food rescue platform with real-time GPS radar, dynamic QR rescue passes, and ESG carbon reduction & EcoPoints tracking.",
-    story:
-      "Transactional reservation flow with cryptographic QR claim verification. Inventory locking mechanism using PostgreSQL transactions and Prisma to prevent race conditions during end-of-day surplus meal claims.",
-    color: "#18261e",
-    wearSeed: 202602,
-    image: "/projects/Eco-Bite.png",
-    githubUrl: "https://github.com/FerrelHD/Eco-Bite",
-    metrics: [
-      { label: "Impact Focus", value: "SDG 12" },
-      { label: "Pass Generation", value: "Dynamic QR" },
-      { label: "Tracking", value: "ESG Carbon Reductions" },
-      { label: "Stack", value: "Next.js 14" },
-    ],
-    problem: {
-      headline: "Preventing campus cafeteria food waste through rapid-response redistributions.",
-      description:
-        "Excess food from campus cafeterias and vendors frequently ended up discarded despite high student demand for affordable meals. EcoBite bridges supply and demand with a real-time rescue marketplace.",
-    },
-    architecture: {
-      headline: "Transactional reservation flow with cryptographic QR claim verification.",
-      description:
-        "Engineered an inventory locking mechanism using PostgreSQL transactions and Prisma to prevent race conditions during end-of-day surplus meal claims, paired with verifiable dynamic QR codes.",
-      highlights: [
-        {
-          title: "Inventory Concurrency Guard",
-          detail: "Row-level locking ensuring zero double-claiming when meal batches hit clearance discounts.",
-        },
-        {
-          title: "Carbon Footprint Calculator",
-          detail: "Real-time metric calculation translating saved meals into CO2 reduction statistics.",
-        },
-        {
-          title: "Geo-Radius Discovery",
-          detail: "Proximity sorting highlighting immediate food pickup opportunities within walking distance.",
-        },
-      ],
-    },
-    features: [
-      {
-        title: "Live Rescue Radar",
-        description: "Map and list feeds showing remaining food servings with countdown timers.",
-        tag: "Surplus Radar",
-      },
-      {
-        title: "Dynamic QR Pass",
-        description: "Time-expiring QR passes scanned by vendors for instant contactless verification.",
-        tag: "Verification",
-      },
-    ],
-    takeaways: [
-      "Food rescue platforms require ultra-low friction checkout flows because vendor surplus windows are typically under 30 minutes.",
-    ],
-    shots: [
-      {
-        title: "GEO-RADIUS RESCUE RADAR",
-        tag: "GPS TELEMETRY",
-        caption: "Live proximity scanner highlighting available surplus portions across campus venues.",
-        accent: "#10b981",
-      },
-      {
-        title: "INVENTORY CONCURRENCY GUARD",
-        tag: "TRANSACTION ACID",
-        caption: "Pessimistic locking preventing race conditions on last-minute meal claims.",
-        accent: "#059669",
-      },
-    ],
-    meta: {
-      duration: "00:45:00",
-      format: "NTSC-SP",
-      channel: "CH 12",
-      quality: "STEREO",
-    },
-  },
-  {
-    id: "spidey-dev",
-    code: "FRA_06",
-    title: "SPIDEY DEV PORTFOLIO",
-    headline: "Cinematic Spider-Man portfolio with interactive Web Audio.",
-    year: 2025,
-    category: "CREATIVE FRONTEND • WEB AUDIO",
-    categoryFilter: "creative",
-    role: "Creative Technologist",
-    client: "Interactive Creative Experiment",
-    system: "React 19 · GSAP · Web Audio API · Tailwind",
-    tags: ["React 19", "GSAP", "Web Audio API", "Tailwind CSS"],
-    summary:
-      "Cinematic Spider-Man-themed portfolio with interactive Web Audio soundscapes, kinetic typography, elastic web physics, and halftone screen shaders.",
-    story:
-      "Choreographed GSAP scroll timelines and interactive canvas webs. Implemented custom cursor physics simulating web slinging alongside synchronized multi-layer parallax scenes.",
-    color: "#2e1818",
-    wearSeed: 200205,
-    image: "/projects/spider-dev.png",
-    liveUrl: "https://spidey-portfolio-ferrel.vercel.app/",
-    githubUrl: "https://github.com/FerrelHD/Portofolio",
-    metrics: [
-      { label: "Kinetic Motion", value: "GSAP Timeline" },
-      { label: "Audio Engine", value: "Procedural Web Audio" },
-      { label: "Theme", value: "Spider-Verse" },
-      { label: "Interactive Cursor", value: "Canvas Web" },
-    ],
-    problem: {
-      headline: "Recreating comic-book dynamism through kinetic motion and tactile audio.",
-      description:
-        "Exploring how comic art principles (halftone textures, action lines, and kinetic impact typography) can be translated into modern web interfaces without sacrificing scroll responsiveness.",
-    },
-    architecture: {
-      headline: "Choreographed GSAP scroll timelines and interactive canvas webs.",
-      description:
-        "Implemented custom cursor physics simulating web slinging alongside synchronized multi-layer parallax scenes.",
-      highlights: [
-        {
-          title: "Canvas String Simulation",
-          detail: "Verlet integration physics simulating elastic spider webbing following mouse cursor momentum.",
-        },
-        {
-          title: "Halftone Shading Shaders",
-          detail: "Lightweight SVG filters and CSS masks producing dynamic comic dot patterns.",
-        },
-      ],
-    },
-    features: [
-      {
-        title: "Interactive Web Physics",
-        description: "Elastic spider-web cursor trails reacting to cursor velocity.",
-        tag: "Physics",
-      },
-      {
-        title: "Comic Sound FX Synthesizer",
-        description: "Web Audio API synthesizing retro cartoon sound effects on click events.",
-        tag: "Web Audio",
-      },
-    ],
-    takeaways: [
-      "Complex animations must respect user preferences such as prefers-reduced-motion without losing character.",
-    ],
-    shots: [
-      {
-        title: "CANVAS STRING PHYSICS",
-        tag: "VERLET SIMULATION",
-        caption: "Real-time spring tension cords responding dynamically to pointer pluck gestures.",
-        accent: "#ef4444",
-      },
-      {
-        title: "HALFTONE SHADING SHADER",
-        tag: "GLSL SCREEN-TONE",
-        caption: "Custom fragment shader rendering authentic Marvel-style benday dot halftone screens.",
-        accent: "#f43f5e",
-      },
-      {
-        title: "COMIC SOUND SYNTHESIS",
-        tag: "WEB AUDIO",
-        caption: "Dynamic FM oscillators producing tactile web-thwip sound transients.",
-        accent: "#fb7185",
-      },
-    ],
-    meta: {
-      duration: "01:10:00",
-      format: "NTSC-SP",
-      channel: "CH 07",
-      quality: "HQ-HI-FI",
-    },
-  },
-  {
-    id: "fersya-shop",
-    code: "FRA_07",
-    title: "FERSYA SHOP",
-    headline: "Modern storefront with Filament admin dashboard & granular RBAC.",
-    year: 2025,
-    category: "ORGANIC E-COMMERCE STOREFRONT",
-    categoryFilter: "web",
-    role: "Fullstack Laravel Developer",
-    client: "Retail Commerce Platform",
-    system: "Laravel 11 · Filament Admin · MySQL · Tailwind",
-    tags: ["Laravel 11", "Filament Admin", "MySQL", "Tailwind CSS", "Blade"],
-    summary:
-      "Modern storefront with Filament admin dashboard, granular RBAC, and inventory management.",
-    story:
-      "Modular Laravel architecture with reactive Filament tables and automated audit trails. Designed database schemas with foreign key constraints and transactional order placement to guarantee inventory integrity.",
-    color: "#241f1a",
-    wearSeed: 202504,
-    image: "/projects/fersya-shop.webp",
-    githubUrl: "https://github.com/FerrelHD/Fersya-Shop",
-    metrics: [
-      { label: "Backend", value: "Laravel 11" },
-      { label: "Admin Panel", value: "Filament 3" },
-      { label: "Architecture", value: "MVC + RBAC" },
-      { label: "Database", value: "MySQL" },
-    ],
-    problem: {
-      headline: "Streamlining organic retail commerce with automated stock management and staff permissions.",
-      description:
-        "Small businesses often struggle with managing offline and online stock counts. Fersya Shop provides a unified back-office with role-based staff access.",
-    },
-    architecture: {
-      headline: "Modular Laravel architecture with reactive Filament tables and automated audit trails.",
-      description:
-        "Designed database schemas with foreign key constraints and transactional order placement to guarantee inventory integrity.",
-      highlights: [
-        {
-          title: "Granular Role-Based Access",
-          detail: "Multi-guard authentication separating store managers, fulfillment staff, and customers.",
-        },
-        {
-          title: "Stock Ledger Logging",
-          detail: "Immutable inventory change logs tracking stock additions, sales, and expirations.",
-        },
-      ],
-    },
-    features: [
-      {
-        title: "Filament 3 Back-Office",
-        description: "High-speed administrative panel for product curation and order fulfillment.",
-        tag: "Back-Office",
-      },
-      {
-        title: "Responsive Customer Storefront",
-        description: "Clean organic-themed shopping experience with fast category filtering.",
-        tag: "Storefront",
-      },
-    ],
-    takeaways: [
-      "Using mature ecosystem tools like Filament drastically accelerates back-office delivery while preserving enterprise security.",
-    ],
-    shots: [
-      {
-        title: "FILAMENT 3 ADMIN ENGINE",
-        tag: "BACK-OFFICE",
-        caption: "Granular RBAC role matrices managing real-time stock intake and fulfillment.",
-        accent: "#d97706",
-      },
-      {
-        title: "TRANSACTION STOCK LEDGER",
-        tag: "DATABASE ACID",
-        caption: "Pessimistic concurrency guards ensuring zero overselling across physical and digital storefronts.",
-        accent: "#b45309",
-      },
-    ],
-    meta: {
-      duration: "01:05:00",
-      format: "PAL-HQ",
-      channel: "CH 11",
-      quality: "STEREO",
-    },
-  },
-  {
     id: "student-life",
     code: "FRA_08",
     title: "STUDENT LIFE",
@@ -831,9 +609,9 @@ export const TAPE_PROJECTS: TapeProject[] = [
       "All-in-one offline-first academic productivity ecosystem consolidating schedules, tasks, and precision focus sessions.",
     story:
       "Progressive Web App with optimistic local-first state synchronization. Designed an offline-first architecture utilizing IndexedDB for instantaneous local reads and writes, paired with Supabase for cloud persistence.",
-    color: "#1c202a",
-    wearSeed: 202509,
-    image: "/projects/student-life.png",
+    color: "#08090d",
+    wearSeed: 202631,
+    image: "/projects/Student Life Poster.png",
     liveUrl: "https://ferrelhd.github.io/Student-Life/",
     githubUrl: "https://github.com/FerrelHD/Student-Life",
     metrics: [
@@ -893,6 +671,7 @@ export const TAPE_PROJECTS: TapeProject[] = [
         tag: "CACHE-FIRST ARCHITECTURE",
         caption: "Background synchronization worker merging offline updates upon reconnection.",
         accent: "#3b82f6",
+        mediaUrl: "/projects/student-life.png",
       },
       {
         title: "DEDICATED WEB WORKER TIMER",
@@ -906,170 +685,6 @@ export const TAPE_PROJECTS: TapeProject[] = [
       format: "PAL-HQ",
       channel: "CH 09",
       quality: "HQ-HI-FI",
-    },
-  },
-  {
-    id: "stock-prediction",
-    code: "FRA_09",
-    title: "STOCK PREDICTION ML",
-    headline: "Time-series machine learning model analyzing equities with volatility curves.",
-    year: 2024,
-    category: "QUANT ML & ANALYTICS",
-    categoryFilter: "ml",
-    role: "Machine Learning Engineer",
-    client: "Financial Quantitative Research",
-    system: "Python · Streamlit · XGBoost · LightGBM · Pandas",
-    tags: ["Python", "Streamlit", "XGBoost", "LightGBM", "Scikit-Learn", "Pandas"],
-    summary:
-      "Time-series machine learning model analyzing equities with predictive volatility curves and Streamlit dashboard.",
-    story:
-      "Walk-forward rolling validation with technical indicator feature pipelines. Implemented rolling time-series splits to prevent future data leakage, extracting momentum, volatility, and mean-reversion indicators before training gradient-boosted ensembles.",
-    color: "#192429",
-    wearSeed: 202410,
-    image: "/projects/stock-prediction.png",
-    githubUrl: "https://github.com/FerrelHD/Stock-Prediction-System",
-    metrics: [
-      { label: "ML Models", value: "XGBoost & LightGBM" },
-      { label: "Feature Engineering", value: "RSI, MACD, Bollinger" },
-      { label: "Framework", value: "Python / Streamlit" },
-      { label: "Validation", value: "Rolling Walk-Forward" },
-    ],
-    problem: {
-      headline: "Building robust feature pipelines for non-stationary financial time series.",
-      description:
-        "Financial market data suffers from low signal-to-noise ratios and regime shifts. Standard regressions often overfit historical data without providing actionable confidence bands.",
-    },
-    architecture: {
-      headline: "Walk-forward rolling validation with technical indicator feature pipelines.",
-      description:
-        "Implemented rolling time-series splits to prevent future data leakage, extracting momentum, volatility, and mean-reversion indicators before training gradient-boosted ensembles.",
-      highlights: [
-        {
-          title: "Leakage-Free Feature Engineering",
-          detail: "Strict lag transforms ensuring zero lookahead bias during feature computation.",
-        },
-        {
-          title: "Interactive Volatility Bands",
-          detail: "Streamlit dashboard rendering confidence envelopes alongside historical moving averages.",
-        },
-      ],
-    },
-    features: [
-      {
-        title: "Predictive Price Curve",
-        description: "Ensemble model projection with adjustable forecast horizons and risk boundaries.",
-        tag: "Forecasting",
-      },
-      {
-        title: "Technical Indicator Matrix",
-        description: "Automated calculation of MACD, RSI, and exponential moving averages.",
-        tag: "Feature Store",
-      },
-    ],
-    takeaways: [
-      "In financial machine learning, leak-free validation architecture is vastly more important than tuning complex model hyperparameters.",
-    ],
-    shots: [
-      {
-        title: "ROLLING WALK-FORWARD MATRIX",
-        tag: "ML VALIDATION",
-        caption: "Strict sequential cross-validation preventing temporal lookahead leakage.",
-        accent: "#06b6d4",
-      },
-      {
-        title: "VOLATILITY ENVELOPE",
-        tag: "RISK DSP",
-        caption: "Dynamic confidence intervals adjusting to market macroeconomic regimes.",
-        accent: "#0891b2",
-      },
-    ],
-    meta: {
-      duration: "00:58:00",
-      format: "NTSC-SP",
-      channel: "CH 14",
-      quality: "DATA-STREAM",
-    },
-  },
-  {
-    id: "street-rush",
-    code: "FRA_10",
-    title: "STREET RUSH",
-    headline: "Fast-paced mobile 3D endless runner with procedural obstacle spawning.",
-    year: 2024,
-    category: "3D ARCADE RUNNER MOBILE GAME",
-    categoryFilter: "games",
-    role: "Game Developer & 3D Designer",
-    client: "Mobile Game Project",
-    system: "Unity 3D · C# · Mobile Physics",
-    tags: ["Unity 3D", "C#", "Blender", "Mobile Optimization"],
-    summary:
-      "Fast-paced mobile 3D endless runner featuring dynamic procedural obstacle spawning and custom physics.",
-    story:
-      "Object pooling architecture and procedural obstacle chunk recycling. Architected a ring-buffer object pool that recycles track chunks and obstacles ahead of the camera, eliminating runtime memory allocations during active gameplay.",
-    color: "#281c22",
-    wearSeed: 202408,
-    image: "/projects/street-rush.webp",
-    githubUrl: "https://github.com/FerrelHD/Street-Rush-Unity",
-    metrics: [
-      { label: "Engine", value: "Unity 3D" },
-      { label: "Target Platform", value: "Android / iOS" },
-      { label: "Framerate", value: "Stable 60 FPS" },
-      { label: "Generation", value: "Procedural" },
-    ],
-    problem: {
-      headline: "Maintaining consistent mobile frame pacing with procedural 3D world streaming.",
-      description:
-        "Continuous object instantiation and garbage collection spikes cause noticeable stutters on mobile devices. Street Rush required zero-allocation pooling to guarantee smooth 60 FPS gameplay.",
-    },
-    architecture: {
-      headline: "Object pooling architecture and procedural obstacle chunk recycling.",
-      description:
-        "Architected a ring-buffer object pool that recycles track chunks and obstacles ahead of the camera, eliminating runtime memory allocations during active gameplay.",
-      highlights: [
-        {
-          title: "Zero-Allocation Pooler",
-          detail: "Recycling 3D road meshes, coins, and barriers to prevent garbage collector hitches.",
-        },
-        {
-          title: "Responsive Swipe Controller",
-          detail: "Custom touch gesture recognizer with sub-pixel lane snapping physics.",
-        },
-      ],
-    },
-    features: [
-      {
-        title: "Endless Track Generator",
-        description: "Dynamic procedural generation with curve difficulty ramping as player speed increases.",
-        tag: "Game Loop",
-      },
-      {
-        title: "Mobile Touch Controls",
-        description: "Ultra-low latency swipe detection for lane changes, slide rolls, and jump physics.",
-        tag: "Input",
-      },
-    ],
-    takeaways: [
-      "Object pooling is non-negotiable for mobile 3D games: garbage collection spikes ruin player immersion faster than anything else.",
-    ],
-    shots: [
-      {
-        title: "RING BUFFER POOLING",
-        tag: "ZERO-ALLOCATION",
-        caption: "Chunk instancing without garbage collector spikes on low-tier mobile GPUs.",
-        accent: "#ec4899",
-      },
-      {
-        title: "PROCEDURAL CURVE TRACK",
-        tag: "BEZIER GENERATION",
-        caption: "Dynamic difficulty scaling based on player survival timecode.",
-        accent: "#f43f5e",
-      },
-    ],
-    meta: {
-      duration: "00:40:00",
-      format: "NTSC-SP",
-      channel: "CH 20",
-      quality: "STEREO-DOLBY",
     },
   },
   {
@@ -1088,9 +703,9 @@ export const TAPE_PROJECTS: TapeProject[] = [
       "Realistic environmental simulation replicating the Mount Gede hiking trail via Gunung Putri route.",
     story:
       "Heightmap terrain sculpting and altitude-triggered volumetric weather zones. Scripted altitude-based weather zones that dynamically adjust ambient temperature, fog density, and wind audio cues as players hike up the mountain slope.",
-    color: "#1b241c",
-    wearSeed: 202405,
-    image: "/projects/Gunung-Gede.webp",
+    color: "#0b0c0e",
+    wearSeed: 202634,
+    image: "/projects/Gunung Gede Poster.png",
     liveUrl: "https://www.roblox.com/games/125712163693709/Mount-Gede-Via-Gunung-Putri",
     githubUrl: "https://github.com/FerrelHD",
     metrics: [
@@ -1140,6 +755,7 @@ export const TAPE_PROJECTS: TapeProject[] = [
         tag: "ATMOSPHERE",
         caption: "Elevation-dependent Rayleigh scattering and tropical cloud layers.",
         accent: "#10b981",
+        mediaUrl: "/projects/Gunung-Gede.webp",
       },
       {
         title: "SURYA KENCANA MEADOW",

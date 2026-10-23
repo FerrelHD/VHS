@@ -15,6 +15,7 @@ interface TapeDeckProps {
   onOpenProject: (tape: TapeProject) => void;
   intro?: boolean;
   onReady?: () => void;
+  onCardsEntered?: () => void;
 }
 
 function TapeCarousel({
@@ -24,6 +25,7 @@ function TapeCarousel({
   intro = true,
   mouseRef,
   isDraggingRef,
+  onCardsEntered,
 }: {
   targetOffset: number;
   currentIndex: number;
@@ -31,6 +33,7 @@ function TapeCarousel({
   intro?: boolean;
   mouseRef: React.RefObject<{ x: number; y: number }>;
   isDraggingRef: React.RefObject<boolean>;
+  onCardsEntered?: () => void;
 }) {
   const sharedStateRef = useRef<CarouselSharedState>({
     currentOffset: currentIndex * VHS_METRICS.SLOT_SPACING,
@@ -41,16 +44,22 @@ function TapeCarousel({
   });
 
   const prevOffsetRef = useRef(currentIndex * VHS_METRICS.SLOT_SPACING);
+  const enteredCalledRef = useRef(false);
 
   useFrame((_, delta) => {
     const dt = Math.min(0.1, delta);
     const state = sharedStateRef.current;
 
-    // 1. Enter progress (Staggered swoop entrance curve)
+    // 1. Enter progress (Smooth 0.85s physical glide)
     if (intro) {
-      state.enterProgress = Math.min(1, state.enterProgress + dt / 1.5);
+      state.enterProgress = Math.min(1, state.enterProgress + dt / 0.85);
+      if (state.enterProgress >= 0.92 && !enteredCalledRef.current) {
+        enteredCalledRef.current = true;
+        setTimeout(() => onCardsEntered?.(), 0);
+      }
     } else {
       state.enterProgress = 0;
+      enteredCalledRef.current = false;
     }
 
     // 2. Position exponential decay
@@ -101,6 +110,7 @@ export function TapeDeck({
   onOpenProject,
   intro = true,
   onReady,
+  onCardsEntered,
 }: TapeDeckProps) {
   const [targetOffset, setTargetOffset] = useState(currentIndex * VHS_METRICS.SLOT_SPACING);
 
@@ -114,31 +124,42 @@ export function TapeDeck({
     onReady?.();
   }, [onReady]);
 
-  const snapToIndex = useCallback(
-    (index: number) => {
-      const clamped = Math.max(0, Math.min(TAPE_PROJECTS.length - 1, index));
-      const newOffset = clamped * VHS_METRICS.SLOT_SPACING;
+  const snapToSlot = useCallback(
+    (slot: number) => {
+      const N = TAPE_PROJECTS.length;
+      const newOffset = slot * VHS_METRICS.SLOT_SPACING;
+      const normalizedIndex = ((slot % N) + N) % N;
       setTargetOffset(newOffset);
-      onIndexChange(clamped);
+      onIndexChange(normalizedIndex);
       audio.playSnap();
     },
     [onIndexChange]
   );
 
-  // Sync external index changes
+  // Sync external index changes (shortest circular path)
   useEffect(() => {
-    setTargetOffset(currentIndex * VHS_METRICS.SLOT_SPACING);
+    const N = TAPE_PROJECTS.length;
+    const currentSlot = Math.round(targetOffset / VHS_METRICS.SLOT_SPACING);
+    const currentNorm = ((currentSlot % N) + N) % N;
+    let diff = currentIndex - currentNorm;
+    if (diff > N / 2) diff -= N;
+    if (diff < -N / 2) diff += N;
+    if (diff !== 0) {
+      setTargetOffset((currentSlot + diff) * VHS_METRICS.SLOT_SPACING);
+    }
   }, [currentIndex]);
 
-  // Keyboard navigation
+  // Keyboard navigation (Endless Left / Right)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") {
         e.preventDefault();
-        snapToIndex(currentIndex - 1);
+        const currentSlot = Math.round(targetOffset / VHS_METRICS.SLOT_SPACING);
+        snapToSlot(currentSlot - 1);
       } else if (e.key === "ArrowRight") {
         e.preventDefault();
-        snapToIndex(currentIndex + 1);
+        const currentSlot = Math.round(targetOffset / VHS_METRICS.SLOT_SPACING);
+        snapToSlot(currentSlot + 1);
       } else if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         onOpenProject(TAPE_PROJECTS[currentIndex]);
@@ -147,19 +168,20 @@ export function TapeDeck({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentIndex, snapToIndex, onOpenProject]);
+  }, [currentIndex, targetOffset, snapToSlot, onOpenProject]);
 
-  // Mouse Wheel navigation on the 3D Carousel
+  // Mouse Wheel navigation on the 3D Carousel (Infinite Looping)
   const handleWheel = (e: React.WheelEvent) => {
     const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
     if (Math.abs(delta) < 25) return;
     if (wheelLockRef.current) return;
 
     wheelLockRef.current = true;
+    const currentSlot = Math.round(targetOffset / VHS_METRICS.SLOT_SPACING);
     if (delta > 0) {
-      snapToIndex(currentIndex + 1);
+      snapToSlot(currentSlot + 1);
     } else {
-      snapToIndex(currentIndex - 1);
+      snapToSlot(currentSlot - 1);
     }
 
     setTimeout(() => {
@@ -187,24 +209,16 @@ export function TapeDeck({
       };
     }
 
-    // 2. Drag physics
+    // 2. Continuous drag physics (No clamping -> infinite looping)
     if (!isDraggingRef.current) return;
     const dx = e.clientX - dragStartRef.current.x;
     const nextOffset = dragStartRef.current.offset - dx * 1.15;
 
-    const minOffset = -VHS_METRICS.SLOT_SPACING * 0.4;
-    const maxOffset = (TAPE_PROJECTS.length - 1 + 0.4) * VHS_METRICS.SLOT_SPACING;
-    const clamped = Math.max(minOffset, Math.min(maxOffset, nextOffset));
+    setTargetOffset(nextOffset);
 
-    setTargetOffset(clamped);
-
-    const approxIndex = Math.max(
-      0,
-      Math.min(
-        TAPE_PROJECTS.length - 1,
-        Math.round(clamped / VHS_METRICS.SLOT_SPACING)
-      )
-    );
+    const N = TAPE_PROJECTS.length;
+    const approxSlot = Math.round(nextOffset / VHS_METRICS.SLOT_SPACING);
+    const approxIndex = ((approxSlot % N) + N) % N;
     if (approxIndex !== currentIndex) {
       onIndexChange(approxIndex);
       audio.playClick();
@@ -216,15 +230,28 @@ export function TapeDeck({
     isDraggingRef.current = false;
     (e.target as HTMLElement).releasePointerCapture(e.pointerId);
 
-    const nearestIndex = Math.max(
-      0,
-      Math.min(
-        TAPE_PROJECTS.length - 1,
-        Math.round(targetOffset / VHS_METRICS.SLOT_SPACING)
-      )
-    );
-    snapToIndex(nearestIndex);
+    const nearestSlot = Math.round(targetOffset / VHS_METRICS.SLOT_SPACING);
+    snapToSlot(nearestSlot);
   };
+
+  const handleSelectTape = useCallback(
+    (idx: number) => {
+      const N = TAPE_PROJECTS.length;
+      const currentSlot = Math.round(targetOffset / VHS_METRICS.SLOT_SPACING);
+      const currentNorm = ((currentSlot % N) + N) % N;
+      let diff = idx - currentNorm;
+      if (diff > N / 2) diff -= N;
+      if (diff < -N / 2) diff += N;
+      const targetSlot = currentSlot + diff;
+
+      if (diff === 0) {
+        onOpenProject(TAPE_PROJECTS[idx]);
+      } else {
+        snapToSlot(targetSlot);
+      }
+    },
+    [targetOffset, onOpenProject, snapToSlot]
+  );
 
   return (
     <div
@@ -251,13 +278,8 @@ export function TapeDeck({
           intro={intro}
           mouseRef={mouseRef}
           isDraggingRef={isDraggingRef}
-          onSelectTape={(idx) => {
-            if (idx === currentIndex) {
-              onOpenProject(TAPE_PROJECTS[idx]);
-            } else {
-              snapToIndex(idx);
-            }
-          }}
+          onSelectTape={handleSelectTape}
+          onCardsEntered={onCardsEntered}
         />
 
         {/* The CRT Optical Barrel Distortion Post-Processing Pass */}

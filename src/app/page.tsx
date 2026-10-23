@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { TAPE_PROJECTS, TapeProject } from "@/data/tapes";
 import { CrtGlass } from "@/components/crt/CrtGlass";
@@ -27,10 +27,17 @@ export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeView, setActiveView] = useState<ActiveSection>("deck");
 
-  // Entrance & Loading state choreography (100% Arc Marumo authentic)
+  // Entrance & Loading state choreography:
+  // 1. HUD (header & footer) reveals
+  // 2. 3D Card project carousel glides up smoothly into place
+  // 3. Center project subtitle smoothly slides up AFTER cards appear
   const [isReady, setIsReady] = useState(false);
   const [isLoaderFinished, setIsLoaderFinished] = useState(false);
-  const [introStarted, setIntroStarted] = useState(false);
+  const [textIntroStarted, setTextIntroStarted] = useState(false);
+  const [cardsIntroStarted, setCardsIntroStarted] = useState(false);
+  const [subtitleIntroStarted, setSubtitleIntroStarted] = useState(false);
+
+  const cardsTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Fallback safety: ensure ready within 1.2s even if canvas takes a beat
   useEffect(() => {
@@ -44,19 +51,31 @@ export default function Home() {
     setIsReady(true);
   }, []);
 
+  const handleLoaderStartOut = useCallback(() => {
+    // 1. HUD header/footer starts revealing as loader begins dissolving
+    setTextIntroStarted(true);
+
+    // 2. 3D Card carousel entrance launches smoothly after a gentle 180ms beat
+    if (cardsTimerRef.current) clearTimeout(cardsTimerRef.current);
+    cardsTimerRef.current = setTimeout(() => {
+      setCardsIntroStarted(true);
+    }, 180);
+  }, []);
+
+  // Called directly from WebGL frame-loop when cards reach their resting position
+  const handleCardsEntered = useCallback(() => {
+    setSubtitleIntroStarted(true);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (cardsTimerRef.current) clearTimeout(cardsTimerRef.current);
+    };
+  }, []);
+
   const handleLoaderDone = useCallback(() => {
     setIsLoaderFinished(true);
   }, []);
-
-  // Trigger entrance animation once ready
-  useEffect(() => {
-    if (isReady) {
-      const t = setTimeout(() => {
-        setIntroStarted(true);
-      }, 400);
-      return () => clearTimeout(t);
-    }
-  }, [isReady]);
 
   const handleIndexChange = useCallback((idx: number) => {
     setCurrentIndex(idx);
@@ -102,7 +121,11 @@ export default function Home() {
       <CrtGlass>
         {/* Layer 0: Authentic VHS CRT Loading Screen */}
         {!isLoaderFinished && (
-          <VhsLoader ready={isReady} onDone={handleLoaderDone} />
+          <VhsLoader
+            ready={isReady}
+            onStartOut={handleLoaderStartOut}
+            onDone={handleLoaderDone}
+          />
         )}
 
         {/* Layer 1: 3D Cylindrical Tape Deck (Only visible in deck view) */}
@@ -117,8 +140,9 @@ export default function Home() {
             currentIndex={currentIndex}
             onIndexChange={handleIndexChange}
             onOpenProject={handleOpenProject}
-            intro={introStarted}
+            intro={cardsIntroStarted}
             onReady={handleDeckReady}
+            onCardsEntered={handleCardsEntered}
           />
         </div>
 
@@ -126,7 +150,7 @@ export default function Home() {
         <div className="absolute top-0 left-0 right-0 z-40 pt-[clamp(32px,5.2vh,56px)] px-[clamp(28px,7vw,100px)] pointer-events-auto">
           <AppHeader
             activeView={activeView}
-            intro={introStarted}
+            intro={textIntroStarted}
             onHomeClick={handleBackToCarousel}
             onProfileClick={() =>
               setActiveView((prev) => (prev === "profile" ? "deck" : "profile"))
@@ -146,7 +170,7 @@ export default function Home() {
           <div className="absolute bottom-[calc(var(--pad-y)+44px)] left-0 right-0 z-30 flex justify-center pointer-events-auto">
             <TapeSubtitle
               tape={currentTape}
-              intro={introStarted}
+              intro={subtitleIntroStarted}
               onOpen={() => handleOpenProject(currentTape)}
             />
           </div>
@@ -189,7 +213,7 @@ export default function Home() {
 
         {/* Layer 4: Fixed Footer across all views (Calibrated to 60px bottom, 100px padding-x matching navbar) */}
         <div className="absolute bottom-0 left-0 right-0 z-40 pb-[clamp(32px,5.5vh,60px)] px-[clamp(28px,7vw,100px)] pointer-events-auto">
-          <AppFooter intro={introStarted} />
+          <AppFooter intro={textIntroStarted} />
         </div>
       </CrtGlass>
     </main>
