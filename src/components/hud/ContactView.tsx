@@ -115,7 +115,11 @@ export function ContactView({ onBack }: ContactViewProps) {
       reel.style.transform = `translate3d(0, ${-currentY.toFixed(1)}px, 0)`;
 
       // 2. Dynamic Tape Position & Scale from top-small to center-large
+      const isDesktop = window.innerWidth > 640;
+      const topAnchor = isDesktop ? 40 : 30;
+      const baseTapeHeight = isDesktop ? 331 : 286;
       const centerY = container.clientHeight / 2;
+
       const scrollThreshold = 360;
       const progress = Math.min(1, Math.max(0, currentY / scrollThreshold));
 
@@ -125,22 +129,21 @@ export function ContactView({ onBack }: ContactViewProps) {
       // Tape scale starts compact at 0.42 and expands to 1.05
       const tapeScale = 0.42 + ease * (1.05 - 0.42);
 
-      // Initial vertical position: placed cleanly ABOVE the text headline (approx 140px from top)
-      const initialTapeY = Math.max(125, Math.min(155, container.clientHeight * 0.16));
-      const initialOffset = initialTapeY - centerY;
-      const dy = initialOffset * (1 - ease);
+      // Target shift down from top anchor to dead center of viewport
+      const targetCenterShift = Math.max(0, centerY - topAnchor - (baseTapeHeight * 1.05) / 2);
+      const dy = targetCenterShift * ease;
 
       // Tape screen Y coordinate for obstacle calculation
-      const tapeScreenY = centerY + dy;
+      const tapeScreenY = topAnchor + (baseTapeHeight * tapeScale) / 2 + dy;
 
       if (tape) {
         // Continuous 3D rotation on scroll (0.24 deg/px) + mouse parallax tilt
         const spinY = currentY * 0.24 + mouseRef.current.x * 6;
         const tiltX = -mouseRef.current.y * 5;
 
-        tape.style.transform = `translate3d(-50%, calc(-50% + ${dy.toFixed(
+        tape.style.transform = `translate3d(-50%, ${dy.toFixed(
           1
-        )}px), 0) perspective(1200px) rotateY(${spinY.toFixed(2)}deg) rotateX(${tiltX.toFixed(
+        )}px, 0) perspective(1200px) rotateY(${spinY.toFixed(2)}deg) rotateX(${tiltX.toFixed(
           2
         )}deg) scale(${tapeScale.toFixed(3)})`;
       }
@@ -327,7 +330,7 @@ export function ContactView({ onBack }: ContactViewProps) {
           className="w-full max-w-5xl mx-auto px-6 sm:px-10 pt-[calc(var(--pj-top)+205px)] pb-[calc(var(--pj-bottom)+180px)] flex flex-col items-center will-change-transform"
         >
           {/* SECTION A: MASSIVE EDITORIAL SERIF HEADLINE */}
-          <div className="w-full max-w-2xl text-center mb-16 sm:mb-24">
+          <div className="w-full max-w-2xl text-center mb-16 sm:mb-24 pt-4 sm:pt-6">
                       <h1 className="font-serif italic text-2xl sm:text-3xl md:text-4xl text-white/90 leading-relaxed font-normal tracking-tight">
               An original animated tragedy forged by Studio TRIGGER and CD PROJEKT RED,
               setting fire to the skies of Night City.
@@ -653,13 +656,13 @@ export function ContactView({ onBack }: ContactViewProps) {
         </div>
       </div>
 
-      {/* 3. HERO PHYSICAL 3D VHS CASSETTE (GPU-composited scale from top-small to center-large with 3D box thickness) */}
+      {/* 3. HERO PHYSICAL 3D VHS CASSETTE (CSS-anchored cleanly above headline at top:40px with origin-top) */}
       <div
         ref={tapeRef}
-        className="absolute top-1/2 left-1/2 pointer-events-none z-20 flex flex-col items-center justify-center opacity-95 [transform-style:preserve-3d] will-change-transform"
+        className="absolute top-[30px] sm:top-[40px] left-1/2 pointer-events-none z-20 flex flex-col items-center justify-center opacity-95 [transform-style:preserve-3d] origin-top will-change-transform"
         style={{
           transform:
-            "translate3d(-50%, calc(-50% - 295px), 0) perspective(1200px) rotateY(0deg) rotateX(0deg) scale(0.42)",
+            "translate3d(-50%, 0px, 0) perspective(1200px) rotateY(0deg) rotateX(0deg) scale(0.42)",
         }}
       >
         {/* 3D Cassette Box Container with 18px Depth */}
