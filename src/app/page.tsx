@@ -4,12 +4,13 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { TAPE_PROJECTS, TapeProject } from "@/data/tapes";
 import { CrtGlass } from "@/components/crt/CrtGlass";
+import { CrtGlitchBurst } from "@/components/crt/CrtGlitchBurst";
 import { AppHeader, ActiveSection } from "@/components/hud/AppHeader";
 import { AppFooter } from "@/components/hud/AppFooter";
 import { TapeSubtitle } from "@/components/hud/TapeSubtitle";
 import { WorkDetailView } from "@/components/work/WorkDetailView";
-import { ProfileView } from "@/components/hud/ProfileView";
 import { ArchiveView } from "@/components/hud/ArchiveView";
+import { NewsView } from "@/components/hud/NewsView";
 import { ContactView } from "@/components/hud/ContactView";
 import { VhsLoader } from "@/components/hud/VhsLoader";
 import { audio } from "@/lib/audio";
@@ -26,6 +27,7 @@ const TapeDeck = dynamic(
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeView, setActiveView] = useState<ActiveSection>("deck");
+  const [isGlitching, setIsGlitching] = useState(false);
 
   // Entrance & Loading state choreography:
   // 1. HUD (header & footer) reveals
@@ -38,6 +40,7 @@ export default function Home() {
   const [subtitleIntroStarted, setSubtitleIntroStarted] = useState(false);
 
   const cardsTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const glitchTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Fallback safety: ensure ready within 1.2s even if canvas takes a beat
   useEffect(() => {
@@ -70,6 +73,7 @@ export default function Home() {
   useEffect(() => {
     return () => {
       if (cardsTimerRef.current) clearTimeout(cardsTimerRef.current);
+      if (glitchTimerRef.current) clearTimeout(glitchTimerRef.current);
     };
   }, []);
 
@@ -81,15 +85,29 @@ export default function Home() {
     setCurrentIndex(idx);
   }, []);
 
-  const handleOpenProject = useCallback((tape: TapeProject) => {
-    audio.playClick(1.2);
-    setActiveView("work");
-  }, []);
+  /**
+   * Universal CRT view switcher with signal glitch and static sound burst.
+   */
+  const transitionToView = useCallback((next: ActiveSection) => {
+    if (next === activeView) return;
+
+    audio.playGlitch();
+    setIsGlitching(true);
+    setActiveView(next);
+
+    if (glitchTimerRef.current) clearTimeout(glitchTimerRef.current);
+    glitchTimerRef.current = setTimeout(() => {
+      setIsGlitching(false);
+    }, 300);
+  }, [activeView]);
+
+  const handleOpenProject = useCallback((_tape: TapeProject) => {
+    transitionToView("work");
+  }, [transitionToView]);
 
   const handleBackToCarousel = useCallback(() => {
-    audio.playClick(0.9);
-    setActiveView("deck");
-  }, []);
+    transitionToView("deck");
+  }, [transitionToView]);
 
   const handleNextProject = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % TAPE_PROJECTS.length);
@@ -97,22 +115,22 @@ export default function Home() {
 
   const handleSelectFromArchive = useCallback((idx: number) => {
     setCurrentIndex(idx);
-    setActiveView("work");
-  }, []);
+    transitionToView("work");
+  }, [transitionToView]);
 
   // Keyboard shortcut: Space or Enter opens active project if in carousel
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (activeView === "deck" && (e.key === "Enter" || e.key === " ")) {
         e.preventDefault();
-        setActiveView("work");
+        transitionToView("work");
       } else if (activeView !== "deck" && e.key === "Escape") {
-        setActiveView("deck");
+        transitionToView("deck");
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeView]);
+  }, [activeView, transitionToView]);
 
   const currentTape = TAPE_PROJECTS[currentIndex] || TAPE_PROJECTS[0];
 
@@ -127,6 +145,9 @@ export default function Home() {
             onDone={handleLoaderDone}
           />
         )}
+
+        {/* Layer 0b: CRT Signal Glitch Transition Burst */}
+        <CrtGlitchBurst active={isGlitching} />
 
         {/* Layer 1: 3D Cylindrical Tape Deck (Only visible in deck view) */}
         <div
@@ -147,19 +168,19 @@ export default function Home() {
         </div>
 
         {/* Layer 2: Fixed Header across all views (Calibrated to 56px top, 100px padding-x) */}
-        <div className="absolute top-0 left-0 right-0 z-40 pt-[clamp(32px,5.2vh,56px)] px-[clamp(28px,7vw,100px)] pointer-events-auto">
+        <div className="absolute top-0 left-0 right-0 z-40 pt-[clamp(32px,5.2vh,56px)] px-[clamp(28px,7vw,100px)] pointer-events-none">
           <AppHeader
             activeView={activeView}
             intro={textIntroStarted}
             onHomeClick={handleBackToCarousel}
-            onProfileClick={() =>
-              setActiveView((prev) => (prev === "profile" ? "deck" : "profile"))
-            }
             onArchiveClick={() =>
-              setActiveView((prev) => (prev === "archive" ? "deck" : "archive"))
+              transitionToView(activeView === "archive" ? "deck" : "archive")
+            }
+            onNewsClick={() =>
+              transitionToView(activeView === "news" ? "deck" : "news")
             }
             onContactClick={() =>
-              setActiveView((prev) => (prev === "contact" ? "deck" : "contact"))
+              transitionToView(activeView === "contact" ? "deck" : "contact")
             }
           />
         </div>
@@ -176,7 +197,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* 3b. Work Detail Exhibition Gallery (Spanning full chamber with calculated margins) */}
+        {/* 3b. Work Detail Exhibition Gallery (Spanning full chamber) */}
         {activeView === "work" && (
           <div className="absolute inset-0 z-20 pointer-events-auto">
             <WorkDetailView
@@ -187,16 +208,9 @@ export default function Home() {
           </div>
         )}
 
-        {/* 3c. Profile Biography View */}
-        {activeView === "profile" && (
-          <div className="absolute inset-0 z-20 pointer-events-auto flex items-center justify-center px-[var(--pad-x)] pt-[var(--pj-top)] pb-[var(--pj-bottom)]">
-            <ProfileView onBack={handleBackToCarousel} />
-          </div>
-        )}
-
-        {/* 3d. Archive Matrix View */}
+        {/* 3c. Archive / Braindance Shards View (Unboxed, full chamber) */}
         {activeView === "archive" && (
-          <div className="absolute inset-0 z-20 pointer-events-auto flex items-center justify-center px-[var(--pad-x)] pt-[var(--pj-top)] pb-[var(--pj-bottom)]">
+          <div className="absolute inset-0 z-20 pointer-events-auto">
             <ArchiveView
               onBack={handleBackToCarousel}
               onSelectProject={handleSelectFromArchive}
@@ -204,14 +218,21 @@ export default function Home() {
           </div>
         )}
 
-        {/* 3e. Direct Contact View */}
-        {activeView === "contact" && (
-          <div className="absolute inset-0 z-20 pointer-events-auto flex items-center justify-center px-[var(--pad-x)] pt-[var(--pj-top)] pb-[var(--pj-bottom)]">
+        {/* 3e. News Watch / N54 Broadcast View (Unboxed, full chamber) */}
+        {activeView === "news" && (
+          <div className="absolute inset-0 z-20 pointer-events-auto">
+            <NewsView onBack={handleBackToCarousel} />
+          </div>
+        )}
+
+        {/* 3f. Contact / Original Creators Credits View (Unboxed, full chamber) */}
+        {(activeView === "contact" || activeView === "credits") && (
+          <div className="absolute inset-0 z-20 pointer-events-auto">
             <ContactView onBack={handleBackToCarousel} />
           </div>
         )}
 
-        {/* Layer 4: Fixed Footer across all views (Calibrated to 60px bottom, 100px padding-x matching navbar) */}
+        {/* Layer 4: Fixed Footer across all views */}
         <div className="absolute bottom-0 left-0 right-0 z-40 pb-[clamp(32px,5.5vh,60px)] px-[clamp(28px,7vw,100px)] pointer-events-auto">
           <AppFooter intro={textIntroStarted} />
         </div>

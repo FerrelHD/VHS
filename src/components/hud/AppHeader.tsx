@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { audio } from "@/lib/audio";
 import { Reveal } from "./Reveal";
 
-export type ActiveSection = "deck" | "work" | "profile" | "archive" | "contact";
+export type ActiveSection = "deck" | "work" | "profile" | "archive" | "news" | "contact" | "credits";
 
 interface AppHeaderProps {
   activeView: ActiveSection;
   onHomeClick?: () => void;
-  onProfileClick?: () => void;
   onArchiveClick?: () => void;
+  onNewsClick?: () => void;
   onContactClick?: () => void;
   intro?: boolean;
 }
@@ -18,8 +18,8 @@ interface AppHeaderProps {
 export function AppHeader({
   activeView,
   onHomeClick,
-  onProfileClick,
   onArchiveClick,
+  onNewsClick,
   onContactClick,
   intro = true,
 }: AppHeaderProps) {
@@ -39,7 +39,7 @@ export function AppHeader({
   };
 
   return (
-    <header className="w-full flex items-center justify-between select-none z-40 font-mono tracking-wider shrink-0 relative">
+    <header className="w-full flex items-center justify-between select-none z-40 font-mono tracking-wider shrink-0 relative pointer-events-auto">
       {/* 1. Left: Home status & Running Timecode (Fixed 214px broadcast gap) */}
       <div className="flex items-center gap-[clamp(48px,14vw,214px)]">
         <Reveal on={intro} i={1} inline>
@@ -102,15 +102,15 @@ export function AppHeader({
             type="button"
             onClick={() => {
               audio.playClick(1.0);
-              onProfileClick?.();
+              onArchiveClick?.();
             }}
-            className={`transition-colors cursor-pointer tracking-wider pb-0.5 whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs ${
-              activeView === "profile"
-                ? "text-white font-bold border-b border-crt-phosphor"
-                : "text-crt-phosphor/70 hover:text-white border-b border-transparent"
+            className={`transition-colors cursor-pointer tracking-wider whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs ${
+              activeView === "archive"
+                ? "text-white font-bold phosphor-glow"
+                : "text-crt-phosphor/60 hover:text-white"
             }`}
           >
-            PROFILE
+            ARCHIVE
           </button>
         </Reveal>
 
@@ -119,15 +119,15 @@ export function AppHeader({
             type="button"
             onClick={() => {
               audio.playClick(1.0);
-              onArchiveClick?.();
+              onNewsClick?.();
             }}
-            className={`transition-colors cursor-pointer tracking-wider pb-0.5 whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs ${
-              activeView === "archive"
-                ? "text-white font-bold border-b border-crt-phosphor"
-                : "text-crt-phosphor/70 hover:text-white border-b border-transparent"
+            className={`transition-colors cursor-pointer tracking-wider whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs ${
+              activeView === "news"
+                ? "text-white font-bold phosphor-glow"
+                : "text-crt-phosphor/60 hover:text-white"
             }`}
           >
-            ARCHIVE
+            NEWS
           </button>
         </Reveal>
 
@@ -138,13 +138,13 @@ export function AppHeader({
               audio.playClick(1.0);
               onContactClick?.();
             }}
-            className={`transition-colors cursor-pointer tracking-wider pb-0.5 whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs ${
-              activeView === "contact"
-                ? "text-white font-bold border-b border-crt-phosphor"
-                : "text-crt-phosphor/70 hover:text-white border-b border-transparent"
+            className={`transition-colors cursor-pointer tracking-wider whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs ${
+              activeView === "contact" || activeView === "credits"
+                ? "text-white font-bold phosphor-glow"
+                : "text-crt-phosphor/60 hover:text-white"
             }`}
           >
-            CONTACT
+            CREDITS
           </button>
         </Reveal>
       </nav>

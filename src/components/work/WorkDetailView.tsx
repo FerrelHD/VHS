@@ -322,15 +322,15 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
               </div>
             </div>
 
-            {/* Action CTAs: Visit Live & GitHub */}
-            <div className="flex flex-wrap items-center gap-2.5 pt-1 text-[11px] sm:text-xs">
+            {/* Action CTAs: Visit Live & GitHub (Pure typography, zero card/badge wrapper) */}
+            <div className="flex flex-wrap items-center gap-3 pt-1 text-[11px] sm:text-xs">
               {tape.liveUrl && (
                 <a
                   href={tape.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => audio.playClick(1.1)}
-                  className="px-3 sm:px-3.5 py-1.5 bg-crt-phosphor/10 hover:bg-crt-phosphor/20 border border-crt-phosphor/50 hover:border-crt-phosphor text-white font-bold tracking-wider transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+                  className="text-amber-400 hover:text-white font-bold tracking-wider transition-colors flex items-center gap-1.5 cursor-pointer py-1"
                 >
                   <span>[ VISIT LIVE ↗ ]</span>
                 </a>
@@ -342,7 +342,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => audio.playClick(1.0)}
-                  className="px-3 sm:px-3.5 py-1.5 bg-white/5 hover:bg-white/10 border border-crt-phosphor/30 hover:border-crt-phosphor/60 text-crt-phosphor tracking-wider transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+                  className="text-crt-phosphor/70 hover:text-white font-bold tracking-wider transition-colors flex items-center gap-1.5 cursor-pointer py-1"
                 >
                   <span>[ SOURCE CODE ↗ ]</span>
                 </a>
@@ -354,7 +354,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
                   audio.playClick(0.9);
                   onBack();
                 }}
-                className="text-crt-phosphor/50 hover:text-crt-phosphor transition-colors tracking-widest cursor-pointer ml-1 text-[11px] sm:text-xs"
+                className="text-crt-phosphor/50 hover:text-white transition-colors tracking-widest cursor-pointer ml-1 text-[11px] sm:text-xs py-1"
               >
                 [ ← RETURN ]
               </button>
@@ -402,7 +402,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
               {tape.problem.description}
             </p>
 
-            <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 bg-crt-phosphor/10 border border-crt-phosphor/30 text-[10px] text-crt-phosphor w-fit font-bold tracking-wider z-10">
+            <div className="mt-2 text-[10px] text-amber-400 font-bold tracking-wider z-10 font-mono">
               <span>{tape.id.startsWith("ep-") ? "[ INCIDENT DOSSIER ]" : "[ CORE ARCHIVAL DIRECTION ]"}</span>
             </div>
           </section>
@@ -464,11 +464,11 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
               {tape.architecture.headline}
             </h2>
 
-            {/* Staggered Telemetry Metrics Grid */}
+            {/* Staggered Telemetry Metrics Grid (Pure typography, no boxed cards) */}
             {tape.metrics && tape.metrics.length > 0 && (
-              <div className="grid grid-cols-2 gap-2 my-1 z-10">
+              <div className="grid grid-cols-2 gap-3 my-1 z-10">
                 {tape.metrics.slice(0, 4).map((m, idx) => (
-                  <div key={idx} className="p-2 bg-white/[0.03] border border-crt-phosphor/20">
+                  <div key={idx} className="flex flex-col gap-0.5 border-l border-crt-phosphor/25 pl-2">
                     <span className="text-[9px] text-crt-phosphor/50 uppercase tracking-wider block">
                       {m.label}
                     </span>
@@ -536,14 +536,14 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
             {tape.story}
           </p>
 
-          {/* Tech Stack Chips Matrix */}
-          <div className="flex flex-wrap gap-1.5 pt-1 text-[10px] z-10">
+          {/* Tech Stack Chips Matrix (Pure typography, zero card/badge borders) */}
+          <div className="flex flex-wrap gap-2 pt-1 text-[10px] sm:text-[11px] z-10 font-mono">
             {tape.tags.map((tag) => (
               <span
                 key={tag}
-                className="px-2.5 py-1 bg-white/5 border border-crt-phosphor/25 hover:border-crt-phosphor/60 text-crt-phosphor/90 transition-colors"
+                className="text-crt-phosphor/70 hover:text-white transition-colors"
               >
-                {tag}
+                #{tag}
               </span>
             ))}
           </div>
@@ -585,35 +585,46 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
           </section>
         ))}
 
-        {/* 8. ADVANCE TO NEXT REEL CARD with elastic parallax */}
-        <section className="pj-screen-height flex items-center justify-center pr-16 sm:pr-20 pl-6 flex-shrink-0">
-          <button
+        {/* 8. ADVANCE TO NEXT REEL - Pure Physical Tape Cover Poster (Zero boxed text card) */}
+        <section className="pj-screen-height flex items-center justify-center pr-16 sm:pr-24 pl-8 flex-shrink-0">
+          <div
             data-parallax="true"
-            type="button"
             onClick={() => {
               audio.playClick(1.2);
               onNextProject();
             }}
-            className="p-6 sm:p-8 border border-crt-phosphor/30 hover:border-crt-phosphor bg-white/[0.02] hover:bg-white/[0.06] transition-all flex flex-col items-center gap-3 text-center cursor-pointer active:scale-95 group rounded-xs font-mono will-change-transform shadow-2xl"
+            className="flex flex-col items-center gap-4 cursor-pointer group will-change-transform select-none"
           >
-            <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-crt-phosphor/50 tracking-widest uppercase">
-              <span>NEXT REEL</span>
-              <span>•</span>
-              <span className="text-crt-phosphor font-bold">[{nextTape.code}]</span>
+            {/* Physical VHS Sleeve Poster */}
+            <div className="relative w-[190px] sm:w-[220px] aspect-[130/196] rounded-xs overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.8)] border border-crt-phosphor/40 transition-all duration-500 group-hover:scale-105 group-hover:border-white group-hover:shadow-[0_0_35px_rgba(236,233,225,0.4)]">
+              <img
+                src={`/tapes/${nextTape.id}-front.webp`}
+                alt={nextTape.title}
+                className="w-full h-full object-cover rounded-xs"
+              />
+              {/* Gloss lighting layer */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/15 pointer-events-none" />
+              {/* Hover highlight overlay */}
+              <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors pointer-events-none" />
             </div>
 
-            <span className="font-bit text-3xl sm:text-4xl md:text-5xl font-bold text-crt-phosphor group-hover:text-white uppercase leading-none transition-colors">
-              {nextTape.title}
-            </span>
+            {/* Pure Typographic Label (No card/badge borders) */}
+            <div className="flex flex-col items-center gap-1 font-mono text-center">
+              <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-crt-phosphor/60 tracking-widest uppercase">
+                <span>NEXT REEL</span>
+                <span>•</span>
+                <span className="text-amber-400 font-bold">{nextTape.code}</span>
+              </div>
 
-            <span className="text-[9px] sm:text-[10px] text-crt-phosphor/60 uppercase tracking-widest">
-              {nextTape.category}
-            </span>
+              <div className="font-bit text-2xl sm:text-3xl text-crt-phosphor group-hover:text-white uppercase leading-tight tracking-tight transition-colors phosphor-glow">
+                {nextTape.title}
+              </div>
 
-            <div className="mt-1 px-4 py-1.5 bg-crt-phosphor/10 group-hover:bg-crt-phosphor/20 border border-crt-phosphor/50 group-hover:border-crt-phosphor text-white text-[11px] font-bold tracking-wider transition-all">
-              [ ADVANCE REEL → ]
+              <div className="text-[10px] text-crt-phosphor/50 group-hover:text-amber-400 tracking-wider transition-colors pt-0.5">
+                [ ADVANCE REEL ↗ ]
+              </div>
             </div>
-          </button>
+          </div>
         </section>
       </div>
     </div>

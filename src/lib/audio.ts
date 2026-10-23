@@ -105,6 +105,61 @@ class AudioEngine {
       // Audio policies
     }
   }
+
+  /**
+   * CRT channel-switch / signal distortion glitch burst.
+   */
+  public playGlitch() {
+    try {
+      this.init();
+      if (!this.ctx) return;
+
+      const now = this.ctx.currentTime;
+
+      // 1. Static noise burst
+      const bufferSize = Math.floor(this.ctx.sampleRate * 0.08);
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.35));
+      }
+
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = "highpass";
+      filter.frequency.value = 1200;
+
+      const noiseGain = this.ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.09, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+      noise.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(this.ctx.destination);
+
+      // 2. Sub-bass displacement pop
+      const osc = this.ctx.createOscillator();
+      const oscGain = this.ctx.createGain();
+
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(320, now);
+      osc.frequency.exponentialRampToValueAtTime(40, now + 0.06);
+
+      oscGain.gain.setValueAtTime(0.08, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+      osc.connect(oscGain);
+      oscGain.connect(this.ctx.destination);
+
+      noise.start(now);
+      osc.start(now);
+      osc.stop(now + 0.07);
+    } catch {
+      // Audio policies
+    }
+  }
 }
 
 export const audio = new AudioEngine();

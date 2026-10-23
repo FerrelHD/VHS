@@ -292,3 +292,71 @@ html.bw .tv {
     width: 100%;
   }
 }
+
+/* 7. CRT Glitch Transition */
+@keyframes glitch-tear-1 {
+  0% { clip-path: inset(12% 0 68% 0); transform: translate(-12px, 1px); }
+  20% { clip-path: inset(48% 0 32% 0); transform: translate(16px, -2px); }
+  40% { clip-path: inset(78% 0 8% 0); transform: translate(-18px, 1px); }
+  60% { clip-path: inset(6% 0 82% 0); transform: translate(14px, -1px); }
+  80% { clip-path: inset(34% 0 52% 0); transform: translate(-8px, 2px); }
+  100% { clip-path: inset(58% 0 24% 0); transform: translate(0, 0); }
+}
+
+@keyframes glitch-tear-2 {
+  0% { clip-path: inset(28% 0 52% 0); transform: translate(18px, -2px); }
+  20% { clip-path: inset(8% 0 80% 0); transform: translate(-14px, 2px); }
+  40% { clip-path: inset(62% 0 18% 0); transform: translate(20px, -1px); }
+  60% { clip-path: inset(22% 0 64% 0); transform: translate(-10px, 1px); }
+  80% { clip-path: inset(84% 0 4% 0); transform: translate(12px, -2px); }
+  100% { clip-path: inset(42% 0 44% 0); transform: translate(0, 0); }
+}
+
+@keyframes glitch-flash {
+  0% { opacity: 0.15; }
+  15% { opacity: 0.75; }
+  35% { opacity: 0.08; }
+  55% { opacity: 0.9; }
+  75% { opacity: 0.2; }
+  100% { opacity: 0; }
+}
+
+@keyframes glitch-scan-jitter {
+  0% { transform: translateY(0); }
+  25% { transform: translateY(-4px); }
+  50% { transform: translateY(3px); }
+  75% { transform: translateY(-2px); }
+  100% { transform: translateY(0); }
+}
+
+.glitch-slice-1 {
+  animation: glitch-tear-1 0.28s steps(2) infinite;
+  background: rgba(255, 30, 80, 0.18);
+  mix-blend-mode: screen;
+}
+
+.glitch-slice-2 {
+  animation: glitch-tear-2 0.28s steps(2) infinite;
+  background: rgba(0, 240, 255, 0.18);
+  mix-blend-mode: screen;
+}
+
+.glitch-flash-layer {
+  animation: glitch-flash 0.3s ease-out forwards;
+  background: radial-gradient(circle at center, rgba(236, 233, 225, 0.22) 0%, transparent 75%);
+}
+
+.glitch-scan-layer {
+  animation: glitch-scan-jitter 0.12s linear infinite;
+}
+
+/* Infinite Marquee Ticker Animations (Pure GPU translate3d) */
+@keyframes marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+

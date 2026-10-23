@@ -30,7 +30,7 @@ export function BwToggle() {
     <button
       type="button"
       onClick={handleToggle}
-      className="text-xs tracking-wider uppercase px-2 py-1 border border-crt-phosphor/20 hover:border-crt-phosphor/60 transition-colors bg-black/40 backdrop-blur-sm cursor-pointer active:scale-95 flex items-center gap-1.5"
+      className="text-xs tracking-wider uppercase transition-colors cursor-pointer flex items-center gap-1.5 py-0.5"
       aria-label="Toggle Black and White display mode"
     >
       <span className="text-crt-phosphor/60">COLOR:</span>
