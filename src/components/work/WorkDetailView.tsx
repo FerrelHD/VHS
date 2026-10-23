@@ -275,11 +275,11 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
         className="pj-track w-max min-w-full"
       >
         {/* 1. HERO INTRO: Physical Mini VHS Sleeve & Overview */}
-        <section className="pj-screen-height flex flex-col md:flex-row items-center md:items-stretch gap-6 sm:gap-10 md:gap-12 flex-shrink-0">
+        <section className="pj-screen-height flex flex-col md:flex-row items-center md:items-center gap-6 sm:gap-10 md:gap-12 flex-shrink-0">
           {/* Angled Authentic Physical VHS Sleeve with Elastic Parallax */}
           <div
             data-parallax="true"
-            className="relative w-[180px] sm:w-[220px] md:w-auto h-auto md:h-full max-h-[min(350px,52cqh)] aspect-[130/196] bg-[#141210] rounded-xs border border-crt-phosphor/30 shadow-[0_20px_50px_rgba(0,0,0,0.85)] rotate-[-2deg] hover:rotate-0 transition-transform duration-500 overflow-hidden shrink-0 will-change-transform group cursor-pointer"
+            className="relative w-[180px] sm:w-[220px] md:w-auto h-auto md:h-[min(350px,52cqh)] aspect-[130/196] bg-[#141210] rounded-xs border border-crt-phosphor/30 shadow-[0_20px_50px_rgba(0,0,0,0.85)] rotate-[-2deg] hover:rotate-0 transition-transform duration-500 overflow-hidden shrink-0 will-change-transform group cursor-pointer"
           >
             <img
               src={`/tapes/${tape.id}-front.webp?v=${tape.wearSeed}`}
