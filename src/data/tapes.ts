@@ -92,7 +92,7 @@ export const TAPE_PROJECTS: TapeProject[] = [
       "Structured upon a persistent 12-column Swiss modernist grid overlay with kinetic GSAP timelines, dual-palette chromatic state machine, expanding anatomical accordions, and a live fashion capital world clock.",
     color: "#080f24",
     wearSeed: 198701,
-    image: "/projects/Araki_ Manga Iconoclast Poster.png",
+    image: "/projects/Araki Poster.png",
     liveUrl: "https://araki-art.vercel.app",
     githubUrl: "https://github.com/FerrelHD/Araki-Art",
     metrics: [
@@ -189,9 +189,9 @@ export const TAPE_PROJECTS: TapeProject[] = [
       "Enterprise-grade football intelligence platform featuring real-time 2D pitch tracking overlay, multi-criteria player scouting, and AI match probability forecasting.",
     story:
       "High-frequency Canvas 2D telemetry synchronized over WebSockets. Isolating high-frequency coordinate broadcasts from React DOM reconciliations via double-buffered HTML5 Canvas 2D engine driven by requestAnimationFrame.",
-    color: "#18221c",
+    color: "#141410",
     wearSeed: 199402,
-    image: "/projects/TactIQ.png",
+    image: "/projects/TactIQ Poster.png",
     githubUrl: "https://github.com/LuthfiMirza/TactIQ",
     metrics: [
       { label: "Render Frame Rate", value: "60 FPS" },
@@ -485,9 +485,9 @@ export const TAPE_PROJECTS: TapeProject[] = [
       "High-octane Formula 1 showcase with canvas telemetry visualizers, velocity-driven tachometer, dynamic redline shaders, and fluid kinetic transitions.",
     story:
       "Translating the sensory velocity and telemetry of Formula 1 into interactive web form. Interactive tachometer dial that revs based on user scroll velocity, paired with smooth video scrub triggers and microsecond sector deltas.",
-    color: "#2b1414",
+    color: "#1f0606",
     wearSeed: 201916,
-    image: "/projects/Charles-Leclerc.png",
+    image: "/projects/Leclerc Poster.png",
     liveUrl: "https://leclerc-redline.vercel.app/",
     githubUrl: "https://github.com/FerrelHD",
     metrics: [

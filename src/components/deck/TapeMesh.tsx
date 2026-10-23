@@ -221,10 +221,11 @@ export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMe
 
     group.rotation.set(tiltX, arc.rotationY + bankY, 0);
 
-    // 5. Cassette Peek Animation (Smooth slide out of sleeve)
+    // 5. Cassette Peek Animation (Only emerges when selected, fully tucked when idle)
     const targetPeek = isSelected ? VHS_METRICS.PEEK : VHS_METRICS.PEEK_IDLE;
-    currentPeekRef.current += (targetPeek - currentPeekRef.current) * (1 - Math.exp(-8 * dt));
+    currentPeekRef.current += (targetPeek - currentPeekRef.current) * (1 - Math.exp(-9 * dt));
     cassette.position.y = currentPeekRef.current;
+    cassette.visible = isSelected || currentPeekRef.current > 0.5;
 
     // 6. Dynamic Phosphor Smoothstep Lighting Falloff
     const litFactor = Math.max(0, 1 - distUnits / 1.75);
@@ -246,9 +247,10 @@ export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMe
         onSelect();
       }}
     >
-      {/* 1. Inner VHS Cassette (Slides out smoothly when selected) */}
+      {/* 1. Inner VHS Cassette (Slides out smoothly when selected, hidden when idle) */}
       <mesh
         ref={cassetteMeshRef}
+        visible={isSelected}
         material={cassetteMaterials}
         castShadow
       >

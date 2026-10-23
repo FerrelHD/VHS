@@ -12,8 +12,8 @@ export const CRT_CONSTANTS = {
 export const VHS_METRICS = {
   CASE: { w: 130, h: 196, t: 14 },
   TAPE: { w: 120, h: 185, t: 10 },
-  PEEK: 46, // Proud exposure of the twin spool windows and cassette label
-  PEEK_IDLE: 22, // Subtle peek when unselected revealing window and grip ribs
+  PEEK: 48, // Proud exposure of the twin spool windows and cassette label
+  PEEK_IDLE: 0, // Fully tucked inside sleeve when unselected
   ARC_RADIUS: 900, // Radius of the tape carousel cylinder in 3D units
   SLOT_SPACING: 210, // Distance between consecutive vertical tapes along the arc
 };
