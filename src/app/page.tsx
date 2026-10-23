@@ -187,8 +187,8 @@ export default function Home() {
           </div>
         )}
 
-        {/* Layer 4: Fixed Footer across all views (Calibrated to 60px bottom, 48px padding-x) */}
-        <div className="absolute bottom-0 left-0 right-0 z-40 pb-[clamp(32px,5.5vh,60px)] px-[clamp(24px,3.5vw,48px)] pointer-events-auto">
+        {/* Layer 4: Fixed Footer across all views (Calibrated to 60px bottom, 100px padding-x matching navbar) */}
+        <div className="absolute bottom-0 left-0 right-0 z-40 pb-[clamp(32px,5.5vh,60px)] px-[clamp(28px,7vw,100px)] pointer-events-auto">
           <AppFooter intro={introStarted} />
         </div>
       </CrtGlass>

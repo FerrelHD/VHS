@@ -6,12 +6,15 @@ import { CRT_CONSTANTS } from "./math";
 let filterIdCounter = 0;
 
 /**
- * Creates a subtle SVG <feDisplacementMap> barrel distortion filter for HTML DOM elements.
- * Calibrated with gentle optical curvature (~12px displacement) matching the CRT glass surface,
- * ensuring text remains crisp, legible, and comfortably positioned.
+ * Creates an authentic SVG <feDisplacementMap> barrel distortion filter for HTML DOM elements.
+ * Calibrated with full CRT curvature (Option B: k = 0.09) matching the 3D cassette deck post-processing.
  */
-export function useCrtBend<T extends HTMLElement>() {
-  const containerRef = useRef<T | null>(null);
+export function useCrtBend<T extends HTMLElement>(
+  kFactor = 0.09,
+  externalRef?: React.RefObject<T | null>
+) {
+  const internalRef = useRef<T | null>(null);
+  const containerRef = externalRef || internalRef;
 
   useEffect(() => {
     const el = containerRef.current;
@@ -19,6 +22,7 @@ export function useCrtBend<T extends HTMLElement>() {
 
     const filterId = `crt-bend-${++filterIdCounter}`;
     const svgNS = "http://www.w3.org/2000/svg";
+    const xlinkNS = "http://www.w3.org/1999/xlink";
 
     let svgHost = document.getElementById("crt-svg-filters") as SVGSVGElement | null;
     if (!svgHost) {
@@ -35,11 +39,10 @@ export function useCrtBend<T extends HTMLElement>() {
 
     const filter = document.createElementNS(svgNS, "filter");
     filter.id = filterId;
-    filter.setAttribute("x", "0");
-    filter.setAttribute("y", "0");
-    filter.setAttribute("width", "1");
-    filter.setAttribute("height", "1");
-    filter.setAttribute("primitiveUnits", "userSpaceOnUse");
+    filter.setAttribute("x", "-6%");
+    filter.setAttribute("y", "-6%");
+    filter.setAttribute("width", "112%");
+    filter.setAttribute("height", "112%");
     filter.setAttribute("color-interpolation-filters", "sRGB");
 
     const feImage = document.createElementNS(svgNS, "feImage");
@@ -56,7 +59,7 @@ export function useCrtBend<T extends HTMLElement>() {
     filter.appendChild(feDisplacementMap);
     svgHost.appendChild(filter);
 
-    const generateDisplacementHref = (w: number, h: number, maxScale: number) => {
+    const generateDisplacementHref = (w: number, h: number, maxDisp: number) => {
       const canvas = document.createElement("canvas");
       canvas.width = 128;
       canvas.height = 128;
@@ -64,7 +67,8 @@ export function useCrtBend<T extends HTMLElement>() {
       if (!ctx) return "";
 
       const imgData = ctx.createImageData(128, 128);
-      const k = CRT_CONSTANTS.K; // 0.07
+      const k = kFactor;
+      const scaleVal = maxDisp * 2;
 
       for (let y = 0; y < 128; y++) {
         const ny = ((y + 0.5) / 128) * 2 - 1;
@@ -74,14 +78,18 @@ export function useCrtBend<T extends HTMLElement>() {
           const dy = k * ny * nx * nx * (h / 2);
           const idx = (y * 128 + x) * 4;
 
-          imgData.data[idx] = Math.max(0, Math.min(255, Math.round((0.5 + dx / maxScale) * 255)));
-          imgData.data[idx + 1] = Math.max(0, Math.min(255, Math.round((0.5 + dy / maxScale) * 255)));
+          // Normalized into [-0.5, 0.5] range relative to scaleVal
+          const normX = Math.max(-0.5, Math.min(0.5, dx / scaleVal));
+          const normY = Math.max(-0.5, Math.min(0.5, dy / scaleVal));
+
+          imgData.data[idx] = Math.round((normX + 0.5) * 255);
+          imgData.data[idx + 1] = Math.round((normY + 0.5) * 255);
           imgData.data[idx + 2] = 128;
           imgData.data[idx + 3] = 255;
         }
       }
       ctx.putImageData(imgData, 0, 0);
-      return canvas.toDataURL();
+      return canvas.toDataURL("image/png");
     };
 
     let lastSize = "";
@@ -92,16 +100,19 @@ export function useCrtBend<T extends HTMLElement>() {
       if (!w || !h || `${w}x${h}` === lastSize) return;
       lastSize = `${w}x${h}`;
 
-      // Subtle scale: max displacement ~12px so text is gentle and clean
-      const maxScale = Math.min(14, Math.max(10, Math.round(Math.max(w, h) * 0.009)));
+      // Calculate maximum displacement for Option B (k = 0.09)
+      const maxDisp = Math.max(16, Math.round(Math.max(w, h) * kFactor * 0.5));
+      const scaleVal = maxDisp * 2;
 
+      const dataUrl = generateDisplacementHref(w, h, maxDisp);
       feImage.setAttribute("x", "0");
       feImage.setAttribute("y", "0");
       feImage.setAttribute("width", String(w));
       feImage.setAttribute("height", String(h));
-      feImage.setAttribute("href", generateDisplacementHref(w, h, maxScale * 8));
+      feImage.setAttribute("href", dataUrl);
+      feImage.setAttributeNS(xlinkNS, "href", dataUrl);
 
-      feDisplacementMap.setAttribute("scale", String(maxScale));
+      feDisplacementMap.setAttribute("scale", String(scaleVal));
       el.style.filter = `url(#${filterId})`;
     };
 
@@ -116,7 +127,7 @@ export function useCrtBend<T extends HTMLElement>() {
         el.style.filter = "";
       }
     };
-  }, []);
+  }, [kFactor, containerRef]);
 
   return containerRef;
 }

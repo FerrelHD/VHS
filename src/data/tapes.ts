@@ -386,9 +386,9 @@ export const TAPE_PROJECTS: TapeProject[] = [
       "Interactive geospatial hazard tracker integrating real-time disaster feeds into visual 2D mapping with custom zero-dependency projections and temporal replay.",
     story:
       "Bespoke Canvas 2D rendering pipeline using custom equirectangular coordinate transforms. Kept the initial payload under 90 KB while sustaining 60 FPS rendering of thousands of historical earthquake epicenters, plate boundary polygons, and active volcano alerts.",
-    color: "#28231c",
+    color: "#1f1810",
     wearSeed: 202604,
-    image: "/projects/nusantara-observatory.png",
+    image: "/projects/Crustal Poster.png",
     liveUrl: "https://nusantara-observatory.vercel.app/",
     githubUrl: "https://github.com/FerrelHD/Global-Seismic-Tracker",
     metrics: [

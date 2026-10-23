@@ -4,6 +4,7 @@ import { useEffect, useRef, useCallback } from "react";
 import { TapeProject, TAPE_PROJECTS } from "@/data/tapes";
 import { audio } from "@/lib/audio";
 import { getSleeveArchetype } from "../deck/TapeMesh";
+import { useCrtBend } from "@/lib/useCrtBend";
 
 interface WorkDetailViewProps {
   tape: TapeProject;
@@ -27,6 +28,9 @@ interface ParallaxItem {
 export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewProps) {
   const scrollWrapperRef = useRef<HTMLDivElement>(null);
   const scrollContentRef = useRef<HTMLDivElement>(null);
+
+  // Apply Option B authentic CRT barrel distortion curvature (k = 0.09) matching home deck
+  useCrtBend(0.09, scrollWrapperRef);
 
   const currentIndex = TAPE_PROJECTS.findIndex((t) => t.id === tape.id);
   const nextTape = TAPE_PROJECTS[(currentIndex + 1) % TAPE_PROJECTS.length];
