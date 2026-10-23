@@ -34,20 +34,16 @@ export function TapeSubtitle({ tape, onOpen, intro = true }: TapeSubtitleProps) 
         </p>
       </Reveal>
 
-      {/* Line 3: Telemetry Badges & Call to Action */}
+      {/* Line 3: Telemetry & Call to Action (Plain text without cards or badges) */}
       <Reveal on={intro} i={2}>
-        <div className="flex items-center gap-2 mt-2.5 font-mono text-[9px] sm:text-[10px] tracking-widest uppercase">
-          <span className="px-2 py-0.5 border border-crt-phosphor/30 bg-black/40 text-crt-phosphor/90 group-hover:border-crt-phosphor/60 transition-colors">
-            {tape.code}
-          </span>
+        <div className="flex items-center gap-2 sm:gap-2.5 mt-2 font-mono text-[10px] sm:text-[11px] tracking-widest uppercase text-crt-phosphor/70">
+          <span>{tape.code}</span>
           <span className="text-crt-phosphor/40">•</span>
-          <span className="px-2 py-0.5 border border-crt-phosphor/30 bg-black/40 text-crt-phosphor/90 group-hover:border-crt-phosphor/60 transition-colors">
-            {tape.meta.duration}
-          </span>
+          <span>{tape.meta.duration}</span>
           <span className="text-crt-phosphor/40">•</span>
-          <span className="px-2.5 py-0.5 border border-crt-phosphor/40 bg-crt-phosphor/10 text-crt-phosphor group-hover:bg-crt-phosphor group-hover:text-black font-bold transition-all flex items-center gap-1.5 shadow-[0_0_10px_rgba(235,231,222,0.1)]">
+          <span className="text-crt-phosphor group-hover:text-white transition-colors flex items-center gap-1 font-semibold">
             <span>PLAY SHARD</span>
-            <span className="text-[11px] leading-none">↗</span>
+            <span className="text-[11px] leading-none group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
           </span>
         </div>
       </Reveal>
