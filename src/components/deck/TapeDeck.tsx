@@ -16,6 +16,7 @@ interface TapeDeckProps {
   intro?: boolean;
   onReady?: () => void;
   onCardsEntered?: () => void;
+  active?: boolean;
 }
 
 function TapeCarousel({
@@ -134,6 +135,7 @@ export function TapeDeck({
   intro = true,
   onReady,
   onCardsEntered,
+  active = true,
 }: TapeDeckProps) {
   const [targetOffset, setTargetOffset] = useState(currentIndex * VHS_METRICS.SLOT_SPACING);
 
@@ -293,7 +295,8 @@ export function TapeDeck({
           alpha: true,
           powerPreference: "high-performance",
         }}
-        dpr={[1, 2]}
+        dpr={[1, 1.35]}
+        frameloop={active ? "always" : "never"}
       >
         <ResponsiveDeckCamera />
         <TapeCarousel
@@ -307,7 +310,7 @@ export function TapeDeck({
         />
 
         {/* The CRT Optical Barrel Distortion Post-Processing Pass */}
-        <BentPostProcessing />
+        <BentPostProcessing paused={!active} />
       </Canvas>
     </div>
   );

@@ -164,6 +164,7 @@ export default function Home() {
             intro={cardsIntroStarted}
             onReady={handleDeckReady}
             onCardsEntered={handleCardsEntered}
+            active={activeView === "deck"}
           />
         </div>
 

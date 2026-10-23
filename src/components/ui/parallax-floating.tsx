@@ -79,11 +79,12 @@ const Floating = ({
       const dx = newTargetX - data.currentPosition.x;
       const dy = newTargetY - data.currentPosition.y;
 
-      // Update position only if we're still moving
-      data.currentPosition.x += dx * easingFactor;
-      data.currentPosition.y += dy * easingFactor;
-
-      data.element.style.transform = `translate3d(${data.currentPosition.x.toFixed(2)}px, ${data.currentPosition.y.toFixed(2)}px, 0)`;
+      // Idle sleep optimization: Only update and write to DOM if position is actively moving (> 0.05px)
+      if (Math.abs(dx) > 0.05 || Math.abs(dy) > 0.05) {
+        data.currentPosition.x += dx * easingFactor;
+        data.currentPosition.y += dy * easingFactor;
+        data.element.style.transform = `translate3d(${data.currentPosition.x.toFixed(2)}px, ${data.currentPosition.y.toFixed(2)}px, 0)`;
+      }
     });
   });
 

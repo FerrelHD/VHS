@@ -51,7 +51,7 @@ export function BentPostProcessing({ paused = false }: BentPostProcessingProps) 
   const { target, screenScene, screenCamera, material } = useMemo(() => {
     const renderTarget = new THREE.WebGLRenderTarget(1, 1, {
       type: THREE.HalfFloatType,
-      samples: 4,
+      samples: 1,
       minFilter: THREE.LinearFilter,
       magFilter: THREE.LinearFilter,
     });
