@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import { audio } from "@/lib/audio";
 import { Reveal } from "./Reveal";
 
@@ -38,6 +39,11 @@ export function AppHeader({
     return `00:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
+  const isHomeActive = activeView === "deck" || activeView === "work";
+  const isArchiveActive = activeView === "archive";
+  const isNewsActive = activeView === "news";
+  const isCreditsActive = activeView === "contact" || activeView === "credits";
+
   return (
     <header className="w-full flex items-center justify-between select-none z-40 font-mono tracking-wider shrink-0 relative pointer-events-auto">
       {/* 1. Left: Home status & Running Timecode (Adaptive gap) */}
@@ -50,19 +56,19 @@ export function AppHeader({
               onHomeClick?.();
             }}
             className={`flex items-center gap-1.5 sm:gap-2.5 transition-colors cursor-pointer group whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs text-[clamp(11px,1.05vw,15px)] ${
-              activeView === "deck"
+              isHomeActive
                 ? "text-white font-bold"
                 : "text-crt-phosphor/70 hover:text-white"
             }`}
             aria-label="Return to carousel home"
           >
-            <span
-              className={`w-2 h-2 sm:w-2.5 sm:h-2.5 inline-block transition-transform shrink-0 ${
-                activeView === "deck"
-                  ? "bg-crt-phosphor shadow-[0_0_8px_rgba(235,235,230,0.8)]"
-                  : "bg-crt-phosphor/40 group-hover:bg-crt-phosphor"
-              }`}
-            />
+            {isHomeActive && (
+              <motion.span
+                layoutId="nav-active-indicator"
+                className="w-2 h-2 sm:w-2.5 sm:h-2.5 inline-block bg-crt-phosphor shadow-[0_0_8px_rgba(235,235,230,0.85)] shrink-0"
+                transition={{ type: "spring", stiffness: 420, damping: 32 }}
+              />
+            )}
             <span className="tracking-widest">
               {activeView === "deck" ? "HOME" : "← REELS"}
             </span>
@@ -104,13 +110,20 @@ export function AppHeader({
               audio.playClick(1.0);
               onArchiveClick?.();
             }}
-            className={`transition-colors cursor-pointer tracking-wider whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs ${
-              activeView === "archive"
+            className={`flex items-center gap-1.5 sm:gap-2 transition-colors cursor-pointer tracking-wider whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs ${
+              isArchiveActive
                 ? "text-white font-bold phosphor-glow"
                 : "text-crt-phosphor/60 hover:text-white"
             }`}
           >
-            ARCHIVE
+            {isArchiveActive && (
+              <motion.span
+                layoutId="nav-active-indicator"
+                className="w-2 h-2 sm:w-2.5 sm:h-2.5 inline-block bg-crt-phosphor shadow-[0_0_8px_rgba(235,235,230,0.85)] shrink-0"
+                transition={{ type: "spring", stiffness: 420, damping: 32 }}
+              />
+            )}
+            <span>ARCHIVE</span>
           </button>
         </Reveal>
 
@@ -121,13 +134,20 @@ export function AppHeader({
               audio.playClick(1.0);
               onNewsClick?.();
             }}
-            className={`transition-colors cursor-pointer tracking-wider whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs ${
-              activeView === "news"
+            className={`flex items-center gap-1.5 sm:gap-2 transition-colors cursor-pointer tracking-wider whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs ${
+              isNewsActive
                 ? "text-white font-bold phosphor-glow"
                 : "text-crt-phosphor/60 hover:text-white"
             }`}
           >
-            NEWS
+            {isNewsActive && (
+              <motion.span
+                layoutId="nav-active-indicator"
+                className="w-2 h-2 sm:w-2.5 sm:h-2.5 inline-block bg-crt-phosphor shadow-[0_0_8px_rgba(235,235,230,0.85)] shrink-0"
+                transition={{ type: "spring", stiffness: 420, damping: 32 }}
+              />
+            )}
+            <span>NEWS</span>
           </button>
         </Reveal>
 
@@ -138,13 +158,20 @@ export function AppHeader({
               audio.playClick(1.0);
               onContactClick?.();
             }}
-            className={`transition-colors cursor-pointer tracking-wider whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs ${
-              activeView === "contact" || activeView === "credits"
+            className={`flex items-center gap-1.5 sm:gap-2 transition-colors cursor-pointer tracking-wider whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs ${
+              isCreditsActive
                 ? "text-white font-bold phosphor-glow"
                 : "text-crt-phosphor/60 hover:text-white"
             }`}
           >
-            CREDITS
+            {isCreditsActive && (
+              <motion.span
+                layoutId="nav-active-indicator"
+                className="w-2 h-2 sm:w-2.5 sm:h-2.5 inline-block bg-crt-phosphor shadow-[0_0_8px_rgba(235,235,230,0.85)] shrink-0"
+                transition={{ type: "spring", stiffness: 420, damping: 32 }}
+              />
+            )}
+            <span>CREDITS</span>
           </button>
         </Reveal>
       </nav>

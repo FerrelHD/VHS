@@ -9,13 +9,17 @@ export const useMousePositionRef = (
     const updatePosition = (x: number, y: number) => {
       if (containerRef && containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
-        const relativeX = x - rect.left;
-        const relativeY = y - rect.top;
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const relativeX = x - centerX;
+        const relativeY = y - centerY;
 
-        // Calculate relative position even when outside the container
+        // Calculate relative position centered around container center
         positionRef.current = { x: relativeX, y: relativeY };
       } else {
-        positionRef.current = { x, y };
+        const centerX = typeof window !== "undefined" ? window.innerWidth / 2 : 0;
+        const centerY = typeof window !== "undefined" ? window.innerHeight / 2 : 0;
+        positionRef.current = { x: x - centerX, y: y - centerY };
       }
     };
 
@@ -42,3 +46,4 @@ export const useMousePositionRef = (
 
   return positionRef;
 };
+

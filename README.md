@@ -78,6 +78,13 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
+## Credits & Inspiration
+
+- **Design & Interaction Inspiration**: Inspired by the work and creative direction of [Arc Marumo](https://www.arcmarumo.com/).
+- **Original IP & Visuals**: *Cyberpunk: Edgerunners* (c) Studio TRIGGER & CD PROJEKT RED.
+
+---
+
 ## License
 
 (c) 2026 Ferrel Rashad Akeyla (FRA c'26) & Studio Trigger / CD PROJEKT RED fan project.

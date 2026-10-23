@@ -14,16 +14,16 @@ interface ArchiveViewProps {
 
 // 10 Floating constellation coordinates designed to orbit around the central HUD
 const SHARD_COORDINATES = [
-  { top: "6%", left: "6%", depth: 1.4, rotate: "-4deg" },     // EP.01 - Top Left Outer
-  { top: "10%", left: "26%", depth: 2.5, rotate: "2deg" },     // EP.02 - Top Left Inner
-  { top: "5%", left: "64%", depth: 0.9, rotate: "-2deg" },     // EP.03 - Top Right Inner
-  { top: "11%", left: "84%", depth: 1.9, rotate: "4deg" },     // EP.04 - Top Right Outer
-  { top: "42%", left: "3%", depth: 2.8, rotate: "-3deg" },     // EP.05 - Mid Left Edge
-  { top: "40%", left: "86%", depth: 2.2, rotate: "3deg" },     // EP.06 - Mid Right Edge
-  { top: "72%", left: "5%", depth: 1.6, rotate: "2deg" },      // EP.07 - Bottom Left Outer
-  { top: "78%", left: "26%", depth: 0.7, rotate: "-3deg" },    // EP.08 - Bottom Left Inner
+  { top: "6%", left: "8%", depth: 1.4, rotate: "-4deg" },     // EP.01 - Top Left Outer
+  { top: "10%", left: "28%", depth: 2.2, rotate: "2deg" },     // EP.02 - Top Left Inner
+  { top: "6%", left: "64%", depth: 0.9, rotate: "-2deg" },     // EP.03 - Top Right Inner
+  { top: "11%", left: "84%", depth: 1.8, rotate: "4deg" },     // EP.04 - Top Right Outer
+  { top: "42%", left: "5%", depth: 2.6, rotate: "-3deg" },     // EP.05 - Mid Left Edge
+  { top: "40%", left: "85%", depth: 2.2, rotate: "3deg" },     // EP.06 - Mid Right Edge
+  { top: "72%", left: "8%", depth: 1.6, rotate: "2deg" },      // EP.07 - Bottom Left Outer
+  { top: "78%", left: "28%", depth: 0.7, rotate: "-3deg" },    // EP.08 - Bottom Left Inner
   { top: "74%", left: "62%", depth: 2.4, rotate: "4deg" },     // EP.09 - Bottom Right Inner
-  { top: "76%", left: "83%", depth: 1.8, rotate: "-2deg" },    // EP.10 - Bottom Right Outer
+  { top: "76%", left: "82%", depth: 1.8, rotate: "-2deg" },    // EP.10 - Bottom Right Outer
 ];
 
 /**
@@ -67,7 +67,7 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="absolute inset-0 pointer-events-none z-30 flex flex-col items-center justify-center p-4 text-center"
       >
-        <div className="w-full max-w-xl flex flex-col items-center gap-3">
+        <div className="w-full max-w-xl flex flex-col items-center gap-2.5">
           <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-crt-phosphor/60 tracking-widest uppercase">
             <span className="text-amber-400 font-bold">[VAULT // SHARD MATRIX]</span>
             <span>•</span>
@@ -78,9 +78,10 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
             BRAINDANCE VAULT
           </h1>
 
-          <div className="text-[11px] sm:text-xs text-crt-phosphor/85 font-mono tracking-wider uppercase">
+          {/* Locked height prevents any layout shift on hover */}
+          <div className="h-6 flex items-center justify-center text-[11px] sm:text-xs text-crt-phosphor/85 font-mono tracking-wider uppercase px-2">
             {hoveredIndex !== null ? (
-              <span className="text-amber-400 font-bold phosphor-glow">
+              <span className="text-amber-400 font-bold phosphor-glow truncate max-w-full">
                 READY TO INITIALIZE: [{TAPE_PROJECTS[hoveredIndex]?.code} // {TAPE_PROJECTS[hoveredIndex]?.title}]
               </span>
             ) : (
@@ -89,7 +90,7 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
           </div>
 
           {/* Interactive Category Filter Toggles */}
-          <div className="pointer-events-auto flex flex-wrap items-center justify-center gap-2 sm:gap-3 pt-2">
+          <div className="pointer-events-auto flex flex-wrap items-center justify-center gap-2 sm:gap-3 pt-1">
             {ARCHIVE_CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
@@ -109,7 +110,7 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
             ))}
           </div>
 
-          <div className="flex items-center gap-2 pt-1 text-[9px] sm:text-[10px] text-crt-phosphor/40">
+          <div className="flex items-center gap-2 pt-0.5 text-[9px] sm:text-[10px] text-crt-phosphor/40">
             <span>SHOWING {activeCount} OF {TAPE_PROJECTS.length} SHARDS</span>
           </div>
 
@@ -158,27 +159,32 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
                   onSelectProject(idx);
                 }}
                 onMouseEnter={() => {
-                  audio.playClick(1.4);
-                  setHoveredIndex(idx);
+                  if (hoveredIndex !== idx) {
+                    audio.playClick(1.4);
+                    setHoveredIndex(idx);
+                  }
                 }}
                 onMouseLeave={() => {
                   setHoveredIndex(null);
                 }}
-                style={{ transform: `rotate(${coord.rotate})` }}
-                className="group relative cursor-pointer select-none transition-transform duration-500 hover:scale-110 active:scale-95 will-change-transform"
+                style={{
+                  transform: `rotate(${coord.rotate}) scale(${isHovered ? 1.1 : 1})`,
+                  transition: "transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+                }}
+                className="group relative cursor-pointer select-none will-change-transform active:scale-95"
               >
                 {/* Physical VHS Mini Sleeve Poster */}
                 <div
-                  className={`relative w-[78px] sm:w-[98px] md:w-[118px] lg:w-[136px] aspect-[130/196] bg-[#141210] rounded-xs border overflow-hidden transition-all duration-300 shadow-[0_15px_35px_rgba(0,0,0,0.85)] ${
+                  className={`relative w-[78px] sm:w-[98px] md:w-[118px] lg:w-[136px] aspect-[130/196] bg-[#141210] rounded-xs border overflow-hidden transition-[border-color,box-shadow] duration-300 shadow-[0_15px_35px_rgba(0,0,0,0.85)] ${
                     isHovered
-                      ? "border-amber-400 shadow-[0_0_25px_rgba(251,191,36,0.5)] scale-102"
+                      ? "border-amber-400 shadow-[0_0_25px_rgba(251,191,36,0.5)]"
                       : "border-crt-phosphor/35 hover:border-white"
                   }`}
                 >
                   <img
                     src={`/tapes/${tape.id}-front.webp?v=${tape.wearSeed}`}
                     alt={tape.title}
-                    className="w-full h-full object-cover rounded-xs pointer-events-none transition-[filter,transform] duration-500 contrast-105 group-hover:contrast-115 group-hover:scale-105"
+                    className="w-full h-full object-cover rounded-xs pointer-events-none transition-[filter] duration-300 contrast-105"
                   />
                   {/* Subtle gloss lighting diagonal gradient */}
                   <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/20 pointer-events-none" />
@@ -186,12 +192,12 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
                   {/* Shard Play Tag Overlay */}
                   <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between text-[8px] font-mono tracking-wider text-white/90">
                     <span className="text-amber-300 font-bold">{tape.code}</span>
-                    <span className="opacity-0 group-hover:opacity-100 text-amber-300 transition-opacity">PLAY ↗</span>
+                    <span className={`text-amber-300 transition-opacity duration-200 ${isHovered ? "opacity-100" : "opacity-0"}`}>PLAY ↗</span>
                   </div>
                 </div>
 
                 {/* Floating Typographic Label Badge */}
-                <div className="absolute top-[102%] left-1/2 -translate-x-1/2 pt-1 pointer-events-none whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className={`absolute top-[102%] left-1/2 -translate-x-1/2 pt-1 pointer-events-none whitespace-nowrap transition-opacity duration-200 ${isHovered ? "opacity-100" : "opacity-0"}`}>
                   <div className="text-[9px] font-mono font-bold text-amber-400 tracking-wider phosphor-glow bg-black/85 px-1.5 py-0.5 rounded-xs border border-amber-400/40">
                     {tape.code} • {tape.title}
                   </div>
