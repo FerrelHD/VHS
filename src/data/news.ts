@@ -45,14 +45,6 @@ export const N54_BULLETINS: NewsBulletin[] = [
     body: "Sub-net security breaches detected in regional training terminals. Unauthorized deep-dive access into classified relational data resulted in immediate neural purge protocols. Arasaka reminds citizens that proprietary data retrieval is punishable by terminal forfeiture.",
   },
   {
-    id: "n54-04",
-    source: "NIGHT CITY ENVIRONMENTAL",
-    timestamp: "14:20:12 NCST",
-    category: "WEATHER",
-    headline: "ACID PRECIPITATION WARNING OVER WATSON & HEYWOOD",
-    body: "Heavy particulate discharge from industrial refineries combined with coastal stormfronts has elevated precipitation toxicity. Pedestrians advised to wear sealed respiratory gear and protective coats. Cyberware joints subject to accelerated galvanic corrosion.",
-  },
-  {
     id: "n54-05",
     source: "ORBITAL AIR COMMUNICATIONS",
     timestamp: "09:44:55 NCST",

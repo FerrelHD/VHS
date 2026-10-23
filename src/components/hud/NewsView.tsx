@@ -41,18 +41,19 @@ export function NewsView({ onBack }: NewsViewProps) {
       <div className="max-w-5xl mx-auto flex flex-col gap-4 sm:gap-6">
         {/* 1. BROADCAST TOP BANNER */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-crt-phosphor/20 pb-3">
-          <div className="flex items-center gap-2.5 sm:gap-3">
-            <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-ping shrink-0" />
-            <div>
-              <div className="flex items-center gap-2 text-[9px] sm:text-[10px] text-crt-phosphor/60 tracking-widest uppercase">
-                <span className="text-red-400 font-bold">[N54 NEWS LIVE]</span>
-                <span>•</span>
-                <span>CH-54 NIGHT CITY BROADCAST</span>
-              </div>
-              <h1 className="font-bit text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-none text-crt-phosphor phosphor-glow uppercase tracking-tight">
-                NIGHT CITY NEWS WATCH
-              </h1>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2 text-[9px] sm:text-[10px] text-crt-phosphor/60 tracking-widest uppercase">
+              <span className="relative flex h-2 w-2 shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.9)]" />
+              </span>
+              <span className="text-red-400 font-bold">[N54 NEWS LIVE]</span>
+              <span>•</span>
+              <span>CH-54 NIGHT CITY BROADCAST</span>
             </div>
+            <h1 className="font-bit text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-none text-crt-phosphor phosphor-glow uppercase tracking-tight">
+              NIGHT CITY NEWS WATCH
+            </h1>
           </div>
 
           <div className="flex items-center gap-3">
