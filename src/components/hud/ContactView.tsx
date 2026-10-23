@@ -14,23 +14,87 @@ interface DisplaceableLine {
   initialTop: number;
 }
 
+export interface CreditsTweakSettings {
+  initialTop: number;
+  initialScale: number;
+  finalScale: number;
+  baseColGap: number;
+  repulsionPush: number;
+  repulsionRadius: number;
+  headlinePadding: number;
+}
+
+const DEFAULT_SETTINGS: CreditsTweakSettings = {
+  initialTop: 75,
+  initialScale: 0.44,
+  finalScale: 1.05,
+  baseColGap: 56,
+  repulsionPush: 115,
+  repulsionRadius: 210,
+  headlinePadding: 165,
+};
+
+function getSavedSettings(): CreditsTweakSettings {
+  if (typeof window === "undefined") return DEFAULT_SETTINGS;
+  try {
+    const raw = localStorage.getItem("vhs_credits_tweak_settings");
+    if (raw) return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+  } catch {}
+  return DEFAULT_SETTINGS;
+}
+
 /**
  * Cyberpunk: Edgerunners Production Credits View.
  * 100% Faithful recreation of arcmarumo.com/profile:
  * - Upright physical VHS tape in dead center with 3D Y-axis spinning on scroll + mouse parallax
  * - Dynamic Obstacle Repulsion ("Teks Minggir"): As each credit line approaches the vertical zone
- *   of the center tape, it dynamically slides outward (-140px to the left, +140px to the right),
+ *   of the center tape, it dynamically slides outward (-115px to the left, +115px to the right),
  *   creating an organic magnetic corridor around the cassette!
  * - Large editorial serif statement sweeping behind the tape
  * - Smooth exponential inertia scrolling engine with top & bottom CRT cathode beam fade
+ * - Integrated Live Tweak HUD to interactively adjust poster height, scale, and text spacing in real-time!
  */
 export function ContactView({ onBack }: ContactViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const reelRef = useRef<HTMLDivElement>(null);
   const tapeRef = useRef<HTMLDivElement>(null);
 
+  const [settings, setSettings] = useState<CreditsTweakSettings>(getSavedSettings);
+  const [isHudOpen, setIsHudOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
   const mouseRef = useRef({ x: 0, y: 0 });
   const startLoopRef = useRef<() => void>(() => {});
+  const measureRef = useRef<() => void>(() => {});
+  const settingsRef = useRef(settings);
+
+  useEffect(() => {
+    settingsRef.current = settings;
+    try {
+      localStorage.setItem("vhs_credits_tweak_settings", JSON.stringify(settings));
+    } catch {}
+    measureRef.current();
+    startLoopRef.current();
+  }, [settings]);
+
+  const updateSetting = <K extends keyof CreditsTweakSettings>(
+    key: K,
+    val: CreditsTweakSettings[K]
+  ) => {
+    setSettings((prev) => ({ ...prev, [key]: val }));
+  };
+
+  const handleReset = () => {
+    audio.playClick(0.9);
+    setSettings(DEFAULT_SETTINGS);
+  };
+
+  const handleCopy = () => {
+    audio.playClick(1.1);
+    navigator.clipboard.writeText(JSON.stringify(settings, null, 2));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   // Apply authentic CRT barrel distortion curvature
   useCrtBend(0.09, containerRef);
@@ -103,6 +167,8 @@ export function ContactView({ onBack }: ContactViewProps) {
       render();
     };
 
+    measureRef.current = measure;
+
     /**
      * Render vertical scroll position, 3D tape rotation,
      * dynamic scale expansion from top to center via GPU compositing,
@@ -115,8 +181,10 @@ export function ContactView({ onBack }: ContactViewProps) {
       reel.style.transform = `translate3d(0, ${-currentY.toFixed(1)}px, 0)`;
 
       // 2. Dynamic Tape Position & Scale from top-small to center-large
+      const { initialTop, initialScale, finalScale, repulsionPush, repulsionRadius } =
+        settingsRef.current;
       const isDesktop = window.innerWidth > 640;
-      const topAnchor = isDesktop ? 40 : 30;
+      const topAnchor = initialTop;
       const baseTapeHeight = isDesktop ? 331 : 286;
       const centerY = container.clientHeight / 2;
 
@@ -126,11 +194,11 @@ export function ContactView({ onBack }: ContactViewProps) {
       // Smooth cubic ease out
       const ease = 1 - Math.pow(1 - progress, 3);
 
-      // Tape scale starts compact at 0.42 and expands to 1.05
-      const tapeScale = 0.42 + ease * (1.05 - 0.42);
+      // Tape scale starts compact at initialScale and expands to finalScale
+      const tapeScale = initialScale + ease * (finalScale - initialScale);
 
       // Target shift down from top anchor to dead center of viewport
-      const targetCenterShift = Math.max(0, centerY - topAnchor - (baseTapeHeight * 1.05) / 2);
+      const targetCenterShift = Math.max(0, centerY - topAnchor - (baseTapeHeight * finalScale) / 2);
       const dy = targetCenterShift * ease;
 
       // Tape screen Y coordinate for obstacle calculation
@@ -141,6 +209,7 @@ export function ContactView({ onBack }: ContactViewProps) {
         const spinY = currentY * 0.24 + mouseRef.current.x * 6;
         const tiltX = -mouseRef.current.y * 5;
 
+        tape.style.top = `${topAnchor}px`;
         tape.style.transform = `translate3d(-50%, ${dy.toFixed(
           1
         )}px, 0) perspective(1200px) rotateY(${spinY.toFixed(2)}deg) rotateX(${tiltX.toFixed(
@@ -150,8 +219,8 @@ export function ContactView({ onBack }: ContactViewProps) {
 
       // 3. Dynamic Obstacle Repulsion ("Teks Minggir")
       if (window.innerWidth > 768) {
-        const radius = 230 * tapeScale; // Influence radius scales with the physical tape
-        const maxDisplacement = 145 * Math.min(1.2, tapeScale); // Max horizontal push to the side
+        const radius = (repulsionRadius / 1.05) * tapeScale; // Influence radius scales with the physical tape
+        const maxDisplacement = repulsionPush * Math.min(1.2, tapeScale); // Max horizontal push to the side
 
         for (const item of lines) {
           // Current vertical center of this line relative to tape's current position
@@ -327,18 +396,22 @@ export function ContactView({ onBack }: ContactViewProps) {
         {/* 2. VERTICAL ROLLING CREDITS REEL */}
         <div
           ref={reelRef}
-          className="w-full max-w-5xl mx-auto px-6 sm:px-10 pt-[calc(var(--pj-top)+205px)] pb-[calc(var(--pj-bottom)+180px)] flex flex-col items-center will-change-transform"
+          style={{ paddingTop: `calc(var(--pj-top) + ${settings.headlinePadding}px)` }}
+          className="w-full max-w-5xl mx-auto px-6 sm:px-10 pb-[calc(var(--pj-bottom)+180px)] flex flex-col items-center will-change-transform"
         >
           {/* SECTION A: MASSIVE EDITORIAL SERIF HEADLINE */}
           <div className="w-full max-w-2xl text-center mb-16 sm:mb-24 pt-4 sm:pt-6">
-                      <h1 className="font-serif italic text-2xl sm:text-3xl md:text-4xl text-white/90 leading-relaxed font-normal tracking-tight">
+            <h1 className="font-serif italic text-2xl sm:text-3xl md:text-4xl text-white/90 leading-relaxed font-normal tracking-tight">
               An original animated tragedy forged by Studio TRIGGER and CD PROJEKT RED,
               setting fire to the skies of Night City.
             </h1>
           </div>
 
           {/* SECTION B: CREDITS PAIR 01 - STUDIOS & CREATIVE DIRECTION */}
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-[clamp(200px,22vw,300px)] gap-y-10 my-10 sm:my-16 text-xs sm:text-sm">
+          <div
+            style={{ columnGap: `${settings.baseColGap}px` }}
+            className="w-full grid grid-cols-1 md:grid-cols-2 gap-y-10 my-10 sm:my-16 text-xs sm:text-sm"
+          >
             {/* Left Column (Pushes to the LEFT when passing tape) */}
             <div className="flex flex-col md:items-end">
               <h2
@@ -429,7 +502,10 @@ export function ContactView({ onBack }: ContactViewProps) {
           </div>
 
           {/* SECTION C: CREDITS PAIR 02 - SOUNDTRACK & SCORE */}
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-[clamp(200px,22vw,300px)] gap-y-10 my-10 sm:my-16 text-xs sm:text-sm">
+          <div
+            style={{ columnGap: `${settings.baseColGap}px` }}
+            className="w-full grid grid-cols-1 md:grid-cols-2 gap-y-10 my-10 sm:my-16 text-xs sm:text-sm"
+          >
             {/* Left Column: Music & Themes (Pushes LEFT) */}
             <div className="flex flex-col md:items-end">
               <h2
@@ -536,7 +612,10 @@ export function ContactView({ onBack }: ContactViewProps) {
           </div>
 
           {/* SECTION D: CREDITS PAIR 03 - NIGHT CITY REALM & SQUAD */}
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-[clamp(200px,22vw,300px)] gap-y-10 my-10 sm:my-16 text-xs sm:text-sm">
+          <div
+            style={{ columnGap: `${settings.baseColGap}px` }}
+            className="w-full grid grid-cols-1 md:grid-cols-2 gap-y-10 my-10 sm:my-16 text-xs sm:text-sm"
+          >
             {/* Left Column: Locations (Pushes LEFT) */}
             <div className="flex flex-col md:items-end">
               <h2
@@ -656,13 +735,13 @@ export function ContactView({ onBack }: ContactViewProps) {
         </div>
       </div>
 
-      {/* 3. HERO PHYSICAL 3D VHS CASSETTE (CSS-anchored cleanly above headline at top:40px with origin-top) */}
+      {/* 3. HERO PHYSICAL 3D VHS CASSETTE (CSS-anchored, live adjustable) */}
       <div
         ref={tapeRef}
-        className="absolute top-[30px] sm:top-[40px] left-1/2 pointer-events-none z-20 flex flex-col items-center justify-center opacity-95 [transform-style:preserve-3d] origin-top will-change-transform"
+        className="absolute left-1/2 pointer-events-none z-20 flex flex-col items-center justify-center opacity-95 [transform-style:preserve-3d] origin-top will-change-transform"
         style={{
-          transform:
-            "translate3d(-50%, 0px, 0) perspective(1200px) rotateY(0deg) rotateX(0deg) scale(0.42)",
+          top: `${settings.initialTop}px`,
+          transform: `translate3d(-50%, 0px, 0) perspective(1200px) rotateY(0deg) rotateX(0deg) scale(${settings.initialScale})`,
         }}
       >
         {/* 3D Cassette Box Container with 18px Depth */}
@@ -735,6 +814,159 @@ export function ContactView({ onBack }: ContactViewProps) {
             style={{ transform: "rotateX(-90deg)" }}
           />
         </div>
+      </div>
+
+      {/* 4. LIVE CYBERPUNK TWEAK HUD PANEL */}
+      <div className="fixed bottom-4 right-6 z-50 pointer-events-auto font-mono select-none">
+        {isHudOpen ? (
+          <div className="bg-[#0c0c12]/95 backdrop-blur-md border border-amber-400/50 rounded-xs p-4 shadow-[0_0_25px_rgba(245,167,66,0.25)] w-[310px] text-xs text-crt-phosphor flex flex-col gap-3">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-2 border-b border-crt-phosphor/20">
+              <div className="flex items-center gap-1.5 text-amber-400 font-bold tracking-wider text-[11px]">
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                <span>CREDITS TWEAK HUD</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsHudOpen(false)}
+                className="text-crt-phosphor/60 hover:text-white cursor-pointer px-1 text-[11px]"
+              >
+                [ ✕ ]
+              </button>
+            </div>
+
+            {/* Sliders */}
+            <div className="flex flex-col gap-2.5 text-[10px]">
+              {/* Slider 1: Initial Top Y */}
+              <div className="flex flex-col gap-1">
+                <div className="flex justify-between text-crt-phosphor/80">
+                  <span>POSTER INITIAL Y</span>
+                  <span className="text-amber-400 font-bold">{settings.initialTop}px</span>
+                </div>
+                <input
+                  type="range"
+                  min={20}
+                  max={200}
+                  step={2}
+                  value={settings.initialTop}
+                  onChange={(e) => updateSetting("initialTop", Number(e.target.value))}
+                  className="w-full accent-amber-400 cursor-pointer"
+                />
+              </div>
+
+              {/* Slider 2: Headline Top Padding */}
+              <div className="flex flex-col gap-1">
+                <div className="flex justify-between text-crt-phosphor/80">
+                  <span>HEADLINE PADDING</span>
+                  <span className="text-amber-400 font-bold">{settings.headlinePadding}px</span>
+                </div>
+                <input
+                  type="range"
+                  min={90}
+                  max={260}
+                  step={5}
+                  value={settings.headlinePadding}
+                  onChange={(e) => updateSetting("headlinePadding", Number(e.target.value))}
+                  className="w-full accent-amber-400 cursor-pointer"
+                />
+              </div>
+
+              {/* Slider 3: Base Column Gap */}
+              <div className="flex flex-col gap-1">
+                <div className="flex justify-between text-crt-phosphor/80">
+                  <span>BASE COLUMN GAP</span>
+                  <span className="text-amber-400 font-bold">{settings.baseColGap}px</span>
+                </div>
+                <input
+                  type="range"
+                  min={20}
+                  max={140}
+                  step={2}
+                  value={settings.baseColGap}
+                  onChange={(e) => updateSetting("baseColGap", Number(e.target.value))}
+                  className="w-full accent-amber-400 cursor-pointer"
+                />
+              </div>
+
+              {/* Slider 4: Text Push Distance */}
+              <div className="flex flex-col gap-1">
+                <div className="flex justify-between text-crt-phosphor/80">
+                  <span>TEXT PUSH (REPULSION)</span>
+                  <span className="text-amber-400 font-bold">{settings.repulsionPush}px</span>
+                </div>
+                <input
+                  type="range"
+                  min={60}
+                  max={180}
+                  step={2}
+                  value={settings.repulsionPush}
+                  onChange={(e) => updateSetting("repulsionPush", Number(e.target.value))}
+                  className="w-full accent-amber-400 cursor-pointer"
+                />
+              </div>
+
+              {/* Slider 5: Initial Scale */}
+              <div className="flex flex-col gap-1">
+                <div className="flex justify-between text-crt-phosphor/80">
+                  <span>INITIAL SCALE</span>
+                  <span className="text-amber-400 font-bold">{settings.initialScale.toFixed(2)}x</span>
+                </div>
+                <input
+                  type="range"
+                  min={0.3}
+                  max={0.7}
+                  step={0.01}
+                  value={settings.initialScale}
+                  onChange={(e) => updateSetting("initialScale", Number(e.target.value))}
+                  className="w-full accent-amber-400 cursor-pointer"
+                />
+              </div>
+
+              {/* Slider 6: Final Scale */}
+              <div className="flex flex-col gap-1">
+                <div className="flex justify-between text-crt-phosphor/80">
+                  <span>EXPANDED SCALE</span>
+                  <span className="text-amber-400 font-bold">{settings.finalScale.toFixed(2)}x</span>
+                </div>
+                <input
+                  type="range"
+                  min={0.85}
+                  max={1.3}
+                  step={0.01}
+                  value={settings.finalScale}
+                  onChange={(e) => updateSetting("finalScale", Number(e.target.value))}
+                  className="w-full accent-amber-400 cursor-pointer"
+                />
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center justify-between pt-2 border-t border-crt-phosphor/20 text-[10px]">
+              <button
+                type="button"
+                onClick={handleReset}
+                className="text-crt-phosphor/60 hover:text-white cursor-pointer"
+              >
+                [ RESET ]
+              </button>
+              <button
+                type="button"
+                onClick={handleCopy}
+                className="text-amber-400 hover:text-white font-bold cursor-pointer"
+              >
+                {copied ? "[ COPIED! ]" : "[ COPY SETTINGS ]"}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setIsHudOpen(true)}
+            className="px-2.5 py-1 bg-black/80 hover:bg-black/95 border border-amber-400/50 hover:border-amber-400 text-amber-400 text-[11px] font-bold tracking-wider rounded-xs cursor-pointer shadow-lg transition-all"
+          >
+            [ ⚙ TWEAK HUD ]
+          </button>
+        )}
       </div>
     </div>
   );
