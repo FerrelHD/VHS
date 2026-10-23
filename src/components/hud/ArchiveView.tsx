@@ -174,18 +174,12 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
               >
                 {/* Physical VHS Mini Sleeve Poster (Option 3: Analog Plastic Gloss Sheen, zero physical scale) */}
                 <div
-                  className={`relative w-[78px] sm:w-[98px] md:w-[118px] lg:w-[136px] aspect-[130/196] bg-[#141210] rounded-xs border overflow-hidden transition-[border-color,box-shadow] duration-300 shadow-[0_15px_35px_rgba(0,0,0,0.85)] ${
-                    isHovered
-                      ? "border-crt-phosphor/90 shadow-[0_18px_45px_rgba(0,0,0,0.95)]"
-                      : "border-crt-phosphor/30 hover:border-crt-phosphor/60"
-                  }`}
+                  className="relative w-[78px] sm:w-[98px] md:w-[118px] lg:w-[136px] aspect-[130/196] bg-[#141210] rounded-xs border border-crt-phosphor/30 group-hover:border-crt-phosphor/90 overflow-hidden transition-[border-color,box-shadow] duration-300 shadow-[0_15px_35px_rgba(0,0,0,0.85)] group-hover:shadow-[0_18px_45px_rgba(0,0,0,0.95)]"
                 >
                   <img
                     src={`/tapes/${tape.id}-front.webp?v=${tape.wearSeed}`}
                     alt={tape.title}
-                    className={`w-full h-full object-cover rounded-xs pointer-events-none transition-[filter] duration-300 ${
-                      isHovered ? "contrast-115 brightness-105" : "contrast-105 brightness-95"
-                    }`}
+                    className="w-full h-full object-cover rounded-xs pointer-events-none transition-[filter] duration-300 contrast-105 brightness-95 group-hover:contrast-115 group-hover:brightness-105"
                   />
 
                   {/* 1. Base Subtle Ambient Sheen */}
@@ -193,18 +187,16 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
 
                   {/* 2. Analog Physical Plastic Gloss Reflection (Sweeps across on hover) */}
                   <div
-                    className={`absolute inset-0 bg-gradient-to-tr from-transparent via-white/15 to-white/30 pointer-events-none transition-opacity duration-300 ${
-                      isHovered ? "opacity-100" : "opacity-0"
-                    }`}
+                    className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/15 to-white/30 pointer-events-none transition-opacity duration-300 opacity-0 group-hover:opacity-100"
                     style={{ mixBlendMode: "overlay" }}
                   />
 
                   {/* 3. Shard Play Tag Overlay */}
                   <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between text-[8px] font-mono tracking-wider">
-                    <span className={`font-bold transition-colors duration-200 ${isHovered ? "text-white phosphor-glow" : "text-white/70"}`}>
+                    <span className="font-bold text-white/70 group-hover:text-white group-hover:phosphor-glow transition-colors duration-200">
                       {tape.code}
                     </span>
-                    <span className={`font-bold text-white transition-opacity duration-200 ${isHovered ? "opacity-100" : "opacity-0"}`}>
+                    <span className="font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                       PLAY ↗
                     </span>
                   </div>

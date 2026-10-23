@@ -6,6 +6,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
 } from "react";
 import { useAnimationFrame } from "motion/react";
@@ -49,10 +50,12 @@ const Floating = ({
 
   const registerElement = useCallback(
     (id: string, element: HTMLDivElement, depth: number) => {
+      // PRESERVE existing currentPosition so elements NEVER snap or jitter on re-renders
+      const existing = elementsMap.current.get(id);
       elementsMap.current.set(id, {
         element,
         depth,
-        currentPosition: { x: 0, y: 0 },
+        currentPosition: existing ? existing.currentPosition : { x: 0, y: 0 },
       });
     },
     []
@@ -80,12 +83,17 @@ const Floating = ({
       data.currentPosition.x += dx * easingFactor;
       data.currentPosition.y += dy * easingFactor;
 
-      data.element.style.transform = `translate3d(${data.currentPosition.x}px, ${data.currentPosition.y}px, 0)`;
+      data.element.style.transform = `translate3d(${data.currentPosition.x.toFixed(2)}px, ${data.currentPosition.y.toFixed(2)}px, 0)`;
     });
   });
 
+  const contextValue = useMemo(
+    () => ({ registerElement, unregisterElement }),
+    [registerElement, unregisterElement]
+  );
+
   return (
-    <FloatingContext.Provider value={{ registerElement, unregisterElement }}>
+    <FloatingContext.Provider value={contextValue}>
       <div
         ref={containerRef}
         className={cn("absolute top-0 left-0 w-full h-full", className)}
@@ -116,14 +124,17 @@ export const FloatingElement = ({
   const idRef = useRef(Math.random().toString(36).substring(7));
   const context = useContext(FloatingContext);
 
+  const registerElement = context?.registerElement;
+  const unregisterElement = context?.unregisterElement;
+
   useEffect(() => {
-    if (!elementRef.current || !context) return;
+    if (!elementRef.current || !registerElement || !unregisterElement) return;
 
     const nonNullDepth = depth ?? 0.01;
+    registerElement(idRef.current, elementRef.current, nonNullDepth);
 
-    context.registerElement(idRef.current, elementRef.current, nonNullDepth);
-    return () => context.unregisterElement(idRef.current);
-  }, [depth, context]);
+    return () => unregisterElement(idRef.current);
+  }, [depth, registerElement, unregisterElement]);
 
   return (
     <div
