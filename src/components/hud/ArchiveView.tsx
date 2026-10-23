@@ -168,38 +168,45 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
                   setHoveredIndex(null);
                 }}
                 style={{
-                  transform: `rotate(${coord.rotate}) scale(${isHovered ? 1.1 : 1})`,
-                  transition: "transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+                  transform: `rotate(${coord.rotate})`,
                 }}
                 className="group relative cursor-pointer select-none will-change-transform active:scale-95"
               >
-                {/* Physical VHS Mini Sleeve Poster */}
+                {/* Physical VHS Mini Sleeve Poster (Option 3: Analog Plastic Gloss Sheen, zero physical scale) */}
                 <div
                   className={`relative w-[78px] sm:w-[98px] md:w-[118px] lg:w-[136px] aspect-[130/196] bg-[#141210] rounded-xs border overflow-hidden transition-[border-color,box-shadow] duration-300 shadow-[0_15px_35px_rgba(0,0,0,0.85)] ${
                     isHovered
-                      ? "border-amber-400 shadow-[0_0_25px_rgba(251,191,36,0.5)]"
-                      : "border-crt-phosphor/35 hover:border-white"
+                      ? "border-crt-phosphor/90 shadow-[0_18px_45px_rgba(0,0,0,0.95)]"
+                      : "border-crt-phosphor/30 hover:border-crt-phosphor/60"
                   }`}
                 >
                   <img
                     src={`/tapes/${tape.id}-front.webp?v=${tape.wearSeed}`}
                     alt={tape.title}
-                    className="w-full h-full object-cover rounded-xs pointer-events-none transition-[filter] duration-300 contrast-105"
+                    className={`w-full h-full object-cover rounded-xs pointer-events-none transition-[filter] duration-300 ${
+                      isHovered ? "contrast-115 brightness-105" : "contrast-105 brightness-95"
+                    }`}
                   />
-                  {/* Subtle gloss lighting diagonal gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/20 pointer-events-none" />
 
-                  {/* Shard Play Tag Overlay */}
-                  <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between text-[8px] font-mono tracking-wider text-white/90">
-                    <span className="text-amber-300 font-bold">{tape.code}</span>
-                    <span className={`text-amber-300 transition-opacity duration-200 ${isHovered ? "opacity-100" : "opacity-0"}`}>PLAY ↗</span>
-                  </div>
-                </div>
+                  {/* 1. Base Subtle Ambient Sheen */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/10 pointer-events-none" />
 
-                {/* Floating Typographic Label Badge */}
-                <div className={`absolute top-[102%] left-1/2 -translate-x-1/2 pt-1 pointer-events-none whitespace-nowrap transition-opacity duration-200 ${isHovered ? "opacity-100" : "opacity-0"}`}>
-                  <div className="text-[9px] font-mono font-bold text-amber-400 tracking-wider phosphor-glow bg-black/85 px-1.5 py-0.5 rounded-xs border border-amber-400/40">
-                    {tape.code} • {tape.title}
+                  {/* 2. Analog Physical Plastic Gloss Reflection (Sweeps across on hover) */}
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-tr from-transparent via-white/15 to-white/30 pointer-events-none transition-opacity duration-300 ${
+                      isHovered ? "opacity-100" : "opacity-0"
+                    }`}
+                    style={{ mixBlendMode: "overlay" }}
+                  />
+
+                  {/* 3. Shard Play Tag Overlay */}
+                  <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between text-[8px] font-mono tracking-wider">
+                    <span className={`font-bold transition-colors duration-200 ${isHovered ? "text-white phosphor-glow" : "text-white/70"}`}>
+                      {tape.code}
+                    </span>
+                    <span className={`font-bold text-white transition-opacity duration-200 ${isHovered ? "opacity-100" : "opacity-0"}`}>
+                      PLAY ↗
+                    </span>
                   </div>
                 </div>
               </div>
