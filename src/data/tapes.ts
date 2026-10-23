@@ -287,9 +287,9 @@ export const TAPE_PROJECTS: TapeProject[] = [
       "Cinematic game-console developer portfolio inspired by Persona 3 Reload, featuring procedural Web Audio synthesis, 1080p character loop videos, and zero-scroll canvas navigation.",
     story:
       "Acoustic feedback engine using native Web Audio API oscillators and gain nodes (avoiding bulky sound MP3 assets) while providing zero-latency acoustic clicks, thuds, and menu swooshes. Navigation is driven by a finite state machine mimicking console controller inputs.",
-    color: "#17202e",
+    color: "#0c1936",
     wearSeed: 200607,
-    image: "/projects/Persona.png",
+    image: "/projects/Retro VHS Persona Poster.png",
     liveUrl: "https://persona.ferrelrashadakeyla2014.workers.dev/",
     githubUrl: "https://github.com/FerrelHD/Persona",
     metrics: [
