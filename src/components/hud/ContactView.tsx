@@ -60,8 +60,85 @@ export function ContactView({ onBack }: ContactViewProps) {
   const tapeRef = useRef<HTMLDivElement>(null);
 
   const [settings, setSettings] = useState<CreditsTweakSettings>(getSavedSettings);
-  const [isHudOpen, setIsHudOpen] = useState(false);
+  const [isHudOpen, setIsHudOpen] = useState(true);
   const [copied, setCopied] = useState(false);
+
+  // Draggable HUD coordinates in viewport pixels
+  const [hudPos, setHudPos] = useState<{ x: number; y: number } | null>(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      const saved = localStorage.getItem("vhs_credits_hud_pos");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return null;
+  });
+
+  const hudRef = useRef<HTMLDivElement>(null);
+  const isDraggingHud = useRef(false);
+  const dragStartOffset = useRef({ x: 0, y: 0 });
+  const lastHudPosRef = useRef<{ x: number; y: number } | null>(null);
+
+  const handleDragStart = (e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    if ((e.target as HTMLElement).closest("button")) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const panel = hudRef.current;
+    if (!panel) return;
+    const rect = panel.getBoundingClientRect();
+
+    dragStartOffset.current = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
+    isDraggingHud.current = true;
+    try {
+      panel.setPointerCapture(e.pointerId);
+    } catch {}
+  };
+
+  const handleDragMove = (e: React.PointerEvent) => {
+    if (!isDraggingHud.current) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    const panel = hudRef.current;
+    const panelWidth = panel?.offsetWidth || 310;
+    const panelHeight = panel?.offsetHeight || 420;
+
+    const maxX = Math.max(10, window.innerWidth - panelWidth - 12);
+    const maxY = Math.max(10, window.innerHeight - panelHeight - 12);
+
+    const nextX = Math.max(12, Math.min(maxX, e.clientX - dragStartOffset.current.x));
+    const nextY = Math.max(12, Math.min(maxY, e.clientY - dragStartOffset.current.y));
+
+    lastHudPosRef.current = { x: nextX, y: nextY };
+    setHudPos({ x: nextX, y: nextY });
+  };
+
+  const handleDragEnd = (e: React.PointerEvent) => {
+    if (!isDraggingHud.current) return;
+    isDraggingHud.current = false;
+    try {
+      hudRef.current?.releasePointerCapture(e.pointerId);
+    } catch {}
+    if (lastHudPosRef.current) {
+      try {
+        localStorage.setItem("vhs_credits_hud_pos", JSON.stringify(lastHudPosRef.current));
+      } catch {}
+    }
+  };
+
+  const handleResetPos = () => {
+    audio.playClick(0.9);
+    setHudPos(null);
+    lastHudPosRef.current = null;
+    try {
+      localStorage.removeItem("vhs_credits_hud_pos");
+    } catch {}
+  };
 
   const mouseRef = useRef({ x: 0, y: 0 });
   const startLoopRef = useRef<() => void>(() => {});
@@ -102,12 +179,23 @@ export function ContactView({ onBack }: ContactViewProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        onBack();
+        if (isHudOpen) {
+          setIsHudOpen(false);
+        } else {
+          onBack();
+        }
+      } else if (e.key === "t" || e.key === "T" || e.key === "`") {
+        const tag = (e.target as HTMLElement)?.tagName;
+        if (tag !== "INPUT" && tag !== "TEXTAREA") {
+          e.preventDefault();
+          audio.playClick(1.0);
+          setIsHudOpen((prev) => !prev);
+        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onBack]);
+  }, [onBack, isHudOpen]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (window.innerWidth <= 1024) return;
@@ -297,6 +385,10 @@ export function ContactView({ onBack }: ContactViewProps) {
 
     const onPointerDown = (e: PointerEvent) => {
       if (e.button !== 0) return;
+      const target = e.target as HTMLElement | null;
+      if (target?.closest?.("button, input, textarea, [data-hud='true']")) {
+        return;
+      }
       isPointerDown = true;
       dragDist = 0;
       pointerStartY = e.clientY;
@@ -816,23 +908,47 @@ export function ContactView({ onBack }: ContactViewProps) {
         </div>
       </div>
 
-      {/* 4. LIVE CYBERPUNK TWEAK HUD PANEL */}
-      <div className="fixed bottom-4 right-6 z-50 pointer-events-auto font-mono select-none">
+      {/* 4. LIVE CYBERPUNK TWEAK HUD PANEL (DRAGGABLE) */}
+      <div
+        ref={hudRef}
+        data-hud="true"
+        onPointerDown={(e) => e.stopPropagation()}
+        onWheel={(e) => e.stopPropagation()}
+        style={
+          hudPos
+            ? { left: `${hudPos.x}px`, top: `${hudPos.y}px`, right: "auto", bottom: "auto" }
+            : { right: "24px", bottom: "75px" }
+        }
+        className="fixed z-[100] pointer-events-auto font-mono select-none"
+      >
         {isHudOpen ? (
           <div className="bg-[#0c0c12]/95 backdrop-blur-md border border-amber-400/50 rounded-xs p-4 shadow-[0_0_25px_rgba(245,167,66,0.25)] w-[310px] text-xs text-crt-phosphor flex flex-col gap-3">
-            {/* Header */}
-            <div className="flex items-center justify-between pb-2 border-b border-crt-phosphor/20">
-              <div className="flex items-center gap-1.5 text-amber-400 font-bold tracking-wider text-[11px]">
+            {/* Header (Drag Handle) */}
+            <div
+              onPointerDown={handleDragStart}
+              onPointerMove={handleDragMove}
+              onPointerUp={handleDragEnd}
+              onPointerCancel={handleDragEnd}
+              className="flex items-center justify-between pb-2 border-b border-crt-phosphor/20 cursor-grab active:cursor-grabbing select-none"
+              title="Drag to reposition HUD"
+            >
+              <div className="flex items-center gap-1.5 text-amber-400 font-bold tracking-wider text-[11px] pointer-events-none">
                 <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                <span className="text-crt-phosphor/40">⠿</span>
                 <span>CREDITS TWEAK HUD</span>
+                <span className="text-[9px] text-crt-phosphor/40 font-normal">[DRAG]</span>
               </div>
-              <button
-                type="button"
-                onClick={() => setIsHudOpen(false)}
-                className="text-crt-phosphor/60 hover:text-white cursor-pointer px-1 text-[11px]"
-              >
-                [ ✕ ]
-              </button>
+              <div className="flex items-center gap-1">
+                <span className="text-[9px] text-crt-phosphor/40 mr-1">[T]</span>
+                <button
+                  type="button"
+                  onClick={() => setIsHudOpen(false)}
+                  className="text-crt-phosphor/60 hover:text-white cursor-pointer px-1 text-[11px]"
+                  title="Close HUD (or press T / ESC)"
+                >
+                  [ ✕ ]
+                </button>
+              </div>
             </div>
 
             {/* Sliders */}
@@ -942,13 +1058,26 @@ export function ContactView({ onBack }: ContactViewProps) {
 
             {/* Action Buttons */}
             <div className="flex items-center justify-between pt-2 border-t border-crt-phosphor/20 text-[10px]">
-              <button
-                type="button"
-                onClick={handleReset}
-                className="text-crt-phosphor/60 hover:text-white cursor-pointer"
-              >
-                [ RESET ]
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="text-crt-phosphor/60 hover:text-white cursor-pointer"
+                  title="Reset slider values to defaults"
+                >
+                  [ RESET ]
+                </button>
+                {hudPos && (
+                  <button
+                    type="button"
+                    onClick={handleResetPos}
+                    className="text-crt-phosphor/40 hover:text-crt-phosphor cursor-pointer"
+                    title="Dock HUD to bottom-right"
+                  >
+                    [ DOCK ]
+                  </button>
+                )}
+              </div>
               <button
                 type="button"
                 onClick={handleCopy}
@@ -962,9 +1091,11 @@ export function ContactView({ onBack }: ContactViewProps) {
           <button
             type="button"
             onClick={() => setIsHudOpen(true)}
-            className="px-2.5 py-1 bg-black/80 hover:bg-black/95 border border-amber-400/50 hover:border-amber-400 text-amber-400 text-[11px] font-bold tracking-wider rounded-xs cursor-pointer shadow-lg transition-all"
+            className="px-2.5 py-1.5 bg-black/85 hover:bg-black border border-amber-400/60 hover:border-amber-400 text-amber-400 text-[11px] font-bold tracking-wider rounded-xs cursor-pointer shadow-[0_0_15px_rgba(245,167,66,0.2)] transition-all flex items-center gap-1.5"
+            title="Open Tweak HUD (Shortcut: T)"
           >
-            [ ⚙ TWEAK HUD ]
+            <span>[ ⚙ TWEAK HUD</span>
+            <span className="text-[9px] text-crt-phosphor/60 font-normal">T ]</span>
           </button>
         )}
       </div>

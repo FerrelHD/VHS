@@ -48,9 +48,9 @@ export function AppFooter({ intro = true }: AppFooterProps) {
   };
 
   return (
-    <footer className="w-full flex items-center justify-between select-none z-40 tracking-wider shrink-0 font-mono text-[clamp(13px,1.15vw,16px)]">
+    <footer className="w-full flex items-center justify-between select-none z-40 tracking-wider shrink-0 font-mono text-[clamp(13px,1.15vw,16px)] pointer-events-none">
       {/* 1. Left: Local Timezone Clock & B&W Mode Switch (36px gap) */}
-      <div className="flex items-center gap-[clamp(18px,2.5vw,36px)]">
+      <div className="flex items-center gap-[clamp(18px,2.5vw,36px)] pointer-events-auto">
         <Reveal on={intro} i={3} inline>
           <span className="text-crt-phosphor/70 tracking-widest">
             {timeStr}
@@ -62,7 +62,7 @@ export function AppFooter({ intro = true }: AppFooterProps) {
       </div>
 
       {/* 2. Right: Hardware Source Stamp & Interactive Email Copy (60px gap) */}
-      <div className="flex items-center gap-[clamp(24px,4.2vw,60px)]">
+      <div className="flex items-center gap-[clamp(24px,4.2vw,60px)] pointer-events-auto">
         <Reveal on={intro} i={4} inline>
           <span className="text-crt-phosphor/50 tracking-wider">
             SOURCE: MAC
@@ -73,7 +73,7 @@ export function AppFooter({ intro = true }: AppFooterProps) {
           <button
             type="button"
             onClick={handleCopyEmail}
-            className="text-crt-phosphor/80 hover:text-white transition-colors cursor-pointer border-b border-crt-phosphor/30 hover:border-white pb-0.5 tracking-wider active:scale-95"
+            className="text-crt-phosphor/80 hover:text-white transition-colors cursor-pointer border-b border-crt-phosphor/30 hover:border-white pb-0.5 tracking-wider active:scale-95 pointer-events-auto"
             aria-label={`Copy email ${MY_EMAIL}`}
           >
             {copied ? "[ COPIED ]" : "EMAIL"}

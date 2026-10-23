@@ -227,13 +227,13 @@ export default function Home() {
 
         {/* 3f. Contact / Original Creators Credits View (Unboxed, full chamber) */}
         {(activeView === "contact" || activeView === "credits") && (
-          <div className="absolute inset-0 z-20 pointer-events-auto">
+          <div className="absolute inset-0 z-30 pointer-events-auto">
             <ContactView onBack={handleBackToCarousel} />
           </div>
         )}
 
         {/* Layer 4: Fixed Footer across all views */}
-        <div className="absolute bottom-0 left-0 right-0 z-40 pb-[clamp(32px,5.5vh,60px)] px-[clamp(28px,7vw,100px)] pointer-events-auto">
+        <div className="absolute bottom-0 left-0 right-0 z-40 pb-[clamp(32px,5.5vh,60px)] px-[clamp(28px,7vw,100px)] pointer-events-none">
           <AppFooter intro={textIntroStarted} />
         </div>
       </CrtGlass>
