@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { audio } from "@/lib/audio";
 import { useCrtBend } from "@/lib/useCrtBend";
 
@@ -14,164 +14,40 @@ interface DisplaceableLine {
   initialTop: number;
 }
 
-export interface CreditsTweakSettings {
-  initialTop: number;
-  initialScale: number;
-  finalScale: number;
-  baseColGap: number;
-  repulsionPush: number;
-  repulsionRadius: number;
-  headlinePadding: number;
-}
-
-const DEFAULT_SETTINGS: CreditsTweakSettings = {
-  initialTop: 75,
-  initialScale: 0.44,
-  finalScale: 1.05,
-  baseColGap: 56,
-  repulsionPush: 115,
-  repulsionRadius: 210,
-  headlinePadding: 165,
-};
-
-function getSavedSettings(): CreditsTweakSettings {
-  if (typeof window === "undefined") return DEFAULT_SETTINGS;
-  try {
-    const raw = localStorage.getItem("vhs_credits_tweak_settings");
-    if (raw) return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
-  } catch {}
-  return DEFAULT_SETTINGS;
-}
+// Tuned production values for Cyberpunk: Edgerunners credits reel
+const INITIAL_TOP = 102;
+const INITIAL_SCALE = 0.49;
+const FINAL_SCALE = 1.05;
+const BASE_COL_GAP = 34;
+const REPULSION_PUSH = 132;
+const REPULSION_RADIUS = 210;
+const HEADLINE_PADDING = 175;
 
 /**
  * Cyberpunk: Edgerunners Production Credits View.
  * 100% Faithful recreation of arcmarumo.com/profile:
  * - Upright physical VHS tape in dead center with 3D Y-axis spinning on scroll + mouse parallax
  * - Dynamic Obstacle Repulsion ("Teks Minggir"): As each credit line approaches the vertical zone
- *   of the center tape, it dynamically slides outward (-115px to the left, +115px to the right),
+ *   of the center tape, it dynamically slides outward (-132px to the left, +132px to the right),
  *   creating an organic magnetic corridor around the cassette!
  * - Large editorial serif statement sweeping behind the tape
  * - Smooth exponential inertia scrolling engine with top & bottom CRT cathode beam fade
- * - Integrated Live Tweak HUD to interactively adjust poster height, scale, and text spacing in real-time!
  */
 export function ContactView({ onBack }: ContactViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const reelRef = useRef<HTMLDivElement>(null);
   const tapeRef = useRef<HTMLDivElement>(null);
 
-  const [settings, setSettings] = useState<CreditsTweakSettings>(getSavedSettings);
-  const [isHudOpen, setIsHudOpen] = useState(true);
-  const [copied, setCopied] = useState(false);
-
-  // Draggable HUD coordinates in viewport pixels
-  const [hudPos, setHudPos] = useState<{ x: number; y: number } | null>(() => {
-    if (typeof window === "undefined") return null;
-    try {
-      const saved = localStorage.getItem("vhs_credits_hud_pos");
-      if (saved) return JSON.parse(saved);
-    } catch {}
-    return null;
-  });
-
-  const hudRef = useRef<HTMLDivElement>(null);
-  const isDraggingHud = useRef(false);
-  const dragStartOffset = useRef({ x: 0, y: 0 });
-  const lastHudPosRef = useRef<{ x: number; y: number } | null>(null);
-
-  const handleDragStart = (e: React.PointerEvent) => {
-    if (e.button !== 0) return;
-    if ((e.target as HTMLElement).closest("button")) return;
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    const panel = hudRef.current;
-    if (!panel) return;
-    const rect = panel.getBoundingClientRect();
-
-    dragStartOffset.current = {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    };
-    isDraggingHud.current = true;
-    try {
-      panel.setPointerCapture(e.pointerId);
-    } catch {}
-  };
-
-  const handleDragMove = (e: React.PointerEvent) => {
-    if (!isDraggingHud.current) return;
-    e.preventDefault();
-    e.stopPropagation();
-
-    const panel = hudRef.current;
-    const panelWidth = panel?.offsetWidth || 310;
-    const panelHeight = panel?.offsetHeight || 420;
-
-    const maxX = Math.max(10, window.innerWidth - panelWidth - 12);
-    const maxY = Math.max(10, window.innerHeight - panelHeight - 12);
-
-    const nextX = Math.max(12, Math.min(maxX, e.clientX - dragStartOffset.current.x));
-    const nextY = Math.max(12, Math.min(maxY, e.clientY - dragStartOffset.current.y));
-
-    lastHudPosRef.current = { x: nextX, y: nextY };
-    setHudPos({ x: nextX, y: nextY });
-  };
-
-  const handleDragEnd = (e: React.PointerEvent) => {
-    if (!isDraggingHud.current) return;
-    isDraggingHud.current = false;
-    try {
-      hudRef.current?.releasePointerCapture(e.pointerId);
-    } catch {}
-    if (lastHudPosRef.current) {
-      try {
-        localStorage.setItem("vhs_credits_hud_pos", JSON.stringify(lastHudPosRef.current));
-      } catch {}
-    }
-  };
-
-  const handleResetPos = () => {
-    audio.playClick(0.9);
-    setHudPos(null);
-    lastHudPosRef.current = null;
-    try {
-      localStorage.removeItem("vhs_credits_hud_pos");
-    } catch {}
-  };
-
   const mouseRef = useRef({ x: 0, y: 0 });
   const startLoopRef = useRef<() => void>(() => {});
-  const measureRef = useRef<() => void>(() => {});
-  const settingsRef = useRef(settings);
 
+  // Clean up legacy tweak HUD storage keys
   useEffect(() => {
-    settingsRef.current = settings;
     try {
-      localStorage.setItem("vhs_credits_tweak_settings", JSON.stringify(settings));
+      localStorage.removeItem("vhs_credits_tweak_settings");
+      localStorage.removeItem("vhs_credits_hud_pos");
     } catch {}
-    measureRef.current();
-    startLoopRef.current();
-  }, [settings]);
-
-  const updateSetting = <K extends keyof CreditsTweakSettings>(
-    key: K,
-    val: CreditsTweakSettings[K]
-  ) => {
-    setSettings((prev) => ({ ...prev, [key]: val }));
-  };
-
-  const handleReset = () => {
-    audio.playClick(0.9);
-    setSettings(DEFAULT_SETTINGS);
-  };
-
-  const handleCopy = () => {
-    audio.playClick(1.1);
-    navigator.clipboard.writeText(JSON.stringify(settings, null, 2));
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  }, []);
 
   // Apply authentic CRT barrel distortion curvature
   useCrtBend(0.09, containerRef);
@@ -179,23 +55,12 @@ export function ContactView({ onBack }: ContactViewProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        if (isHudOpen) {
-          setIsHudOpen(false);
-        } else {
-          onBack();
-        }
-      } else if (e.key === "t" || e.key === "T" || e.key === "`") {
-        const tag = (e.target as HTMLElement)?.tagName;
-        if (tag !== "INPUT" && tag !== "TEXTAREA") {
-          e.preventDefault();
-          audio.playClick(1.0);
-          setIsHudOpen((prev) => !prev);
-        }
+        onBack();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onBack, isHudOpen]);
+  }, [onBack]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (window.innerWidth <= 1024) return;
@@ -255,8 +120,6 @@ export function ContactView({ onBack }: ContactViewProps) {
       render();
     };
 
-    measureRef.current = measure;
-
     /**
      * Render vertical scroll position, 3D tape rotation,
      * dynamic scale expansion from top to center via GPU compositing,
@@ -269,10 +132,8 @@ export function ContactView({ onBack }: ContactViewProps) {
       reel.style.transform = `translate3d(0, ${-currentY.toFixed(1)}px, 0)`;
 
       // 2. Dynamic Tape Position & Scale from top-small to center-large
-      const { initialTop, initialScale, finalScale, repulsionPush, repulsionRadius } =
-        settingsRef.current;
       const isDesktop = window.innerWidth > 640;
-      const topAnchor = initialTop;
+      const topAnchor = INITIAL_TOP;
       const baseTapeHeight = isDesktop ? 331 : 286;
       const centerY = container.clientHeight / 2;
 
@@ -282,11 +143,11 @@ export function ContactView({ onBack }: ContactViewProps) {
       // Smooth cubic ease out
       const ease = 1 - Math.pow(1 - progress, 3);
 
-      // Tape scale starts compact at initialScale and expands to finalScale
-      const tapeScale = initialScale + ease * (finalScale - initialScale);
+      // Tape scale starts compact at INITIAL_SCALE and expands to FINAL_SCALE
+      const tapeScale = INITIAL_SCALE + ease * (FINAL_SCALE - INITIAL_SCALE);
 
       // Target shift down from top anchor to dead center of viewport
-      const targetCenterShift = Math.max(0, centerY - topAnchor - (baseTapeHeight * finalScale) / 2);
+      const targetCenterShift = Math.max(0, centerY - topAnchor - (baseTapeHeight * FINAL_SCALE) / 2);
       const dy = targetCenterShift * ease;
 
       // Tape screen Y coordinate for obstacle calculation
@@ -307,8 +168,8 @@ export function ContactView({ onBack }: ContactViewProps) {
 
       // 3. Dynamic Obstacle Repulsion ("Teks Minggir")
       if (window.innerWidth > 768) {
-        const radius = (repulsionRadius / 1.05) * tapeScale; // Influence radius scales with the physical tape
-        const maxDisplacement = repulsionPush * Math.min(1.2, tapeScale); // Max horizontal push to the side
+        const radius = (REPULSION_RADIUS / 1.05) * tapeScale; // Influence radius scales with the physical tape
+        const maxDisplacement = REPULSION_PUSH * Math.min(1.2, tapeScale); // Max horizontal push to the side
 
         for (const item of lines) {
           // Current vertical center of this line relative to tape's current position
@@ -386,7 +247,7 @@ export function ContactView({ onBack }: ContactViewProps) {
     const onPointerDown = (e: PointerEvent) => {
       if (e.button !== 0) return;
       const target = e.target as HTMLElement | null;
-      if (target?.closest?.("button, input, textarea, [data-hud='true']")) {
+      if (target?.closest?.("button")) {
         return;
       }
       isPointerDown = true;
@@ -488,7 +349,7 @@ export function ContactView({ onBack }: ContactViewProps) {
         {/* 2. VERTICAL ROLLING CREDITS REEL */}
         <div
           ref={reelRef}
-          style={{ paddingTop: `calc(var(--pj-top) + ${settings.headlinePadding}px)` }}
+          style={{ paddingTop: `calc(var(--pj-top) + ${HEADLINE_PADDING}px)` }}
           className="w-full max-w-5xl mx-auto px-6 sm:px-10 pb-[calc(var(--pj-bottom)+180px)] flex flex-col items-center will-change-transform"
         >
           {/* SECTION A: MASSIVE EDITORIAL SERIF HEADLINE */}
@@ -501,7 +362,7 @@ export function ContactView({ onBack }: ContactViewProps) {
 
           {/* SECTION B: CREDITS PAIR 01 - STUDIOS & CREATIVE DIRECTION */}
           <div
-            style={{ columnGap: `${settings.baseColGap}px` }}
+            style={{ columnGap: `${BASE_COL_GAP}px` }}
             className="w-full grid grid-cols-1 md:grid-cols-2 gap-y-10 my-10 sm:my-16 text-xs sm:text-sm"
           >
             {/* Left Column (Pushes to the LEFT when passing tape) */}
@@ -595,7 +456,7 @@ export function ContactView({ onBack }: ContactViewProps) {
 
           {/* SECTION C: CREDITS PAIR 02 - SOUNDTRACK & SCORE */}
           <div
-            style={{ columnGap: `${settings.baseColGap}px` }}
+            style={{ columnGap: `${BASE_COL_GAP}px` }}
             className="w-full grid grid-cols-1 md:grid-cols-2 gap-y-10 my-10 sm:my-16 text-xs sm:text-sm"
           >
             {/* Left Column: Music & Themes (Pushes LEFT) */}
@@ -705,7 +566,7 @@ export function ContactView({ onBack }: ContactViewProps) {
 
           {/* SECTION D: CREDITS PAIR 03 - NIGHT CITY REALM & SQUAD */}
           <div
-            style={{ columnGap: `${settings.baseColGap}px` }}
+            style={{ columnGap: `${BASE_COL_GAP}px` }}
             className="w-full grid grid-cols-1 md:grid-cols-2 gap-y-10 my-10 sm:my-16 text-xs sm:text-sm"
           >
             {/* Left Column: Locations (Pushes LEFT) */}
@@ -832,8 +693,8 @@ export function ContactView({ onBack }: ContactViewProps) {
         ref={tapeRef}
         className="absolute left-1/2 pointer-events-none z-20 flex flex-col items-center justify-center opacity-95 [transform-style:preserve-3d] origin-top will-change-transform"
         style={{
-          top: `${settings.initialTop}px`,
-          transform: `translate3d(-50%, 0px, 0) perspective(1200px) rotateY(0deg) rotateX(0deg) scale(${settings.initialScale})`,
+          top: `${INITIAL_TOP}px`,
+          transform: `translate3d(-50%, 0px, 0) perspective(1200px) rotateY(0deg) rotateX(0deg) scale(${INITIAL_SCALE})`,
         }}
       >
         {/* 3D Cassette Box Container with 18px Depth */}
@@ -906,198 +767,6 @@ export function ContactView({ onBack }: ContactViewProps) {
             style={{ transform: "rotateX(-90deg)" }}
           />
         </div>
-      </div>
-
-      {/* 4. LIVE CYBERPUNK TWEAK HUD PANEL (DRAGGABLE) */}
-      <div
-        ref={hudRef}
-        data-hud="true"
-        onPointerDown={(e) => e.stopPropagation()}
-        onWheel={(e) => e.stopPropagation()}
-        style={
-          hudPos
-            ? { left: `${hudPos.x}px`, top: `${hudPos.y}px`, right: "auto", bottom: "auto" }
-            : { right: "24px", bottom: "75px" }
-        }
-        className="fixed z-[100] pointer-events-auto font-mono select-none"
-      >
-        {isHudOpen ? (
-          <div className="bg-[#0c0c12]/95 backdrop-blur-md border border-amber-400/50 rounded-xs p-4 shadow-[0_0_25px_rgba(245,167,66,0.25)] w-[310px] text-xs text-crt-phosphor flex flex-col gap-3">
-            {/* Header (Drag Handle) */}
-            <div
-              onPointerDown={handleDragStart}
-              onPointerMove={handleDragMove}
-              onPointerUp={handleDragEnd}
-              onPointerCancel={handleDragEnd}
-              className="flex items-center justify-between pb-2 border-b border-crt-phosphor/20 cursor-grab active:cursor-grabbing select-none"
-              title="Drag to reposition HUD"
-            >
-              <div className="flex items-center gap-1.5 text-amber-400 font-bold tracking-wider text-[11px] pointer-events-none">
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                <span className="text-crt-phosphor/40">⠿</span>
-                <span>CREDITS TWEAK HUD</span>
-                <span className="text-[9px] text-crt-phosphor/40 font-normal">[DRAG]</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="text-[9px] text-crt-phosphor/40 mr-1">[T]</span>
-                <button
-                  type="button"
-                  onClick={() => setIsHudOpen(false)}
-                  className="text-crt-phosphor/60 hover:text-white cursor-pointer px-1 text-[11px]"
-                  title="Close HUD (or press T / ESC)"
-                >
-                  [ ✕ ]
-                </button>
-              </div>
-            </div>
-
-            {/* Sliders */}
-            <div className="flex flex-col gap-2.5 text-[10px]">
-              {/* Slider 1: Initial Top Y */}
-              <div className="flex flex-col gap-1">
-                <div className="flex justify-between text-crt-phosphor/80">
-                  <span>POSTER INITIAL Y</span>
-                  <span className="text-amber-400 font-bold">{settings.initialTop}px</span>
-                </div>
-                <input
-                  type="range"
-                  min={20}
-                  max={200}
-                  step={2}
-                  value={settings.initialTop}
-                  onChange={(e) => updateSetting("initialTop", Number(e.target.value))}
-                  className="w-full accent-amber-400 cursor-pointer"
-                />
-              </div>
-
-              {/* Slider 2: Headline Top Padding */}
-              <div className="flex flex-col gap-1">
-                <div className="flex justify-between text-crt-phosphor/80">
-                  <span>HEADLINE PADDING</span>
-                  <span className="text-amber-400 font-bold">{settings.headlinePadding}px</span>
-                </div>
-                <input
-                  type="range"
-                  min={90}
-                  max={260}
-                  step={5}
-                  value={settings.headlinePadding}
-                  onChange={(e) => updateSetting("headlinePadding", Number(e.target.value))}
-                  className="w-full accent-amber-400 cursor-pointer"
-                />
-              </div>
-
-              {/* Slider 3: Base Column Gap */}
-              <div className="flex flex-col gap-1">
-                <div className="flex justify-between text-crt-phosphor/80">
-                  <span>BASE COLUMN GAP</span>
-                  <span className="text-amber-400 font-bold">{settings.baseColGap}px</span>
-                </div>
-                <input
-                  type="range"
-                  min={20}
-                  max={140}
-                  step={2}
-                  value={settings.baseColGap}
-                  onChange={(e) => updateSetting("baseColGap", Number(e.target.value))}
-                  className="w-full accent-amber-400 cursor-pointer"
-                />
-              </div>
-
-              {/* Slider 4: Text Push Distance */}
-              <div className="flex flex-col gap-1">
-                <div className="flex justify-between text-crt-phosphor/80">
-                  <span>TEXT PUSH (REPULSION)</span>
-                  <span className="text-amber-400 font-bold">{settings.repulsionPush}px</span>
-                </div>
-                <input
-                  type="range"
-                  min={60}
-                  max={180}
-                  step={2}
-                  value={settings.repulsionPush}
-                  onChange={(e) => updateSetting("repulsionPush", Number(e.target.value))}
-                  className="w-full accent-amber-400 cursor-pointer"
-                />
-              </div>
-
-              {/* Slider 5: Initial Scale */}
-              <div className="flex flex-col gap-1">
-                <div className="flex justify-between text-crt-phosphor/80">
-                  <span>INITIAL SCALE</span>
-                  <span className="text-amber-400 font-bold">{settings.initialScale.toFixed(2)}x</span>
-                </div>
-                <input
-                  type="range"
-                  min={0.3}
-                  max={0.7}
-                  step={0.01}
-                  value={settings.initialScale}
-                  onChange={(e) => updateSetting("initialScale", Number(e.target.value))}
-                  className="w-full accent-amber-400 cursor-pointer"
-                />
-              </div>
-
-              {/* Slider 6: Final Scale */}
-              <div className="flex flex-col gap-1">
-                <div className="flex justify-between text-crt-phosphor/80">
-                  <span>EXPANDED SCALE</span>
-                  <span className="text-amber-400 font-bold">{settings.finalScale.toFixed(2)}x</span>
-                </div>
-                <input
-                  type="range"
-                  min={0.85}
-                  max={1.3}
-                  step={0.01}
-                  value={settings.finalScale}
-                  onChange={(e) => updateSetting("finalScale", Number(e.target.value))}
-                  className="w-full accent-amber-400 cursor-pointer"
-                />
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex items-center justify-between pt-2 border-t border-crt-phosphor/20 text-[10px]">
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={handleReset}
-                  className="text-crt-phosphor/60 hover:text-white cursor-pointer"
-                  title="Reset slider values to defaults"
-                >
-                  [ RESET ]
-                </button>
-                {hudPos && (
-                  <button
-                    type="button"
-                    onClick={handleResetPos}
-                    className="text-crt-phosphor/40 hover:text-crt-phosphor cursor-pointer"
-                    title="Dock HUD to bottom-right"
-                  >
-                    [ DOCK ]
-                  </button>
-                )}
-              </div>
-              <button
-                type="button"
-                onClick={handleCopy}
-                className="text-amber-400 hover:text-white font-bold cursor-pointer"
-              >
-                {copied ? "[ COPIED! ]" : "[ COPY SETTINGS ]"}
-              </button>
-            </div>
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={() => setIsHudOpen(true)}
-            className="px-2.5 py-1.5 bg-black/85 hover:bg-black border border-amber-400/60 hover:border-amber-400 text-amber-400 text-[11px] font-bold tracking-wider rounded-xs cursor-pointer shadow-[0_0_15px_rgba(245,167,66,0.2)] transition-all flex items-center gap-1.5"
-            title="Open Tweak HUD (Shortcut: T)"
-          >
-            <span>[ ⚙ TWEAK HUD</span>
-            <span className="text-[9px] text-crt-phosphor/60 font-normal">T ]</span>
-          </button>
-        )}
       </div>
     </div>
   );
