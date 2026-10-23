@@ -122,11 +122,13 @@ export function ContactView({ onBack }: ContactViewProps) {
       // Smooth cubic ease out
       const ease = 1 - Math.pow(1 - progress, 3);
 
-      // Tape scale starts compact at 0.45 and expands to 1.05
-      const tapeScale = 0.45 + ease * (1.05 - 0.45);
+      // Tape scale starts compact at 0.42 and expands to 1.05
+      const tapeScale = 0.42 + ease * (1.05 - 0.42);
 
-      // Initial vertical offset: starts at -140px above center, smoothly transitions to dead center (0px)
-      const dy = -140 * (1 - ease);
+      // Initial vertical position: placed cleanly ABOVE the text headline (approx 140px from top)
+      const initialTapeY = Math.max(125, Math.min(155, container.clientHeight * 0.16));
+      const initialOffset = initialTapeY - centerY;
+      const dy = initialOffset * (1 - ease);
 
       // Tape screen Y coordinate for obstacle calculation
       const tapeScreenY = centerY + dy;
@@ -322,7 +324,7 @@ export function ContactView({ onBack }: ContactViewProps) {
         {/* 2. VERTICAL ROLLING CREDITS REEL */}
         <div
           ref={reelRef}
-          className="w-full max-w-5xl mx-auto px-6 sm:px-10 pt-[calc(var(--pj-top)+170px)] pb-[calc(var(--pj-bottom)+180px)] flex flex-col items-center will-change-transform"
+          className="w-full max-w-5xl mx-auto px-6 sm:px-10 pt-[calc(var(--pj-top)+205px)] pb-[calc(var(--pj-bottom)+180px)] flex flex-col items-center will-change-transform"
         >
           {/* SECTION A: MASSIVE EDITORIAL SERIF HEADLINE */}
           <div className="w-full max-w-2xl text-center mb-16 sm:mb-24">
@@ -657,7 +659,7 @@ export function ContactView({ onBack }: ContactViewProps) {
         className="absolute top-1/2 left-1/2 pointer-events-none z-20 flex flex-col items-center justify-center opacity-95 [transform-style:preserve-3d] will-change-transform"
         style={{
           transform:
-            "translate3d(-50%, calc(-50% - 140px), 0) perspective(1200px) rotateY(0deg) rotateX(0deg) scale(0.45)",
+            "translate3d(-50%, calc(-50% - 295px), 0) perspective(1200px) rotateY(0deg) rotateX(0deg) scale(0.42)",
         }}
       >
         {/* 3D Cassette Box Container with 18px Depth */}
