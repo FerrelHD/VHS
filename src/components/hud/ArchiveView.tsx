@@ -12,18 +12,18 @@ interface ArchiveViewProps {
   onSelectProject: (index: number) => void;
 }
 
-// 10 Floating constellation coordinates designed to orbit around the central HUD
+// 10 Floating constellation coordinates with authentic 3D spherical dome orientation (Option A)
 const SHARD_COORDINATES = [
-  { top: "6%", left: "8%", depth: 1.4, rotate: "-4deg" },     // EP.01 - Top Left Outer
-  { top: "10%", left: "28%", depth: 2.2, rotate: "2deg" },     // EP.02 - Top Left Inner
-  { top: "6%", left: "64%", depth: 0.9, rotate: "-2deg" },     // EP.03 - Top Right Inner
-  { top: "11%", left: "84%", depth: 1.8, rotate: "4deg" },     // EP.04 - Top Right Outer
-  { top: "42%", left: "5%", depth: 2.6, rotate: "-3deg" },     // EP.05 - Mid Left Edge
-  { top: "40%", left: "85%", depth: 2.2, rotate: "3deg" },     // EP.06 - Mid Right Edge
-  { top: "72%", left: "8%", depth: 1.6, rotate: "2deg" },      // EP.07 - Bottom Left Outer
-  { top: "78%", left: "28%", depth: 0.7, rotate: "-3deg" },    // EP.08 - Bottom Left Inner
-  { top: "74%", left: "62%", depth: 2.4, rotate: "4deg" },     // EP.09 - Bottom Right Inner
-  { top: "76%", left: "82%", depth: 1.8, rotate: "-2deg" },    // EP.10 - Bottom Right Outer
+  { top: "6%", left: "8%", depth: 1.4, rotY: 14, rotX: -10, rotate: -3 },     // EP.01 - Top Left Outer
+  { top: "10%", left: "28%", depth: 2.2, rotY: 8, rotX: -7, rotate: 2 },      // EP.02 - Top Left Inner
+  { top: "6%", left: "64%", depth: 0.9, rotY: -8, rotX: -7, rotate: -2 },     // EP.03 - Top Right Inner
+  { top: "11%", left: "84%", depth: 1.8, rotY: -14, rotX: -10, rotate: 3 },   // EP.04 - Top Right Outer
+  { top: "42%", left: "5%", depth: 2.6, rotY: 17, rotX: 0, rotate: -2 },      // EP.05 - Mid Left Edge
+  { top: "40%", left: "85%", depth: 2.2, rotY: -17, rotX: 0, rotate: 2 },     // EP.06 - Mid Right Edge
+  { top: "72%", left: "8%", depth: 1.6, rotY: 14, rotX: 9, rotate: 2 },       // EP.07 - Bottom Left Outer
+  { top: "78%", left: "28%", depth: 0.7, rotY: 8, rotX: 7, rotate: -2 },      // EP.08 - Bottom Left Inner
+  { top: "74%", left: "62%", depth: 2.4, rotY: -8, rotX: 7, rotate: 3 },      // EP.09 - Bottom Right Inner
+  { top: "76%", left: "82%", depth: 1.8, rotY: -14, rotX: 9, rotate: -2 },    // EP.10 - Bottom Right Outer
 ];
 
 /**
@@ -127,23 +127,24 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
         </div>
       </motion.div>
 
-      {/* 2. 3D FLOATING PARALLAX VOID */}
-      <Floating sensitivity={-1.1} easingFactor={0.06} className="overflow-hidden">
+      {/* 2. 3D FLOATING PARALLAX VOID (Option A: 3D Spherical Concave Dome) */}
+      <Floating sensitivity={-1.1} easingFactor={0.06} className="overflow-hidden [perspective:1200px] [transform-style:preserve-3d]">
         {TAPE_PROJECTS.map((tape, idx) => {
           const coord = SHARD_COORDINATES[idx] || {
             top: "50%",
             left: "50%",
             depth: 1,
-            rotate: "0deg",
+            rotY: 0,
+            rotX: 0,
+            rotate: 0,
           };
           const isMatch = filter === "all" || tape.categoryFilter === filter;
-          const isHovered = hoveredIndex === idx;
 
           return (
             <FloatingElement
               key={tape.id}
               depth={coord.depth}
-              className={`transition-opacity duration-500 ${
+              className={`transition-opacity duration-500 [transform-style:preserve-3d] ${
                 isMatch ? "opacity-100" : "opacity-20 pointer-events-none"
               }`}
               style={
@@ -168,7 +169,8 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
                   setHoveredIndex(null);
                 }}
                 style={{
-                  transform: `rotate(${coord.rotate})`,
+                  transform: `perspective(1000px) rotateY(${coord.rotY}deg) rotateX(${coord.rotX}deg) rotateZ(${coord.rotate}deg)`,
+                  transformStyle: "preserve-3d",
                 }}
                 className="group relative cursor-pointer select-none will-change-transform active:scale-95"
               >

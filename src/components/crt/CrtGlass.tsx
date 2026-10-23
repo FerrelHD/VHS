@@ -21,6 +21,9 @@ export function CrtGlass({ children }: CrtGlassProps) {
         {/* Child Views (TapeDeck 3D canvas, HUD, Detail views) */}
         {children}
 
+        {/* Optical Deep CRT Tube Curvature Vignette (Option B) */}
+        <div className="crt-tube-vignette" aria-hidden="true" />
+
         {/* Parabolic Curved Scanlines Overlay */}
         <CrtLines />
 
