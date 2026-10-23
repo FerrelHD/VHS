@@ -40,8 +40,8 @@ export function AppHeader({
 
   return (
     <header className="w-full flex items-center justify-between select-none z-40 font-mono tracking-wider shrink-0 relative pointer-events-auto">
-      {/* 1. Left: Home status & Running Timecode (Fixed 214px broadcast gap) */}
-      <div className="flex items-center gap-[clamp(48px,14vw,214px)]">
+      {/* 1. Left: Home status & Running Timecode (Adaptive gap) */}
+      <div className="flex items-center gap-[clamp(16px,8vw,214px)]">
         <Reveal on={intro} i={1} inline>
           <button
             type="button"
@@ -49,7 +49,7 @@ export function AppHeader({
               audio.playClick(0.9);
               onHomeClick?.();
             }}
-            className={`flex items-center gap-2.5 transition-colors cursor-pointer group whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs text-[clamp(12px,1.1vw,15px)] ${
+            className={`flex items-center gap-1.5 sm:gap-2.5 transition-colors cursor-pointer group whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs text-[clamp(11px,1.05vw,15px)] ${
               activeView === "deck"
                 ? "text-white font-bold"
                 : "text-crt-phosphor/70 hover:text-white"
@@ -57,7 +57,7 @@ export function AppHeader({
             aria-label="Return to carousel home"
           >
             <span
-              className={`w-2.5 h-2.5 inline-block transition-transform shrink-0 ${
+              className={`w-2 h-2 sm:w-2.5 sm:h-2.5 inline-block transition-transform shrink-0 ${
                 activeView === "deck"
                   ? "bg-crt-phosphor shadow-[0_0_8px_rgba(235,235,230,0.8)]"
                   : "bg-crt-phosphor/40 group-hover:bg-crt-phosphor"
@@ -69,14 +69,14 @@ export function AppHeader({
           </button>
         </Reveal>
 
-        <Reveal on={intro} i={2} inline className="hidden sm:inline-flex">
+        <Reveal on={intro} i={2} inline className="hidden md:inline-flex">
           <span className="text-crt-phosphor/60 tracking-widest tabular-nums select-none whitespace-nowrap text-[clamp(13px,1.2vw,17px)]">
             {formatTimecode(seconds)}
           </span>
         </Reveal>
       </div>
 
-      {/* 2. Center: Brand Lockup (Dead Center, calibrated 36px font in authentic NeueBit pixel font) */}
+      {/* 2. Center: Brand Lockup (Dead Center, adaptive font in authentic NeueBit pixel font) */}
       <div
         className="absolute left-1/2 -translate-x-1/2 flex items-center select-none cursor-pointer z-10"
         onClick={() => {
@@ -87,7 +87,7 @@ export function AppHeader({
         <Reveal on={intro} i={0}>
           <button
             type="button"
-            className="font-bit font-bold tracking-tight text-crt-phosphor hover:text-white transition-colors phosphor-glow leading-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs cursor-pointer text-[clamp(26px,2.5vw,36px)]"
+            className="font-bit font-bold tracking-tight text-crt-phosphor hover:text-white transition-colors phosphor-glow leading-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-crt-phosphor/70 rounded-xs cursor-pointer text-[clamp(20px,2.2vw,36px)] whitespace-nowrap"
             aria-label="FRA 2026 Home"
           >
             FRA ©&apos;26
@@ -95,8 +95,8 @@ export function AppHeader({
         </Reveal>
       </div>
 
-      {/* 3. Right: Nav Links (Fixed 52px gutter, 15px font) */}
-      <nav className="flex items-center gap-[clamp(20px,3.8vw,52px)] text-[clamp(12px,1.1vw,15px)]">
+      {/* 3. Right: Nav Links (Adaptive gutter and font) */}
+      <nav className="flex items-center gap-[clamp(10px,2.4vw,52px)] text-[clamp(11px,1.05vw,15px)]">
         <Reveal on={intro} i={2} inline>
           <button
             type="button"

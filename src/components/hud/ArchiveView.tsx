@@ -277,14 +277,14 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
       >
         {/* 1. HERO ARCHIVE HEADER & FILTER SYSTEM */}
         <section className="pj-screen-height flex items-center gap-8 sm:gap-12 flex-shrink-0">
-          <div className="w-[320px] sm:w-[420px] flex flex-col justify-center gap-3 shrink-0">
+          <div className="w-full max-w-[420px] md:w-[420px] flex flex-col justify-center gap-3 shrink-0">
             <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-crt-phosphor/60 tracking-widest uppercase">
               <span className="text-amber-400 font-bold">[VAULT // SHARDS]</span>
               <span>•</span>
               <span>TOTAL 10 REELS</span>
             </div>
 
-            <h1 className="font-bit text-4xl sm:text-5xl md:text-6xl font-bold leading-[0.92] tracking-tight text-crt-phosphor phosphor-glow uppercase">
+            <h1 className="font-bit text-3xl sm:text-5xl md:text-6xl font-bold leading-[0.92] tracking-tight text-crt-phosphor phosphor-glow uppercase">
               BRAINDANCE VAULT
             </h1>
 
@@ -294,7 +294,7 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
             </p>
 
             {/* In-Universe Category Filter Toggles (Pure typography, zero card/badge wrapper) */}
-            <div className="flex flex-wrap items-center gap-3 pt-1">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-1">
               {ARCHIVE_CATEGORIES.map((cat) => (
                 <button
                   key={cat.id}
@@ -330,7 +330,7 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
           return (
             <section
               key={tape.id}
-              className="pj-screen-height flex items-center gap-6 sm:gap-10 md:gap-12 flex-shrink-0"
+              className="pj-screen-height flex flex-col md:flex-row items-center md:items-stretch gap-6 sm:gap-10 md:gap-12 flex-shrink-0"
             >
               {/* Left: Sleeve Poster */}
               <div
@@ -339,7 +339,7 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
                   audio.playClick(1.2);
                   onSelectProject(globalIndex);
                 }}
-                className="relative h-full max-h-[min(360px,52cqh)] min-h-[220px] aspect-[130/196] bg-[#141210] rounded-xs border border-crt-phosphor/30 shadow-[0_20px_50px_rgba(0,0,0,0.85)] overflow-hidden shrink-0 will-change-transform group cursor-pointer hover:border-crt-phosphor transition-all duration-500"
+                className="relative w-[180px] sm:w-[220px] md:w-auto h-auto md:h-full max-h-[min(360px,52cqh)] aspect-[130/196] bg-[#141210] rounded-xs border border-crt-phosphor/30 shadow-[0_20px_50px_rgba(0,0,0,0.85)] overflow-hidden shrink-0 will-change-transform group cursor-pointer hover:border-crt-phosphor transition-all duration-500"
               >
                 <img
                   src={`/tapes/${tape.id}-front.webp?v=${tape.wearSeed}`}
@@ -355,7 +355,7 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
               </div>
 
               {/* Right: Spec Sheet & Instant Play CTA */}
-              <div className="w-[300px] sm:w-[380px] md:w-[420px] h-full flex flex-col justify-center gap-2.5 sm:gap-3 shrink-0">
+              <div className="w-full max-w-[420px] md:w-[420px] h-auto md:h-full flex flex-col justify-center gap-2.5 sm:gap-3 shrink-0">
                 <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-crt-phosphor/60 tracking-widest uppercase">
                   <span className="text-amber-400 font-bold">[{tape.code} • {tape.year}]</span>
                   <span>•</span>
@@ -415,7 +415,7 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
         })}
 
         {/* 3. OUTRO SECTION */}
-        <section className="pj-screen-height flex items-center justify-center flex-shrink-0 pl-6 pr-12">
+        <section className="pj-screen-height flex items-center justify-center flex-shrink-0 py-8 md:py-0 pl-4 md:pl-6 pr-6 md:pr-12">
           <div className="flex flex-col items-start gap-3.5">
             <span className="text-[10px] text-crt-phosphor/40 tracking-widest uppercase">
               [END OF SHARD MATRIX]

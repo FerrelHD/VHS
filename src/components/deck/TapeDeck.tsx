@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { TAPE_PROJECTS, TapeProject } from "@/data/tapes";
 import { VHS_METRICS, expDecay } from "@/lib/math";
 import { audio } from "@/lib/audio";
@@ -102,6 +102,29 @@ function TapeCarousel({
       ))}
     </group>
   );
+}
+
+/**
+ * Dynamically adjusts 3D camera depth based on viewport aspect ratio.
+ * On narrow portrait mobile screens, pulls camera back slightly to keep the active
+ * cassette beautifully framed while peeking adjacent cards on both edges.
+ */
+function ResponsiveDeckCamera() {
+  const { camera, size } = useThree();
+
+  useEffect(() => {
+    const aspect = size.width / Math.max(1, size.height);
+    if (aspect < 1) {
+      const targetZ = Math.min(840, Math.max(620, 620 / Math.max(0.68, aspect * 1.35)));
+      camera.position.set(0, 10, targetZ);
+      camera.updateProjectionMatrix();
+    } else {
+      camera.position.set(0, 0, 620);
+      camera.updateProjectionMatrix();
+    }
+  }, [camera, size.width, size.height]);
+
+  return null;
 }
 
 export function TapeDeck({
@@ -272,6 +295,7 @@ export function TapeDeck({
         }}
         dpr={[1, 2]}
       >
+        <ResponsiveDeckCamera />
         <TapeCarousel
           targetOffset={targetOffset}
           currentIndex={currentIndex}

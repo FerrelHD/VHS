@@ -48,11 +48,11 @@ export function AppFooter({ intro = true }: AppFooterProps) {
   };
 
   return (
-    <footer className="w-full flex items-center justify-between select-none z-40 tracking-wider shrink-0 font-mono text-[clamp(13px,1.15vw,16px)] pointer-events-none">
-      {/* 1. Left: Local Timezone Clock & B&W Mode Switch (36px gap) */}
-      <div className="flex items-center gap-[clamp(18px,2.5vw,36px)] pointer-events-auto">
+    <footer className="w-full flex items-center justify-between select-none z-40 tracking-wider shrink-0 font-mono text-[clamp(11px,1.15vw,16px)] pointer-events-none">
+      {/* 1. Left: Local Timezone Clock & B&W Mode Switch (Adaptive gap) */}
+      <div className="flex items-center gap-[clamp(12px,2.5vw,36px)] pointer-events-auto">
         <Reveal on={intro} i={3} inline>
-          <span className="text-crt-phosphor/70 tracking-widest">
+          <span className="text-crt-phosphor/70 tracking-widest whitespace-nowrap">
             {timeStr}
           </span>
         </Reveal>
@@ -61,10 +61,10 @@ export function AppFooter({ intro = true }: AppFooterProps) {
         </Reveal>
       </div>
 
-      {/* 2. Right: Hardware Source Stamp & Interactive Email Copy (60px gap) */}
-      <div className="flex items-center gap-[clamp(24px,4.2vw,60px)] pointer-events-auto">
-        <Reveal on={intro} i={4} inline>
-          <span className="text-crt-phosphor/50 tracking-wider">
+      {/* 2. Right: Hardware Source Stamp & Interactive Email Copy (Adaptive gap) */}
+      <div className="flex items-center gap-[clamp(14px,3.8vw,60px)] pointer-events-auto">
+        <Reveal on={intro} i={4} inline className="hidden sm:inline-flex">
+          <span className="text-crt-phosphor/50 tracking-wider whitespace-nowrap">
             SOURCE: MAC
           </span>
         </Reveal>
@@ -73,7 +73,7 @@ export function AppFooter({ intro = true }: AppFooterProps) {
           <button
             type="button"
             onClick={handleCopyEmail}
-            className="text-crt-phosphor/80 hover:text-white transition-colors cursor-pointer border-b border-crt-phosphor/30 hover:border-white pb-0.5 tracking-wider active:scale-95 pointer-events-auto"
+            className="text-crt-phosphor/80 hover:text-white transition-colors cursor-pointer border-b border-crt-phosphor/30 hover:border-white pb-0.5 tracking-wider active:scale-95 pointer-events-auto whitespace-nowrap"
             aria-label={`Copy email ${MY_EMAIL}`}
           >
             {copied ? "[ COPIED ]" : "EMAIL"}

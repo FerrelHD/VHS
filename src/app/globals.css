@@ -98,6 +98,22 @@ html.bw .tv {
   }
 }
 
+@media (max-width: 640px) {
+  .vhs-chamber {
+    inset: 1vh 1.2vw;
+    --u: calc(100cqw / 420);
+    --pad-x: clamp(10px, 3cqw, 16px);
+    --pad-y: clamp(12px, 3cqh, 18px);
+    --margin: calc(6px + var(--pad-x));
+    --pj-top: calc(42px + var(--pad-y));
+    --pj-bottom: calc(38px + var(--pad-y));
+  }
+
+  .tv-glass {
+    inset: 1vh 1.2vw;
+  }
+}
+
 /* 3. Physical Curved CRT Glass Overlay (Multi-resolution Arc Marumo glass) */
 .tv-glass {
   z-index: 60;

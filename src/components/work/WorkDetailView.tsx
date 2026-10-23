@@ -275,11 +275,11 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
         className="pj-track w-max min-w-full"
       >
         {/* 1. HERO INTRO: Physical Mini VHS Sleeve & Overview */}
-        <section className="pj-screen-height flex items-center gap-6 sm:gap-10 md:gap-12 flex-shrink-0">
+        <section className="pj-screen-height flex flex-col md:flex-row items-center md:items-stretch gap-6 sm:gap-10 md:gap-12 flex-shrink-0">
           {/* Angled Authentic Physical VHS Sleeve with Elastic Parallax */}
           <div
             data-parallax="true"
-            className="relative h-full max-h-[min(350px,52cqh)] min-h-[220px] aspect-[130/196] bg-[#141210] rounded-xs border border-crt-phosphor/30 shadow-[0_20px_50px_rgba(0,0,0,0.85)] rotate-[-2deg] hover:rotate-0 transition-transform duration-500 overflow-hidden shrink-0 will-change-transform group cursor-pointer"
+            className="relative w-[180px] sm:w-[220px] md:w-auto h-auto md:h-full max-h-[min(350px,52cqh)] aspect-[130/196] bg-[#141210] rounded-xs border border-crt-phosphor/30 shadow-[0_20px_50px_rgba(0,0,0,0.85)] rotate-[-2deg] hover:rotate-0 transition-transform duration-500 overflow-hidden shrink-0 will-change-transform group cursor-pointer"
           >
             <img
               src={`/tapes/${tape.id}-front.webp?v=${tape.wearSeed}`}
@@ -289,7 +289,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
           </div>
 
           {/* Title, Overview & Direct CTAs */}
-          <div className="w-[300px] sm:w-[380px] md:w-[420px] h-full flex flex-col justify-center gap-2.5 sm:gap-3 shrink-0">
+          <div className="w-full max-w-[420px] md:w-[420px] h-auto md:h-full flex flex-col justify-center gap-2.5 sm:gap-3 shrink-0">
             <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-crt-phosphor/60 tracking-widest uppercase">
               <span className={archetypeAccent.split(" ")[0]}>[{tape.code} • {tape.year}]</span>
               <span>•</span>
@@ -366,7 +366,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
         <section className="pj-screen-height flex flex-col justify-center gap-2 flex-shrink-0">
           <div
             data-parallax="true"
-            className="relative h-[88%] aspect-[16/10] bg-black/95 border border-crt-phosphor/25 rounded-xs overflow-hidden shadow-2xl group will-change-transform"
+            className="relative w-full max-w-[640px] md:w-auto h-auto md:h-[88%] aspect-[16/10] bg-black/95 border border-crt-phosphor/25 rounded-xs overflow-hidden shadow-2xl group will-change-transform"
           >
             <img
               src={tape.shots[0]?.mediaUrl || tape.image}
@@ -383,9 +383,9 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
 
         {/* 3. CHAPTER 01: CONCEPT - ASYMMETRICAL TOP-ALIGNED (is-high) */}
         {tape.problem && (
-          <section className="pj-screen-height w-[280px] sm:w-[340px] md:w-[380px] flex flex-col justify-start pt-6 sm:pt-10 gap-3 border-l border-crt-phosphor/15 pl-6 sm:pl-8 md:pl-10 relative flex-shrink-0">
+          <section className="pj-screen-height w-full max-w-[420px] md:w-[380px] flex flex-col justify-start pt-4 sm:pt-6 md:pt-10 gap-3 border-l border-crt-phosphor/15 pl-4 sm:pl-6 md:pl-10 relative flex-shrink-0">
             {/* Giant Faint Watermark Numeral */}
-            <span className="absolute top-2 left-4 font-bit text-8xl sm:text-9xl text-crt-phosphor/[0.06] select-none pointer-events-none">
+            <span className="absolute top-2 left-4 font-bit text-7xl sm:text-8xl md:text-9xl text-crt-phosphor/[0.06] select-none pointer-events-none">
               01
             </span>
 
@@ -409,12 +409,12 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
         )}
 
         {/* 4. PAIRED STACKED SHOTS (.pj-pair) - ASYMMETRICAL RHYTHM BREAK */}
-        <section className="pj-screen-height w-[320px] sm:w-[380px] md:w-[420px] flex flex-col justify-between py-1 gap-3.5 flex-shrink-0">
+        <section className="pj-screen-height w-full max-w-[420px] md:w-[420px] flex flex-col justify-between py-1 gap-3.5 flex-shrink-0">
           {/* Top Half Shot */}
-          <div className="h-[calc(50%-8px)] flex flex-col justify-between gap-1">
+          <div className="h-auto md:h-[calc(50%-8px)] flex flex-col justify-between gap-1">
             <div
               data-parallax="true"
-              className="relative h-full aspect-[16/10] max-w-full bg-black/90 border border-crt-phosphor/25 rounded-xs overflow-hidden group will-change-transform shadow-lg"
+              className="relative w-full md:w-auto h-auto md:h-full aspect-[16/10] max-w-full bg-black/90 border border-crt-phosphor/25 rounded-xs overflow-hidden group will-change-transform shadow-lg"
             >
               <img
                 src={tape.shots[1]?.mediaUrl || tape.shots[0]?.mediaUrl || tape.image}
@@ -429,10 +429,10 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
           </div>
 
           {/* Bottom Half Shot */}
-          <div className="h-[calc(50%-8px)] flex flex-col justify-between gap-1">
+          <div className="h-auto md:h-[calc(50%-8px)] flex flex-col justify-between gap-1">
             <div
               data-parallax="true"
-              className="relative h-full aspect-[16/10] max-w-full bg-black/90 border border-crt-phosphor/25 rounded-xs overflow-hidden group will-change-transform shadow-lg"
+              className="relative w-full md:w-auto h-auto md:h-full aspect-[16/10] max-w-full bg-black/90 border border-crt-phosphor/25 rounded-xs overflow-hidden group will-change-transform shadow-lg"
             >
               <img
                 src={tape.shots[2]?.mediaUrl || tape.shots[1]?.mediaUrl || tape.image}
@@ -449,9 +449,9 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
 
         {/* 5. CHAPTER 02: SYSTEM DESIGN & HIGHLIGHTS - ASYMMETRICAL BOTTOM-ALIGNED (is-low) */}
         {tape.architecture && (
-          <section className="pj-screen-height w-[300px] sm:w-[360px] md:w-[400px] flex flex-col justify-end pb-6 sm:pb-10 gap-3 border-l border-crt-phosphor/15 pl-6 sm:pl-8 md:pl-10 relative flex-shrink-0">
+          <section className="pj-screen-height w-full max-w-[420px] md:w-[400px] flex flex-col justify-start md:justify-end pb-4 sm:pb-6 md:pb-10 gap-3 border-l border-crt-phosphor/15 pl-4 sm:pl-6 md:pl-10 relative flex-shrink-0">
             {/* Giant Faint Watermark Numeral */}
-            <span className="absolute bottom-6 left-4 font-bit text-8xl sm:text-9xl text-crt-phosphor/[0.06] select-none pointer-events-none">
+            <span className="absolute bottom-6 left-4 font-bit text-7xl sm:text-8xl md:text-9xl text-crt-phosphor/[0.06] select-none pointer-events-none">
               02
             </span>
 
@@ -498,10 +498,10 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
         )}
 
         {/* 6. PANORAMIC WIDE SHOT: ASYMMETRICAL BOTTOM-GROUNDED (self-end) */}
-        <section className="pj-screen-height flex flex-col justify-end pb-4 sm:pb-6 gap-2 flex-shrink-0">
+        <section className="pj-screen-height flex flex-col justify-start md:justify-end pb-4 sm:pb-6 gap-2 flex-shrink-0">
           <div
             data-parallax="true"
-            className="relative h-[66%] aspect-[21/9] min-w-[340px] sm:min-w-[460px] md:min-w-[540px] bg-black/95 border border-crt-phosphor/30 rounded-xs overflow-hidden shadow-2xl group will-change-transform"
+            className="relative w-full max-w-[640px] md:w-auto h-auto md:h-[66%] aspect-[16/9] md:aspect-[21/9] min-w-0 md:min-w-[540px] bg-black/95 border border-crt-phosphor/30 rounded-xs overflow-hidden shadow-2xl group will-change-transform"
           >
             <img
               src={tape.shots[3]?.mediaUrl || tape.shots[2]?.mediaUrl || tape.image}
@@ -517,9 +517,9 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
         </section>
 
         {/* 7. CHAPTER 03: TECH STACK & TAKEAWAYS - ASYMMETRICAL TOP-ALIGNED */}
-        <section className="pj-screen-height w-[280px] sm:w-[340px] md:w-[380px] flex flex-col justify-start pt-6 sm:pt-10 gap-3 border-l border-crt-phosphor/15 pl-6 sm:pl-8 md:pl-10 relative flex-shrink-0">
+        <section className="pj-screen-height w-full max-w-[420px] md:w-[380px] flex flex-col justify-start pt-4 sm:pt-6 md:pt-10 gap-3 border-l border-crt-phosphor/15 pl-4 sm:pl-6 md:pl-10 relative flex-shrink-0">
           {/* Giant Faint Watermark Numeral */}
-          <span className="absolute top-2 left-4 font-bit text-8xl sm:text-9xl text-crt-phosphor/[0.06] select-none pointer-events-none">
+          <span className="absolute top-2 left-4 font-bit text-7xl sm:text-8xl md:text-9xl text-crt-phosphor/[0.06] select-none pointer-events-none">
             03
           </span>
 
@@ -569,7 +569,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
           >
             <div
               data-parallax="true"
-              className="relative h-[84%] aspect-[16/10] bg-black/95 border border-crt-phosphor/25 rounded-xs overflow-hidden shadow-2xl group will-change-transform"
+              className="relative w-full max-w-[640px] md:w-auto h-auto md:h-[84%] aspect-[16/10] bg-black/95 border border-crt-phosphor/25 rounded-xs overflow-hidden shadow-2xl group will-change-transform"
             >
               <img
                 src={shot.mediaUrl || tape.image}
@@ -586,7 +586,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
         ))}
 
         {/* 8. ADVANCE TO NEXT REEL - Pure Physical Tape Cover Poster (Zero boxed text card) */}
-        <section className="pj-screen-height flex items-center justify-center pr-16 sm:pr-24 pl-8 flex-shrink-0">
+        <section className="pj-screen-height flex items-center justify-center py-8 md:py-0 pr-6 sm:pr-12 md:pr-24 pl-6 sm:pl-8 flex-shrink-0">
           <div
             data-parallax="true"
             onClick={() => {

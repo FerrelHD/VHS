@@ -167,8 +167,8 @@ export default function Home() {
           />
         </div>
 
-        {/* Layer 2: Fixed Header across all views (Calibrated to 56px top, 100px padding-x) */}
-        <div className="absolute top-0 left-0 right-0 z-40 pt-[clamp(32px,5.2vh,56px)] px-[clamp(28px,7vw,100px)] pointer-events-none">
+        {/* Layer 2: Fixed Header across all views (Adaptive padding from mobile to desktop) */}
+        <div className="absolute top-0 left-0 right-0 z-40 pt-[clamp(18px,4vh,56px)] px-[clamp(16px,5vw,100px)] pointer-events-none">
           <AppHeader
             activeView={activeView}
             intro={textIntroStarted}
@@ -188,7 +188,7 @@ export default function Home() {
         {/* Layer 3: Main Active Views */}
         {/* 3a. Reel Carousel Subtitle (When in Deck mode) */}
         {activeView === "deck" && (
-          <div className="absolute bottom-[calc(var(--pad-y)+44px)] left-0 right-0 z-30 flex justify-center pointer-events-auto">
+          <div className="absolute bottom-[calc(var(--pad-y)+28px)] sm:bottom-[calc(var(--pad-y)+44px)] left-0 right-0 z-30 flex justify-center pointer-events-auto px-4">
             <TapeSubtitle
               tape={currentTape}
               intro={subtitleIntroStarted}
@@ -233,7 +233,7 @@ export default function Home() {
         )}
 
         {/* Layer 4: Fixed Footer across all views */}
-        <div className="absolute bottom-0 left-0 right-0 z-40 pb-[clamp(32px,5.5vh,60px)] px-[clamp(28px,7vw,100px)] pointer-events-none">
+        <div className="absolute bottom-0 left-0 right-0 z-40 pb-[clamp(18px,4vh,60px)] px-[clamp(16px,5vw,100px)] pointer-events-none">
           <AppFooter intro={textIntroStarted} />
         </div>
       </CrtGlass>

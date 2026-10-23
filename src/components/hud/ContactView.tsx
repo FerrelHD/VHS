@@ -29,10 +29,10 @@ const HEADLINE_PADDING = 175;
  */
 function CreditsContent({ onBack }: { onBack: () => void }) {
   return (
-    <div className="w-full flex flex-col items-center pt-[175px] pb-[160px]">
+    <div className="w-full flex flex-col items-center pt-[120px] sm:pt-[175px] pb-[120px] sm:pb-[160px]">
       {/* SECTION A: MASSIVE EDITORIAL SERIF HEADLINE */}
-      <div className="w-full max-w-2xl text-center mb-16 sm:mb-24 pt-4 sm:pt-6">
-        <h1 className="font-serif italic text-2xl sm:text-3xl md:text-4xl text-white/90 leading-relaxed font-normal tracking-tight">
+      <div className="w-full max-w-2xl text-center mb-10 sm:mb-24 pt-2 sm:pt-6">
+        <h1 className="font-serif italic text-xl sm:text-3xl md:text-4xl text-white/90 leading-relaxed font-normal tracking-tight">
           An original animated tragedy forged by Studio TRIGGER and CD PROJEKT RED,
           setting fire to the skies of Night City.
         </h1>
@@ -477,11 +477,11 @@ export function ContactView({ onBack }: ContactViewProps) {
 
       // 2. Dynamic Tape Position & Scale (Option A: stays locked in center after intro)
       const isDesktop = window.innerWidth > 640;
-      const topAnchor = INITIAL_TOP;
+      const topAnchor = isDesktop ? INITIAL_TOP : 70;
       const baseTapeHeight = isDesktop ? 331 : 286;
       const centerY = container.clientHeight / 2;
 
-      const scrollThreshold = 360;
+      const scrollThreshold = isDesktop ? 360 : 280;
       if (!hasCompletedIntro && currentY >= scrollThreshold) {
         hasCompletedIntro = true;
       }
@@ -490,11 +490,13 @@ export function ContactView({ onBack }: ContactViewProps) {
         ? 1
         : Math.min(1, Math.max(0, currentY / scrollThreshold));
 
+      const initialScale = isDesktop ? INITIAL_SCALE : 0.36;
+      const finalScale = isDesktop ? FINAL_SCALE : 0.72;
       const ease = 1 - Math.pow(1 - tapeProgress, 3);
-      const tapeScale = INITIAL_SCALE + ease * (FINAL_SCALE - INITIAL_SCALE);
+      const tapeScale = initialScale + ease * (finalScale - initialScale);
       const targetCenterShift = Math.max(
         0,
-        centerY - topAnchor - (baseTapeHeight * FINAL_SCALE) / 2
+        centerY - topAnchor - (baseTapeHeight * finalScale) / 2
       );
       const dy = targetCenterShift * ease;
       const tapeScreenY = topAnchor + (baseTapeHeight * tapeScale) / 2 + dy;
