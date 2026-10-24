@@ -77,11 +77,16 @@ export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMe
     return { frontTexture: front, spineTexture: spine };
   }, [tape.id, tape.wearSeed]);
 
-  // 2. Load authentic industrial VHS cassette textures (Smoky acrylic window, reel spoke hub, fluted grip ribs)
-  const { cassetteFrontTex, cassetteRoughnessTex, cassetteTopTex } = useMemo(() => {
+  // 2. Load authentic industrial VHS cassette textures (Smoky acrylic window, reel spoke hub, fluted grip ribs, normal map)
+  const { cassetteFrontTex, cassetteNormalTex, cassetteRoughnessTex, cassetteTopTex } = useMemo(() => {
     if (typeof window === "undefined") {
       const empty = new THREE.Texture();
-      return { cassetteFrontTex: empty, cassetteRoughnessTex: empty, cassetteTopTex: empty };
+      return {
+        cassetteFrontTex: empty,
+        cassetteNormalTex: empty,
+        cassetteRoughnessTex: empty,
+        cassetteTopTex: empty,
+      };
     }
     const loader = new THREE.TextureLoader();
 
@@ -91,6 +96,12 @@ export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMe
     cFront.minFilter = THREE.LinearMipmapLinearFilter;
     cFront.magFilter = THREE.LinearFilter;
     cFront.generateMipmaps = true;
+
+    const cNormal = loader.load("/tapes/vhs-cassette-normal.webp");
+    cNormal.anisotropy = 16;
+    cNormal.minFilter = THREE.LinearMipmapLinearFilter;
+    cNormal.magFilter = THREE.LinearFilter;
+    cNormal.generateMipmaps = true;
 
     const cRough = loader.load("/tapes/vhs-cassette-roughness.webp");
     cRough.anisotropy = 8;
@@ -106,6 +117,7 @@ export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMe
 
     return {
       cassetteFrontTex: cFront,
+      cassetteNormalTex: cNormal,
       cassetteRoughnessTex: cRough,
       cassetteTopTex: cTop,
     };
@@ -116,10 +128,11 @@ export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMe
       frontTexture.dispose();
       spineTexture.dispose();
       cassetteFrontTex.dispose();
+      cassetteNormalTex.dispose();
       cassetteRoughnessTex.dispose();
       cassetteTopTex.dispose();
     };
-  }, [frontTexture, spineTexture, cassetteFrontTex, cassetteRoughnessTex, cassetteTopTex]);
+  }, [frontTexture, spineTexture, cassetteFrontTex, cassetteNormalTex, cassetteRoughnessTex, cassetteTopTex]);
 
   // 3. Sleeve materials
   const sleeveMaterials = useMemo(() => {
@@ -154,23 +167,28 @@ export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMe
     ];
   }, [tape.color, frontTexture, spineTexture]);
 
-  // 4. Cassette Body Materials (Authentic molded plastic with glassy acrylic window)
+  // 4. Cassette Body Materials (Authentic molded plastic with glassy acrylic window and tactile normal bumps)
   const cassetteMaterials = useMemo(() => {
     const plasticSide = new THREE.MeshStandardMaterial({
-      color: 0x090a0d,
-      roughness: 0.82,
+      color: 0x14161c,
+      roughness: 0.78,
       metalness: 0.1,
     });
     const plasticTop = new THREE.MeshStandardMaterial({
       map: cassetteTopTex,
-      roughness: 0.75,
+      roughness: 0.72,
       metalness: 0.12,
     });
-    const plasticFront = new THREE.MeshStandardMaterial({
+    const plasticFront = new THREE.MeshPhysicalMaterial({
       map: cassetteFrontTex,
+      normalMap: cassetteNormalTex,
+      normalScale: new THREE.Vector2(1.8, 1.8),
       roughnessMap: cassetteRoughnessTex,
-      roughness: 0.85,
-      metalness: 0.16,
+      roughness: 0.65,
+      metalness: 0.14,
+      clearcoat: 0.35,
+      clearcoatRoughness: 0.28,
+      reflectivity: 0.5,
     });
 
     return [
@@ -178,10 +196,10 @@ export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMe
       plasticSide,  // -x (left edge)
       plasticTop,   // +y (top hinge face)
       plasticSide,  // -y (bottom)
-      plasticFront, // +z (front face showing window, reel, ribs)
+      plasticFront, // +z (front face showing window, reel, ribs, screws)
       plasticFront, // -z (back face)
     ];
-  }, [cassetteFrontTex, cassetteRoughnessTex, cassetteTopTex]);
+  }, [cassetteFrontTex, cassetteNormalTex, cassetteRoughnessTex, cassetteTopTex]);
 
   // Direct Hardware Frame-Rate Independent Animation Loop (0 React re-renders)
   useFrame((_, delta) => {
