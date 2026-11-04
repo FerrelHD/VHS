@@ -57,6 +57,23 @@ export function expDecay(current: number, target: number, speed: number, dt: num
 }
 
 /**
+ * Critically-damped spring integrator for ultra-smooth physical settling without oscillation.
+ */
+export function springTo(
+  current: number,
+  velocity: number,
+  target: number,
+  dt: number,
+  stiffness = 180,
+  damping = 26
+): { position: number; velocity: number } {
+  const force = -stiffness * (current - target) - damping * velocity;
+  const nextVelocity = velocity + force * dt;
+  const nextPosition = current + nextVelocity * dt;
+  return { position: nextPosition, velocity: nextVelocity };
+}
+
+/**
  * Ultra-smooth physical entrance easing with zero initial jerk and luxurious deceleration tail.
  * f(t) = 1 - (1 - t^2)^3
  * Derivative f'(0) = 0 (smooth, gentle takeoff), f'(1) = 0 (silky cushioned landing).
