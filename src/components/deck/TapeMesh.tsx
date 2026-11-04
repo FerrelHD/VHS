@@ -42,6 +42,85 @@ export function getSleeveArchetype(tape: TapeProject): SleeveArchetype {
   return "swiss";
 }
 
+// 1. Shared static geometries (allocated once at module level, 0 duplicate allocations)
+const SHARED_CASE_GEOMETRY = new THREE.BoxGeometry(
+  VHS_METRICS.CASE.w,
+  VHS_METRICS.CASE.h,
+  VHS_METRICS.CASE.t
+);
+const SHARED_TAPE_GEOMETRY = new THREE.BoxGeometry(
+  VHS_METRICS.TAPE.w,
+  VHS_METRICS.TAPE.h,
+  VHS_METRICS.TAPE.t
+);
+
+// 2. Singleton Cassette Materials & Textures (4 WebGL textures total instead of 40)
+let sharedCassetteMaterials: THREE.Material[] | null = null;
+
+function getSharedCassetteMaterials(): THREE.Material[] {
+  if (sharedCassetteMaterials) return sharedCassetteMaterials;
+
+  const loader = new THREE.TextureLoader();
+
+  const cFront = loader.load("/tapes/vhs-cassette-front.webp");
+  cFront.colorSpace = THREE.SRGBColorSpace;
+  cFront.anisotropy = 8;
+  cFront.minFilter = THREE.LinearMipmapLinearFilter;
+  cFront.magFilter = THREE.LinearFilter;
+  cFront.generateMipmaps = true;
+
+  const cNormal = loader.load("/tapes/vhs-cassette-normal.webp");
+  cNormal.anisotropy = 8;
+  cNormal.minFilter = THREE.LinearMipmapLinearFilter;
+  cNormal.magFilter = THREE.LinearFilter;
+  cNormal.generateMipmaps = true;
+
+  const cRough = loader.load("/tapes/vhs-cassette-roughness.webp");
+  cRough.anisotropy = 4;
+  cRough.minFilter = THREE.LinearMipmapLinearFilter;
+  cRough.generateMipmaps = true;
+
+  const cTop = loader.load("/tapes/vhs-cassette-top.webp");
+  cTop.colorSpace = THREE.SRGBColorSpace;
+  cTop.anisotropy = 8;
+  cTop.minFilter = THREE.LinearMipmapLinearFilter;
+  cTop.magFilter = THREE.LinearFilter;
+  cTop.generateMipmaps = true;
+
+  const plasticSide = new THREE.MeshStandardMaterial({
+    color: 0x14161c,
+    roughness: 0.78,
+    metalness: 0.1,
+  });
+  const plasticTop = new THREE.MeshStandardMaterial({
+    map: cTop,
+    roughness: 0.72,
+    metalness: 0.12,
+  });
+  const plasticFront = new THREE.MeshPhysicalMaterial({
+    map: cFront,
+    normalMap: cNormal,
+    normalScale: new THREE.Vector2(1.8, 1.8),
+    roughnessMap: cRough,
+    roughness: 0.65,
+    metalness: 0.14,
+    clearcoat: 0.35,
+    clearcoatRoughness: 0.28,
+    reflectivity: 0.5,
+  });
+
+  sharedCassetteMaterials = [
+    plasticSide,  // +x (right edge)
+    plasticSide,  // -x (left edge)
+    plasticTop,   // +y (top hinge face)
+    plasticSide,  // -y (bottom)
+    plasticFront, // +z (front face showing window, reel, ribs, screws)
+    plasticFront, // -z (back face)
+  ];
+
+  return sharedCassetteMaterials;
+}
+
 export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMeshProps) {
   const groupRef = useRef<THREE.Group | null>(null);
   const cassetteMeshRef = useRef<THREE.Mesh | null>(null);
@@ -62,14 +141,14 @@ export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMe
     const v = tape.wearSeed || 1;
     const front = loader.load(`/tapes/${tape.id}-front.webp?v=${v}`);
     front.colorSpace = THREE.SRGBColorSpace;
-    front.anisotropy = 16;
+    front.anisotropy = 8;
     front.minFilter = THREE.LinearMipmapLinearFilter;
     front.magFilter = THREE.LinearFilter;
     front.generateMipmaps = true;
 
     const spine = loader.load(`/tapes/${tape.id}-spine.webp?v=${v}`);
     spine.colorSpace = THREE.SRGBColorSpace;
-    spine.anisotropy = 16;
+    spine.anisotropy = 8;
     spine.minFilter = THREE.LinearMipmapLinearFilter;
     spine.magFilter = THREE.LinearFilter;
     spine.generateMipmaps = true;
@@ -77,64 +156,14 @@ export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMe
     return { frontTexture: front, spineTexture: spine };
   }, [tape.id, tape.wearSeed]);
 
-  // 2. Load authentic industrial VHS cassette textures (Smoky acrylic window, reel spoke hub, fluted grip ribs, normal map)
-  const { cassetteFrontTex, cassetteNormalTex, cassetteRoughnessTex, cassetteTopTex } = useMemo(() => {
-    if (typeof window === "undefined") {
-      const empty = new THREE.Texture();
-      return {
-        cassetteFrontTex: empty,
-        cassetteNormalTex: empty,
-        cassetteRoughnessTex: empty,
-        cassetteTopTex: empty,
-      };
-    }
-    const loader = new THREE.TextureLoader();
-
-    const cFront = loader.load("/tapes/vhs-cassette-front.webp");
-    cFront.colorSpace = THREE.SRGBColorSpace;
-    cFront.anisotropy = 16;
-    cFront.minFilter = THREE.LinearMipmapLinearFilter;
-    cFront.magFilter = THREE.LinearFilter;
-    cFront.generateMipmaps = true;
-
-    const cNormal = loader.load("/tapes/vhs-cassette-normal.webp");
-    cNormal.anisotropy = 16;
-    cNormal.minFilter = THREE.LinearMipmapLinearFilter;
-    cNormal.magFilter = THREE.LinearFilter;
-    cNormal.generateMipmaps = true;
-
-    const cRough = loader.load("/tapes/vhs-cassette-roughness.webp");
-    cRough.anisotropy = 8;
-    cRough.minFilter = THREE.LinearMipmapLinearFilter;
-    cRough.generateMipmaps = true;
-
-    const cTop = loader.load("/tapes/vhs-cassette-top.webp");
-    cTop.colorSpace = THREE.SRGBColorSpace;
-    cTop.anisotropy = 16;
-    cTop.minFilter = THREE.LinearMipmapLinearFilter;
-    cTop.magFilter = THREE.LinearFilter;
-    cTop.generateMipmaps = true;
-
-    return {
-      cassetteFrontTex: cFront,
-      cassetteNormalTex: cNormal,
-      cassetteRoughnessTex: cRough,
-      cassetteTopTex: cTop,
-    };
-  }, []);
-
   useEffect(() => {
     return () => {
       frontTexture.dispose();
       spineTexture.dispose();
-      cassetteFrontTex.dispose();
-      cassetteNormalTex.dispose();
-      cassetteRoughnessTex.dispose();
-      cassetteTopTex.dispose();
     };
-  }, [frontTexture, spineTexture, cassetteFrontTex, cassetteNormalTex, cassetteRoughnessTex, cassetteTopTex]);
+  }, [frontTexture, spineTexture]);
 
-  // 3. Sleeve materials
+  // 2. Sleeve materials
   const sleeveMaterials = useMemo(() => {
     const baseColor = new THREE.Color(tape.color);
     const sideMat = new THREE.MeshStandardMaterial({
@@ -167,39 +196,11 @@ export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMe
     ];
   }, [tape.color, frontTexture, spineTexture]);
 
-  // 4. Cassette Body Materials (Authentic molded plastic with glassy acrylic window and tactile normal bumps)
+  // 3. Shared Cassette Body Materials (Singleton reference)
   const cassetteMaterials = useMemo(() => {
-    const plasticSide = new THREE.MeshStandardMaterial({
-      color: 0x14161c,
-      roughness: 0.78,
-      metalness: 0.1,
-    });
-    const plasticTop = new THREE.MeshStandardMaterial({
-      map: cassetteTopTex,
-      roughness: 0.72,
-      metalness: 0.12,
-    });
-    const plasticFront = new THREE.MeshPhysicalMaterial({
-      map: cassetteFrontTex,
-      normalMap: cassetteNormalTex,
-      normalScale: new THREE.Vector2(1.8, 1.8),
-      roughnessMap: cassetteRoughnessTex,
-      roughness: 0.65,
-      metalness: 0.14,
-      clearcoat: 0.35,
-      clearcoatRoughness: 0.28,
-      reflectivity: 0.5,
-    });
-
-    return [
-      plasticSide,  // +x (right edge)
-      plasticSide,  // -x (left edge)
-      plasticTop,   // +y (top hinge face)
-      plasticSide,  // -y (bottom)
-      plasticFront, // +z (front face showing window, reel, ribs, screws)
-      plasticFront, // -z (back face)
-    ];
-  }, [cassetteFrontTex, cassetteNormalTex, cassetteRoughnessTex, cassetteTopTex]);
+    if (typeof window === "undefined") return [];
+    return getSharedCassetteMaterials();
+  }, []);
 
   // Direct Hardware Frame-Rate Independent Animation Loop (0 React re-renders)
   useFrame((_, delta) => {
@@ -286,29 +287,16 @@ export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMe
       {/* 1. Inner VHS Cassette (Slides out smoothly when selected, hidden when idle) */}
       <mesh
         ref={cassetteMeshRef}
+        geometry={SHARED_TAPE_GEOMETRY}
         visible={isSelected}
         material={cassetteMaterials}
-        castShadow
-      >
-        <boxGeometry
-          args={[
-            VHS_METRICS.TAPE.w,
-            VHS_METRICS.TAPE.h,
-            VHS_METRICS.TAPE.t,
-          ]}
-        />
-      </mesh>
+      />
 
       {/* 2. Outer Cardboard Sleeve (Vertical Portrait) */}
-      <mesh material={sleeveMaterials} castShadow receiveShadow>
-        <boxGeometry
-          args={[
-            VHS_METRICS.CASE.w,
-            VHS_METRICS.CASE.h,
-            VHS_METRICS.CASE.t,
-          ]}
-        />
-      </mesh>
+      <mesh
+        geometry={SHARED_CASE_GEOMETRY}
+        material={sleeveMaterials}
+      />
     </group>
   );
 }
