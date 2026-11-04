@@ -50,10 +50,13 @@ export function BentPostProcessing({ paused = false }: BentPostProcessingProps) 
 
   const { target, screenScene, screenCamera, material } = useMemo(() => {
     const renderTarget = new THREE.WebGLRenderTarget(1, 1, {
-      type: THREE.HalfFloatType,
-      samples: 1,
+      type: THREE.UnsignedByteType,
+      samples: 0,
       minFilter: THREE.LinearFilter,
       magFilter: THREE.LinearFilter,
+      generateMipmaps: false,
+      depthBuffer: true,
+      stencilBuffer: false,
     });
 
     const mat = new THREE.ShaderMaterial({
@@ -97,16 +100,13 @@ export function BentPostProcessing({ paused = false }: BentPostProcessingProps) 
     };
   }, [target, material, screenScene]);
 
-  const bufferSize = useMemo(() => new THREE.Vector2(), []);
-
   useFrame(({ gl, scene, camera }) => {
     if (paused) return;
 
     if (!fallbackRef.current) {
       try {
-        gl.getDrawingBufferSize(bufferSize);
-        const w = Math.max(1, bufferSize.x);
-        const h = Math.max(1, bufferSize.y);
+        const w = gl.domElement.width;
+        const h = gl.domElement.height;
 
         if (target.width !== w || target.height !== h) {
           target.setSize(w, h);
