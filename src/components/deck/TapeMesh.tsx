@@ -64,25 +64,25 @@ function getSharedCassetteMaterials(): THREE.Material[] {
 
   const cFront = loader.load("/tapes/vhs-cassette-front.webp");
   cFront.colorSpace = THREE.SRGBColorSpace;
-  cFront.anisotropy = 8;
+  cFront.anisotropy = 4;
   cFront.minFilter = THREE.LinearMipmapLinearFilter;
   cFront.magFilter = THREE.LinearFilter;
   cFront.generateMipmaps = true;
 
   const cNormal = loader.load("/tapes/vhs-cassette-normal.webp");
-  cNormal.anisotropy = 8;
+  cNormal.anisotropy = 4;
   cNormal.minFilter = THREE.LinearMipmapLinearFilter;
   cNormal.magFilter = THREE.LinearFilter;
   cNormal.generateMipmaps = true;
 
   const cRough = loader.load("/tapes/vhs-cassette-roughness.webp");
-  cRough.anisotropy = 4;
+  cRough.anisotropy = 2;
   cRough.minFilter = THREE.LinearMipmapLinearFilter;
   cRough.generateMipmaps = true;
 
   const cTop = loader.load("/tapes/vhs-cassette-top.webp");
   cTop.colorSpace = THREE.SRGBColorSpace;
-  cTop.anisotropy = 8;
+  cTop.anisotropy = 4;
   cTop.minFilter = THREE.LinearMipmapLinearFilter;
   cTop.magFilter = THREE.LinearFilter;
   cTop.generateMipmaps = true;
@@ -141,14 +141,14 @@ export function TapeMesh({ tape, index, isSelected, onSelect, stateRef }: TapeMe
     const v = tape.wearSeed || 1;
     const front = loader.load(`/tapes/${tape.id}-front.webp?v=${v}`);
     front.colorSpace = THREE.SRGBColorSpace;
-    front.anisotropy = 8;
+    front.anisotropy = 4;
     front.minFilter = THREE.LinearMipmapLinearFilter;
     front.magFilter = THREE.LinearFilter;
     front.generateMipmaps = true;
 
     const spine = loader.load(`/tapes/${tape.id}-spine.webp?v=${v}`);
     spine.colorSpace = THREE.SRGBColorSpace;
-    spine.anisotropy = 8;
+    spine.anisotropy = 4;
     spine.minFilter = THREE.LinearMipmapLinearFilter;
     spine.magFilter = THREE.LinearFilter;
     spine.generateMipmaps = true;

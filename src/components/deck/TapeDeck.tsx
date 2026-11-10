@@ -28,6 +28,7 @@ function TapeCarousel({
   mouseRef,
   isDraggingRef,
   onCardsEntered,
+  onActivityChange,
 }: {
   targetOffsetRef: React.RefObject<number>;
   currentIndex: number;
@@ -37,6 +38,7 @@ function TapeCarousel({
   mouseRef: React.RefObject<{ x: number; y: number }>;
   isDraggingRef: React.RefObject<boolean>;
   onCardsEntered?: () => void;
+  onActivityChange?: (isActive: boolean) => void;
 }) {
   const sharedStateRef = useRef<CarouselSharedState>({
     currentOffset: currentIndex * VHS_METRICS.SLOT_SPACING,
@@ -49,6 +51,8 @@ function TapeCarousel({
   const prevOffsetRef = useRef(currentIndex * VHS_METRICS.SLOT_SPACING);
   const enteredCalledRef = useRef(false);
   const lastSlotRef = useRef(currentIndex);
+  const stillStartTimeRef = useRef(performance.now());
+  const isIdleSignaledRef = useRef(false);
 
   useFrame((_, delta) => {
     const dt = Math.min(0.1, delta);
@@ -93,6 +97,30 @@ function TapeCarousel({
     if (approxIndex !== lastSlotRef.current) {
       lastSlotRef.current = approxIndex;
       onSlotCrossed?.(approxIndex);
+    }
+
+    // 7. Motion & Activity check for Idle Sleep mode (0% GPU when still)
+    const isMoving =
+      (intro && state.enterProgress < 0.999) ||
+      Boolean(isDraggingRef.current) ||
+      Math.abs(next - targetOffset) > 0.08 ||
+      Math.abs(state.velocity) > 0.8 ||
+      Math.abs(state.squash) > 0.005 ||
+      Math.abs(targetMouse.x - state.tilt.x) > 0.01 ||
+      Math.abs(targetMouse.y - state.tilt.y) > 0.01;
+
+    const now = performance.now();
+    if (isMoving) {
+      stillStartTimeRef.current = now;
+      if (isIdleSignaledRef.current) {
+        isIdleSignaledRef.current = false;
+        onActivityChange?.(true);
+      }
+    } else {
+      if (!isIdleSignaledRef.current && now - stillStartTimeRef.current > 750) {
+        isIdleSignaledRef.current = true;
+        onActivityChange?.(false);
+      }
     }
   });
 
@@ -159,6 +187,15 @@ export function TapeDeck({
   const containerRef = useRef<HTMLDivElement>(null);
   const wheelLockRef = useRef(false);
   const mouseRef = useRef({ x: 0, y: 0 });
+  const [isIdle, setIsIdle] = useState(false);
+
+  const wakeUp = useCallback(() => {
+    setIsIdle((prev) => (prev ? false : prev));
+  }, []);
+
+  const handleActivityChange = useCallback((activeState: boolean) => {
+    setIsIdle(!activeState);
+  }, []);
 
   useEffect(() => {
     onReady?.();
@@ -166,6 +203,7 @@ export function TapeDeck({
 
   const snapToSlot = useCallback(
     (slot: number) => {
+      wakeUp();
       const N = TAPE_PROJECTS.length;
       const newOffset = slot * VHS_METRICS.SLOT_SPACING;
       const normalizedIndex = ((slot % N) + N) % N;
@@ -173,11 +211,12 @@ export function TapeDeck({
       onIndexChange(normalizedIndex);
       audio.playSnap();
     },
-    [onIndexChange]
+    [onIndexChange, wakeUp]
   );
 
   // Sync external index changes (shortest circular path)
   useEffect(() => {
+    wakeUp();
     const N = TAPE_PROJECTS.length;
     const currentSlot = Math.round(targetOffsetRef.current / VHS_METRICS.SLOT_SPACING);
     const currentNorm = ((currentSlot % N) + N) % N;
@@ -187,11 +226,16 @@ export function TapeDeck({
     if (diff !== 0) {
       targetOffsetRef.current = (currentSlot + diff) * VHS_METRICS.SLOT_SPACING;
     }
-  }, [currentIndex]);
+  }, [currentIndex, wakeUp]);
+
+  useEffect(() => {
+    wakeUp();
+  }, [intro, wakeUp]);
 
   // Keyboard navigation (Endless Left / Right)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      wakeUp();
       if (e.key === "ArrowLeft") {
         e.preventDefault();
         const currentSlot = Math.round(targetOffsetRef.current / VHS_METRICS.SLOT_SPACING);
@@ -208,10 +252,11 @@ export function TapeDeck({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentIndex, snapToSlot, onOpenProject]);
+  }, [currentIndex, snapToSlot, onOpenProject, wakeUp]);
 
   // Mouse Wheel navigation on the 3D Carousel (Infinite Looping)
   const handleWheel = (e: React.WheelEvent) => {
+    wakeUp();
     const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
     if (Math.abs(delta) < 25) return;
     if (wheelLockRef.current) return;
@@ -231,6 +276,7 @@ export function TapeDeck({
 
   // Pointer drag interactions & Mouse Parallax Tracking
   const handlePointerDown = (e: React.PointerEvent) => {
+    wakeUp();
     const now = performance.now();
     isDraggingRef.current = true;
     dragStartRef.current = {
@@ -245,6 +291,7 @@ export function TapeDeck({
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
+    wakeUp();
     // 1. Update normalized mouse coordinates for 3D parallax tilt [-1, 1]
     const rect = containerRef.current?.getBoundingClientRect();
     if (rect) {
@@ -271,6 +318,7 @@ export function TapeDeck({
   };
 
   const handlePointerUp = (e: React.PointerEvent) => {
+    wakeUp();
     if (!isDraggingRef.current) return;
     isDraggingRef.current = false;
     (e.target as HTMLElement).releasePointerCapture(e.pointerId);
@@ -284,6 +332,7 @@ export function TapeDeck({
 
   const handleSelectTape = useCallback(
     (idx: number) => {
+      wakeUp();
       const N = TAPE_PROJECTS.length;
       const currentSlot = Math.round(targetOffsetRef.current / VHS_METRICS.SLOT_SPACING);
       const currentNorm = ((currentSlot % N) + N) % N;
@@ -298,7 +347,7 @@ export function TapeDeck({
         snapToSlot(targetSlot);
       }
     },
-    [onOpenProject, snapToSlot]
+    [onOpenProject, snapToSlot, wakeUp]
   );
 
   const handleSlotCrossed = useCallback(
@@ -327,7 +376,7 @@ export function TapeDeck({
           powerPreference: "high-performance",
         }}
         dpr={[1, 1.35]}
-        frameloop={active ? "always" : "never"}
+        frameloop={active ? (isIdle ? "demand" : "always") : "never"}
       >
         <ResponsiveDeckCamera />
         <TapeCarousel
@@ -339,6 +388,7 @@ export function TapeDeck({
           onSelectTape={handleSelectTape}
           onSlotCrossed={handleSlotCrossed}
           onCardsEntered={onCardsEntered}
+          onActivityChange={handleActivityChange}
         />
 
         {/* The CRT Optical Barrel Distortion Post-Processing Pass */}
