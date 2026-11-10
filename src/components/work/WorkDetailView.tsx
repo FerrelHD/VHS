@@ -284,6 +284,8 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
             <img
               src={`/tapes/${tape.id}-front.webp?v=${tape.wearSeed}`}
               alt={tape.title}
+              loading="eager"
+              decoding="async"
               className="w-full h-full object-cover rounded-xs pointer-events-none group-hover:scale-102 transition-transform duration-500"
             />
           </div>
@@ -371,6 +373,8 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
             <img
               src={tape.shots[0]?.mediaUrl || tape.image}
               alt={tape.shots[0]?.title || tape.title}
+              loading="eager"
+              decoding="async"
               className="w-full h-full object-cover contrast-110 brightness-95 grayscale-[40%] group-hover:grayscale-0 group-hover:contrast-105 group-hover:brightness-100 group-hover:scale-105 transition-[filter,transform] duration-500 pointer-events-none"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
@@ -391,7 +395,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
 
             <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-crt-phosphor/50 tracking-widest uppercase z-10">
               <span className="w-1.5 h-1.5 bg-crt-phosphor/70 inline-block" />
-              <span>{tape.id.startsWith("ep-") ? "01 // THE INCITING INCIDENT" : "01 // THE CHALLENGE"}</span>
+              <span>{tape.id.startsWith("ep-") ? "01 • THE INCITING INCIDENT" : "01 • THE CHALLENGE"}</span>
             </div>
 
             <h2 className="font-bit text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-crt-phosphor phosphor-glow uppercase z-10">
@@ -419,6 +423,8 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
               <img
                 src={tape.shots[1]?.mediaUrl || tape.shots[0]?.mediaUrl || tape.image}
                 alt={tape.shots[1]?.title || "Shot 01"}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover object-top scale-105 contrast-110 brightness-95 grayscale-[40%] group-hover:grayscale-0 group-hover:contrast-105 group-hover:brightness-100 group-hover:scale-110 transition-[filter,transform] duration-500 pointer-events-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
@@ -437,6 +443,8 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
               <img
                 src={tape.shots[2]?.mediaUrl || tape.shots[1]?.mediaUrl || tape.image}
                 alt={tape.shots[2]?.title || "Shot 02"}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover object-bottom contrast-110 brightness-95 grayscale-[40%] group-hover:grayscale-0 group-hover:contrast-105 group-hover:brightness-100 group-hover:scale-110 transition-[filter,transform] duration-500 pointer-events-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
@@ -457,7 +465,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
 
             <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-crt-phosphor/50 tracking-widest uppercase z-10">
               <span className="w-1.5 h-1.5 bg-crt-phosphor/70 inline-block" />
-              <span>{tape.id.startsWith("ep-") ? "02 // CLIMAX & TURNING POINT" : "02 // ARCHITECTURE & METRICS"}</span>
+              <span>{tape.id.startsWith("ep-") ? "02 • CLIMAX & TURNING POINT" : "02 • ARCHITECTURE & METRICS"}</span>
             </div>
 
             <h2 className="font-bit text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-crt-phosphor phosphor-glow uppercase z-10">
@@ -506,6 +514,8 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
             <img
               src={tape.shots[3]?.mediaUrl || tape.shots[2]?.mediaUrl || tape.image}
               alt={tape.shots[3]?.title || "Panoramic View"}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover contrast-110 brightness-95 grayscale-[40%] group-hover:grayscale-0 group-hover:contrast-105 group-hover:brightness-100 group-hover:scale-105 transition-[filter,transform] duration-500 pointer-events-none"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
@@ -525,7 +535,7 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
 
           <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-crt-phosphor/50 tracking-widest uppercase z-10">
             <span className="w-1.5 h-1.5 bg-crt-phosphor/70 inline-block" />
-            <span>{tape.id.startsWith("ep-") ? "03 // DIALOGUE & AFTERMATH" : "03 // CORE ENGINE & STACK"}</span>
+            <span>{tape.id.startsWith("ep-") ? "03 • DIALOGUE & AFTERMATH" : "03 • CORE ENGINE & STACK"}</span>
           </div>
 
           <h2 className="font-bit text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-crt-phosphor phosphor-glow uppercase z-10">
@@ -574,6 +584,8 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
               <img
                 src={shot.mediaUrl || tape.image}
                 alt={shot.title}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover contrast-110 brightness-95 group-hover:scale-105 transition-transform duration-700 pointer-events-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
@@ -600,6 +612,8 @@ export function WorkDetailView({ tape, onBack, onNextProject }: WorkDetailViewPr
               <img
                 src={`/tapes/${nextTape.id}-front.webp`}
                 alt={nextTape.title}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover rounded-xs"
               />
               {/* Gloss lighting layer */}
