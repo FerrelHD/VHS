@@ -339,7 +339,7 @@ function CreditsContent({ onBack }: { onBack: () => void }) {
       {/* SECTION E: COMMEMORATIVE EPILOGUE & DEDICATION */}
       <div className="w-full max-w-xl text-center mt-12 sm:mt-24 pt-10 border-t border-crt-phosphor/20 flex flex-col items-center gap-3">
         <span className="text-[10px] text-crt-phosphor/40 tracking-widest uppercase">
-          [EPILOGUE // NIGHT CITY 2076]
+          [EPILOGUE • NIGHT CITY 2076]
         </span>
         <blockquote className="text-xs sm:text-sm text-crt-phosphor/80 italic font-mono leading-relaxed max-w-md">
           &ldquo;I really want to stay at your house, and I hope it finds you well.&rdquo;
@@ -785,7 +785,7 @@ export function ContactView({ onBack }: ContactViewProps) {
             style={{ transform: "rotateY(180deg) translateZ(9px)" }}
           >
             <div className="flex items-center justify-between text-[8px] uppercase tracking-widest text-crt-phosphor/40 font-mono">
-              <span>NC-2076 // TRIG-CDPR</span>
+              <span>NC-2076 • TRIG-CDPR</span>
               <span>VHS PAL</span>
             </div>
             <div className="text-center font-bit text-xs text-crt-phosphor/80 uppercase tracking-wider">

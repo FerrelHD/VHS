@@ -69,7 +69,7 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
       >
         <div className="w-full max-w-xl flex flex-col items-center gap-2.5">
           <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-crt-phosphor/60 tracking-widest uppercase">
-            <span className="text-amber-400 font-bold">[VAULT // SHARD MATRIX]</span>
+            <span className="text-amber-400 font-bold">[VAULT • SHARD MATRIX]</span>
             <span>•</span>
             <span className="text-crt-phosphor/80">TOTAL 10 REELS</span>
           </div>
@@ -82,7 +82,7 @@ export function ArchiveView({ onBack, onSelectProject }: ArchiveViewProps) {
           <div className="h-6 flex items-center justify-center text-[11px] sm:text-xs text-crt-phosphor/85 font-mono tracking-wider uppercase px-2">
             {hoveredIndex !== null ? (
               <span className="text-amber-400 font-bold phosphor-glow truncate max-w-full">
-                READY TO INITIALIZE: [{TAPE_PROJECTS[hoveredIndex]?.code} // {TAPE_PROJECTS[hoveredIndex]?.title}]
+                READY TO INITIALIZE: [{TAPE_PROJECTS[hoveredIndex]?.code} • {TAPE_PROJECTS[hoveredIndex]?.title}]
               </span>
             ) : (
               <span>SELECT A SHARD TO INITIATE PLAYBACK</span>

@@ -82,7 +82,7 @@ export function NewsView({ onBack }: NewsViewProps) {
                 <span key={`t1-${i}`} className="flex items-center gap-2.5">
                   <span className="text-red-500 font-black">[FLASH]</span>
                   <span>{h}</span>
-                  <span className="text-crt-phosphor/40">///</span>
+                  <span className="text-crt-phosphor/40">•</span>
                 </span>
               ))}
             </div>
@@ -91,7 +91,7 @@ export function NewsView({ onBack }: NewsViewProps) {
                 <span key={`t1-dup-${i}`} className="flex items-center gap-2.5">
                   <span className="text-red-500 font-black">[FLASH]</span>
                   <span>{h}</span>
-                  <span className="text-crt-phosphor/40">///</span>
+                  <span className="text-crt-phosphor/40">•</span>
                 </span>
               ))}
             </div>
@@ -131,7 +131,7 @@ export function NewsView({ onBack }: NewsViewProps) {
             </p>
 
             <div className="border-t border-crt-phosphor/20 pt-3 flex flex-wrap items-center justify-between gap-2 text-[9px] sm:text-[10px] text-crt-phosphor/60">
-              <span>STATUS: UNCONFIRMED DISPATCH // CORONADO RELAY</span>
+              <span>STATUS: UNCONFIRMED DISPATCH • CORONADO RELAY</span>
               <span className="text-amber-400 font-bold">RESTRICTED FOR PUBLIC RELEASE</span>
             </div>
           </div>
@@ -139,7 +139,7 @@ export function NewsView({ onBack }: NewsViewProps) {
           {/* Right Column: Bulletin Selector Reel */}
           <div className="lg:col-span-5 flex flex-col gap-1.5">
             <span className="text-[9px] sm:text-[10px] text-crt-phosphor/40 tracking-widest uppercase mb-0.5">
-              [DISPATCH ARCHIVE // SELECT LOG]
+              [DISPATCH ARCHIVE • SELECT LOG]
             </span>
 
             <div className="space-y-1.5">
