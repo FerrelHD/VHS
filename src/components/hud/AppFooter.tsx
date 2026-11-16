@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { BwToggle } from "./BwToggle";
+import { AudioToggle } from "./AudioToggle";
 import { audio } from "@/lib/audio";
 import { Reveal } from "./Reveal";
 
@@ -58,6 +59,9 @@ export function AppFooter({ intro = true }: AppFooterProps) {
         </Reveal>
         <Reveal on={intro} i={4} inline>
           <BwToggle />
+        </Reveal>
+        <Reveal on={intro} i={4} inline>
+          <AudioToggle />
         </Reveal>
       </div>
 

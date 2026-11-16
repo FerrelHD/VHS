@@ -2,6 +2,37 @@
 
 class AudioEngine {
   private ctx: AudioContext | null = null;
+  private muted = false;
+
+  constructor() {
+    if (typeof window !== "undefined") {
+      try {
+        this.muted = localStorage.getItem("oldtape_muted") === "1";
+      } catch {
+        // Storage unavailable
+      }
+    }
+  }
+
+  public get isMuted(): boolean {
+    return this.muted;
+  }
+
+  public setMuted(val: boolean) {
+    this.muted = val;
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("oldtape_muted", val ? "1" : "0");
+      } catch {
+        // Storage unavailable
+      }
+    }
+  }
+
+  public toggleMute(): boolean {
+    this.setMuted(!this.muted);
+    return this.muted;
+  }
 
   private init() {
     if (!this.ctx && typeof window !== "undefined") {
@@ -17,6 +48,7 @@ class AudioEngine {
    * Mechanical relay click when tape carousel advances.
    */
   public playClick(pitch = 1.0) {
+    if (this.muted) return;
     try {
       this.init();
       if (!this.ctx) return;
@@ -46,6 +78,7 @@ class AudioEngine {
    * Heavier mechanical thud when a tape settles into the center slot.
    */
   public playSnap() {
+    if (this.muted) return;
     try {
       this.init();
       if (!this.ctx) return;
@@ -75,6 +108,7 @@ class AudioEngine {
    * High-voltage static discharge when B&W switch is toggled.
    */
   public playSwitch() {
+    if (this.muted) return;
     try {
       this.init();
       if (!this.ctx) return;
@@ -110,6 +144,7 @@ class AudioEngine {
    * CRT channel-switch / signal distortion glitch burst.
    */
   public playGlitch() {
+    if (this.muted) return;
     try {
       this.init();
       if (!this.ctx) return;
