@@ -60,6 +60,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
+      <head>
+        {/* Preload critical textures for instant LCP rendering */}
+        <link rel="preload" href="/tapes/ep-01-front.webp" as="image" type="image/webp" />
+        <link rel="preload" href="/brand/tv-glass.webp" as="image" type="image/webp" />
+      </head>
       <body className="h-full w-full bg-crt-dark overflow-hidden antialiased">
         {children}
       </body>
