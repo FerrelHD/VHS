@@ -17,8 +17,11 @@ export function TapeSubtitle({ tape, onOpen, intro = true }: TapeSubtitleProps) 
   return (
     <div
       onClick={onOpen}
+      role="region"
+      aria-live="polite"
+      aria-atomic="true"
       className="flex flex-col items-center justify-center text-center cursor-pointer select-none group transition-transform active:scale-95 px-4 max-w-xl"
-      aria-label={`Open ${tape.title} details`}
+      aria-label={`Active reel: ${tape.title} (${tape.code})`}
     >
       {/* Line 1: NeueBit Pixel Title (Adaptive font size) */}
       <Reveal on={intro} i={0}>

@@ -395,3 +395,22 @@ html.bw .tv {
   }
 }
 
+/* 8. Accessibility: Respect Reduced Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  .grain-layer,
+  .vhs-crt-roll,
+  .glitch-slice-1,
+  .glitch-slice-2,
+  .glitch-flash-layer,
+  .glitch-scan-layer,
+  [class*="animate-[marquee"] {
+    animation: none !important;
+  }
+
+  .rv-i {
+    transition: opacity 0.2s ease !important;
+    transform: none !important;
+  }
+}
+
+
