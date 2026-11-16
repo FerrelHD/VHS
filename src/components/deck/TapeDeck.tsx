@@ -361,7 +361,7 @@ export function TapeDeck({
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing select-none"
+      className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing select-none touch-none"
       onWheel={handleWheel}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
