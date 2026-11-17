@@ -153,14 +153,17 @@ export function NewsView({ onBack }: NewsViewProps) {
                       audio.playClick(1.1);
                       setActiveBulletin(b);
                     }}
-                    className={`py-1.5 px-1.5 transition-all cursor-pointer border-b border-crt-phosphor/15 ${
+                    className={`py-1.5 px-2 transition-all cursor-pointer border-l-2 border-b border-b-crt-phosphor/15 ${
                       isSelected
-                        ? "text-white phosphor-glow bg-white/[0.03] border-crt-phosphor/40"
-                        : "text-crt-phosphor/60 hover:text-white hover:bg-white/[0.015]"
+                        ? "text-white phosphor-glow bg-white/[0.05] border-l-amber-400 pl-2.5"
+                        : "text-crt-phosphor/60 hover:text-white hover:bg-white/[0.015] border-l-transparent"
                     }`}
                   >
                     <div className="flex items-center justify-between text-[8px] sm:text-[9px] tracking-wider mb-0.5">
-                      <span className="font-bold text-amber-300">[{b.category}]</span>
+                      <div className="flex items-center gap-1.5">
+                        {isSelected && <span className="text-amber-400 font-bold">►</span>}
+                        <span className="font-bold text-amber-300">[{b.category}]</span>
+                      </div>
                       <span className="text-crt-phosphor/50">{b.timestamp}</span>
                     </div>
                     <h3 className="font-bit text-sm sm:text-base md:text-lg font-bold uppercase leading-tight line-clamp-1">
