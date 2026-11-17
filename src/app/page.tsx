@@ -113,6 +113,10 @@ export default function Home() {
     setCurrentIndex((prev) => (prev + 1) % TAPE_PROJECTS.length);
   }, []);
 
+  const handlePrevProject = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + TAPE_PROJECTS.length) % TAPE_PROJECTS.length);
+  }, []);
+
   const handleSelectFromArchive = useCallback((idx: number) => {
     setCurrentIndex(idx);
     transitionToView("work");
@@ -194,6 +198,8 @@ export default function Home() {
               tape={currentTape}
               intro={subtitleIntroStarted}
               onOpen={() => handleOpenProject(currentTape)}
+              onPrev={handlePrevProject}
+              onNext={handleNextProject}
             />
           </div>
         )}

@@ -6,6 +6,8 @@ import { Reveal } from "./Reveal";
 interface TapeSubtitleProps {
   tape: TapeProject;
   onOpen: () => void;
+  onPrev?: () => void;
+  onNext?: () => void;
   intro?: boolean;
 }
 
@@ -13,7 +15,13 @@ interface TapeSubtitleProps {
  * Centered project summary block beneath the active tape.
  * Accurately scaled to fit comfortably below the 3D tape and above the CRT footer.
  */
-export function TapeSubtitle({ tape, onOpen, intro = true }: TapeSubtitleProps) {
+export function TapeSubtitle({
+  tape,
+  onOpen,
+  onPrev,
+  onNext,
+  intro = true,
+}: TapeSubtitleProps) {
   return (
     <div
       onClick={onOpen}
@@ -40,6 +48,20 @@ export function TapeSubtitle({ tape, onOpen, intro = true }: TapeSubtitleProps) 
       {/* Line 3: Telemetry & Call to Action (Plain text without cards or badges) */}
       <Reveal on={intro} i={2}>
         <div className="flex items-center gap-1.5 sm:gap-2.5 mt-1 sm:mt-2 font-mono text-[9px] sm:text-[11px] tracking-widest uppercase text-crt-phosphor/70">
+          {onPrev && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onPrev();
+              }}
+              className="text-crt-phosphor/50 hover:text-amber-400 font-bold transition-colors cursor-pointer py-0.5 px-1 active:scale-90"
+              aria-label="Previous reel"
+            >
+              [ ◀ PREV ]
+            </button>
+          )}
+
           <span>{tape.code}</span>
           <span className="text-crt-phosphor/40">•</span>
           <span>{tape.meta.duration}</span>
@@ -48,6 +70,20 @@ export function TapeSubtitle({ tape, onOpen, intro = true }: TapeSubtitleProps) 
             <span>PLAY SHARD</span>
             <span className="text-[11px] leading-none group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
           </span>
+
+          {onNext && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onNext();
+              }}
+              className="text-crt-phosphor/50 hover:text-amber-400 font-bold transition-colors cursor-pointer py-0.5 px-1 active:scale-90"
+              aria-label="Next reel"
+            >
+              [ NEXT ▶ ]
+            </button>
+          )}
         </div>
       </Reveal>
     </div>
