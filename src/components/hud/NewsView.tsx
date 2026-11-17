@@ -73,11 +73,11 @@ export function NewsView({ onBack }: NewsViewProps) {
           </div>
         </div>
 
-        {/* 2. INFINITE ROLLING MARQUEE TICKERS (Compact Retro Stream) */}
+        {/* 2. INFINITE ROLLING MARQUEE TICKERS (Compact Retro Stream, Hover-to-Pause) */}
         <div className="flex flex-col gap-1.5 overflow-hidden border-y border-crt-phosphor/30 py-2 sm:py-2.5 bg-black/40">
-          {/* Ticker Row 1: Fast High-Priority Flash */}
-          <div className="flex overflow-hidden whitespace-nowrap text-[10px] sm:text-xs tracking-wider text-amber-300 font-bold uppercase">
-            <div className="flex animate-[marquee_28s_linear_infinite] gap-8 shrink-0">
+          {/* Ticker Row 1: Relaxed High-Priority Flash */}
+          <div className="group flex overflow-hidden whitespace-nowrap text-[10px] sm:text-xs tracking-wider text-amber-300 font-bold uppercase cursor-pointer">
+            <div className="flex animate-[marquee_72s_linear_infinite] group-hover:[animation-play-state:paused] group-active:[animation-play-state:paused] gap-8 shrink-0">
               {N54_HEADLINES.map((h, i) => (
                 <span key={`t1-${i}`} className="flex items-center gap-2.5">
                   <span className="text-red-500 font-black">[FLASH]</span>
@@ -86,7 +86,7 @@ export function NewsView({ onBack }: NewsViewProps) {
                 </span>
               ))}
             </div>
-            <div className="flex animate-[marquee_28s_linear_infinite] gap-8 shrink-0" aria-hidden="true">
+            <div className="flex animate-[marquee_72s_linear_infinite] group-hover:[animation-play-state:paused] group-active:[animation-play-state:paused] gap-8 shrink-0" aria-hidden="true">
               {N54_HEADLINES.map((h, i) => (
                 <span key={`t1-dup-${i}`} className="flex items-center gap-2.5">
                   <span className="text-red-500 font-black">[FLASH]</span>
@@ -98,12 +98,12 @@ export function NewsView({ onBack }: NewsViewProps) {
           </div>
 
           {/* Ticker Row 2: Pixel Font Marquee (Scaled for Laptops & Monitors) */}
-          <div className="flex overflow-hidden whitespace-nowrap text-base sm:text-lg md:text-2xl font-bit tracking-wide text-crt-phosphor uppercase">
-            <div className="flex animate-[marquee_38s_linear_infinite_reverse] gap-8 shrink-0">
+          <div className="group flex overflow-hidden whitespace-nowrap text-base sm:text-lg md:text-2xl font-bit tracking-wide text-crt-phosphor uppercase cursor-pointer">
+            <div className="flex animate-[marquee_92s_linear_infinite_reverse] group-hover:[animation-play-state:paused] group-active:[animation-play-state:paused] gap-8 shrink-0">
               <span className="text-crt-phosphor phosphor-glow">ARASAKA TOWER ALERT &bull; MILITECH HIGHWAY PURSUIT &bull; SANTO DOMINGO INCIDENT &bull; PACIFICA BLACKOUT &bull; LUNAR FLIGHTS 250,000 ED &bull;</span>
               <span className="text-crt-phosphor phosphor-glow">MAX-TAC DISPATCH TO CORONADO BAY &bull; ACID RAIN WARNING PH 3.2 &bull; AFTERLIFE CONTRACTS OPEN &bull;</span>
             </div>
-            <div className="flex animate-[marquee_38s_linear_infinite_reverse] gap-8 shrink-0" aria-hidden="true">
+            <div className="flex animate-[marquee_92s_linear_infinite_reverse] group-hover:[animation-play-state:paused] group-active:[animation-play-state:paused] gap-8 shrink-0" aria-hidden="true">
               <span className="text-crt-phosphor phosphor-glow">ARASAKA TOWER ALERT &bull; MILITECH HIGHWAY PURSUIT &bull; SANTO DOMINGO INCIDENT &bull; PACIFICA BLACKOUT &bull; LUNAR FLIGHTS 250,000 ED &bull;</span>
               <span className="text-crt-phosphor phosphor-glow">MAX-TAC DISPATCH TO CORONADO BAY &bull; ACID RAIN WARNING PH 3.2 &bull; AFTERLIFE CONTRACTS OPEN &bull;</span>
             </div>
